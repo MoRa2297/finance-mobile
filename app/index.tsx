@@ -1,23 +1,12 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { Redirect } from 'expo-router';
 
-export default function HomeScreen() {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Finance App</Text>
-            <Text>Expo Router configurato!</Text>
-        </View>
-    );
+export default function Index() {
+    // TODO: controllare auth state con Zustand
+    const isAuthenticated = false;
+
+    if (isAuthenticated) {
+        return <Redirect href="/(auth)/(tabs)" />;
+    }
+
+    return <Redirect href="/(unauth)/login" />;
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 16,
-    },
-});
