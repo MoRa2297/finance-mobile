@@ -1,5 +1,5 @@
 import { Redirect } from 'expo-router';
-import {useAuthStore} from "../src/stores";
+import {useAuthStore} from "../stores";
 
 export default function Index() {
     // TODO: controllare auth state con Zustand
