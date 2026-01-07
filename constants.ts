@@ -1,6 +1,6 @@
  import { Dimensions } from 'react-native';
   import {I18NLang} from "./i18n";
- import {BankAccountType, CardType, GenericType} from "./types/types";
+ import {BankAccountType, CardType, GenericType} from "@/types/types";
 
 
 const screen = Dimensions.get('screen');

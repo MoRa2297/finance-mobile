@@ -13,10 +13,10 @@ import { Link, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useAuthStore } from "../../../stores";
-import { useKeyboardVisible } from "../../../hooks/useKeyboardVisible";
-import {IconButton, Button, InputField, ScreenContainer} from "../../../components";
+import { useAuthStore } from "@/stores";
 import {theme} from "../../../theme";
+import {useKeyboardVisible} from "@hooks/useKeyboardVisible";
+import {Button, IconButton, InputField, ScreenContainer} from "@/components";
 
 
 export default function LoginScreen() {
