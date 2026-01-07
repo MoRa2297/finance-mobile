@@ -5,7 +5,7 @@ import {
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  TextStyle,
+  TextStyle, View,
   ViewStyle,
 } from 'react-native';
 
@@ -72,43 +72,44 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       : theme.colors.transparent,
   };
 
+
+  const getAccessoryRight = (): RenderProp<Partial<ImageProps>> | undefined => {
+    if (isLoading) {
+      return () => (
+          <LoadingSpinner
+              color={appearance === 'filled' ? theme.colors.primaryBK : theme.colors.basic100}
+              inline
+              size="small"
+          />
+      );
+    }
+    return accessoryRight;
+  };
+
   return (
     <KittenButton
       appearance={appearance}
       disabled={isDisabled}
       size={size}
-      accessoryRight={
-        isLoading ? (
-          <LoadingSpinner
-            color={
-              appearance === 'filled'
-                ? theme.colors.basic500
-                : theme.colors.basic100
-            }
-            inline
-            size={'small'}
-          />
-        ) : accessoryRight ? (
-          accessoryRight
-        ) : (
-          <></>
-        )
-      }
+      accessoryRight={getAccessoryRight()}
       status="control"
       style={[styles.button, extraStyle, isDisabled && styles.opacity, style]}
       onPress={onPress}
       onLayout={onLayout}>
-      <>
-        {!!buttonText && (
-          <Text
-            numberOfLines={numberOfLines}
-            adjustsFontSizeToFit={adjustsFontSizeToFit}
-            style={[styles.buttonText, textStyle]}>
-            {buttonText.toLocaleUpperCase()}
-          </Text>
-        )}
-        {children}
-      </>
+      {(evaProps:any) => (
+          <View style={styles.content}>
+            {!!buttonText && (
+                <Text
+                    {...evaProps}
+                    numberOfLines={numberOfLines}
+                    adjustsFontSizeToFit={adjustsFontSizeToFit}
+                    style={[styles.buttonText, textStyle]}>
+                  {buttonText.toUpperCase()}
+                </Text>
+            )}
+            {children}
+          </View>
+      )}
     </KittenButton>
   );
 };
@@ -117,6 +118,11 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 15,
     width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  content: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -167,7 +173,9 @@ export const IconButton: React.FunctionComponent<IconButtonProps> = ({
         },
         style,
       ]}>
-      <Icon name={iconName} color={iconColor} size={size} />
+
+      {() => <Icon name={iconName} color={iconColor} size={size} />}
+
     </KittenButton>
   );
 };

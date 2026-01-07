@@ -7,9 +7,9 @@ import {
   StyleSheet,
   TextStyle,
 } from 'react-native';
-import { theme } from '../../../config/theme';
-import Modal from 'react-native-modal';
-import env from '../../../config/env';
+ import Modal from 'react-native-modal';
+import {theme} from "../../../theme";
+import env from "../../../env";
 
 interface LoadingSpinnerProps {
   color?: string;
@@ -22,12 +22,12 @@ interface LoadingSpinnerProps {
 }
 
 export const LoadingSpinner: React.FunctionComponent<LoadingSpinnerProps> = ({
-  color = theme['background-basic-color-1'],
+  color = theme.colors.primaryBK,
   size = 'large',
   fullScreen = false,
   inline = false,
   overlayText,
-  backgroundColor = theme['background-basic-color-1'],
+  backgroundColor = theme.colors.primaryBK,
   textStyle,
 }) => {
   const fullScreenStyle = {
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  textContainer: { backgroundColor: theme['color-basic-transparent'] },
+  textContainer: { backgroundColor: theme.colors.transparent },
   textContent: {
     fontSize: 25,
     fontWeight: 'bold',

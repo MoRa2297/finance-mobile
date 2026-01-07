@@ -3,32 +3,23 @@
     "name": "finance-mobile",
     "slug": "finance-mobile",
     "version": "1.0.0",
+    "scheme": "finance-mobile",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "scheme": "finance",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourname.financemobile"
+      "bundleIdentifier": "com.finance.mobile"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#111827"
       },
-      "package": "com.yourname.financemobile"
+      "package": "com.finance.mobile"
     },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
     }

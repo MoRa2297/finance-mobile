@@ -13,12 +13,10 @@ import { Link, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-import {Button, IconButton, InputField} from '../../components';
-import { ScreenContainer } from '../../components';
-import { useAuthStore } from '../../stores';
-import { colors } from '../../theme';
-import {useKeyboardVisible} from "../../hooks/useKeyboardVisible";
+import { useAuthStore } from "../../../stores";
+import { useKeyboardVisible } from "../../../hooks/useKeyboardVisible";
+import {IconButton, Button, InputField, ScreenContainer} from "../../../components";
+import {theme} from "../../../theme";
 
 
 export default function LoginScreen() {
@@ -152,7 +150,7 @@ export default function LoginScreen() {
 
                                     <Layout style={styles.dividerContainer}>
                                         <LinearGradient
-                                            colors={[colors.primaryBK, colors.textHint]}
+                                            colors={[theme.colors.primaryBK, theme.colors.textHint]}
                                             start={{ x: 0, y: 1 }}
                                             end={{ x: 1, y: 1 }}
                                             style={styles.lineLeft}
@@ -161,7 +159,7 @@ export default function LoginScreen() {
                                             {t('screens.loginScreen.or')}
                                         </Text>
                                         <LinearGradient
-                                            colors={[colors.textHint, colors.primaryBK]}
+                                            colors={[theme.colors.textHint, theme.colors.primaryBK]}
                                             start={{ x: 0, y: 1 }}
                                             end={{ x: 1, y: 1 }}
                                             style={styles.lineLeft}
@@ -172,14 +170,14 @@ export default function LoginScreen() {
                                         <IconButton
                                             iconName="google"
                                             onPress={() => {}}
-                                            iconColor={colors.textHint}
+                                            iconColor={theme.colors.textHint}
                                             style={styles.socialButton}
                                             isDisabled
                                         />
                                         <IconButton
                                             iconName="facebook"
                                             onPress={() => {}}
-                                            iconColor={colors.textHint}
+                                            iconColor={theme.colors.textHint}
                                             style={styles.socialButton}
                                             isDisabled
                                         />
@@ -209,32 +207,32 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: colors.primaryBK,
+        backgroundColor: theme.colors.primaryBK,
     },
     container: {
         width: '100%',
-        backgroundColor: colors.primaryBK,
+        backgroundColor: theme.colors.primaryBK,
     },
     mainContainer: {
         justifyContent: 'center',
         flex: 1,
         flexGrow: 1,
-        backgroundColor: colors.transparent,
+        backgroundColor: theme.colors.transparent,
     },
     titleContainer: {
         flexDirection: 'column',
         paddingVertical: '12%',
         rowGap: 10,
-        backgroundColor: colors.transparent,
+        backgroundColor: theme.colors.transparent,
     },
     formContainer: {
         flexDirection: 'column',
-        backgroundColor: colors.transparent,
+        backgroundColor: theme.colors.transparent,
     },
     forgotPasswordContainer: {
         marginBottom: '5%',
         marginTop: '5%',
-        backgroundColor: colors.transparent,
+        backgroundColor: theme.colors.transparent,
     },
     dividerContainer: {
         display: 'flex',
@@ -242,7 +240,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginVertical: '7%',
-        backgroundColor: colors.transparent,
+        backgroundColor: theme.colors.transparent,
     },
     lineLeft: {
         flex: 1,
@@ -251,37 +249,37 @@ const styles = StyleSheet.create({
     dividerText: {
         marginHorizontal: 15,
         fontWeight: '300',
-        color: colors.textHint,
+        color: theme.colors.textHint,
     },
     socialButtonsContainer: {
         flexDirection: 'row',
         columnGap: 20,
-        backgroundColor: colors.transparent,
+        backgroundColor: theme.colors.transparent,
     },
     socialButton: {
         flex: 1,
-        backgroundColor: colors.primaryBK,
+        backgroundColor: theme.colors.primaryBK,
         height: 55,
-        borderColor: colors.textHint,
+        borderColor: theme.colors.textHint,
         borderWidth: 1,
         borderRadius: 15,
     },
     newAccountContainer: {
         marginTop: '4%',
         alignItems: 'center',
-        backgroundColor: colors.transparent,
+        backgroundColor: theme.colors.transparent,
     },
     textAccent: {
-        color: colors.primary,
+        color: theme.colors.primary,
     },
     errorInput: {
-        color: colors.danger400,
+        color: theme.colors.danger400,
         marginTop: -10,
         marginHorizontal: 7,
         fontSize: 14,
     },
     errorFormApi: {
-        color: colors.danger400,
+        color: theme.colors.danger400,
         marginVertical: 10,
         marginHorizontal: 7,
         fontSize: 16,
@@ -289,11 +287,11 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
     buttonStyle: {
-        backgroundColor: colors.basic100,
+        backgroundColor: theme.colors.basic100,
         height: 55,
     },
     buttonTextStyle: {
-        color: colors.black,
+        color: theme.colors.black,
         fontWeight: '700',
     },
 });

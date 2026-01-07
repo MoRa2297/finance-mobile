@@ -1,9 +1,10 @@
-import * as RNLocalize from 'react-native-localize';
+import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- import it from './it';
+import it from './it';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import {DEFAULT_LANG} from "../stores";
+
+const DEFAULT_LANG = 'it';
 
 const i18nResources = {
   it: {
@@ -19,7 +20,7 @@ const i18nResources = {
  * If not found fallback to defaults.
  */
 const getSystemLocale = () => {
-  const locales = RNLocalize.getLocales();
+  const locales = Localization.getLocales();
   const lang =
     locales.length < 1 ? DEFAULT_LANG : (locales[0].languageCode as I18NLang);
 

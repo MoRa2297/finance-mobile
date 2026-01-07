@@ -2,9 +2,10 @@ import { Layout } from '@ui-kitten/components';
 import React from 'react';
 import { StatusBar, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { HORIZONTAL_PADDING } from '../../../config/constants';
-import env from '../../../config/env';
-import { theme } from '../../../config/theme';
+
+ import {HORIZONTAL_PADDING} from "../../../constants";
+import {theme} from "../../../theme";
+import env from "../../../env";
 
 interface Props {
   horizontalMargin?: boolean;
@@ -22,14 +23,14 @@ export const ScreenContainer: React.FunctionComponent<Props> = ({
   ...props
 }) => {
   if (env.IS_ANDROID) {
-    StatusBar.setBackgroundColor(theme['color-basic-transparent']);
+    StatusBar.setBackgroundColor(theme.colors.transparent);
     StatusBar.setTranslucent(true);
   }
 
   const insets = useSafeAreaInsets();
 
   const extraStyle = {
-    backgroundColor: theme['background-basic-color-1'],
+    backgroundColor: theme.colors.primaryBK,
     paddingHorizontal: horizontalMargin ? HORIZONTAL_PADDING : 0,
     paddingTop: insets.top,
     paddingBottom: isKeyboardOpen || forceNoBottomPadding ? 0 : insets.bottom,
