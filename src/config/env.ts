@@ -12,3 +12,4 @@ export default {
     ? 'http://localhost:4000/api/v1'
     : 'https://production-backend-personalfinance.onrender.com/api/v1',
 };
+

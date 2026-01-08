@@ -1,9 +1,9 @@
- import { Dimensions } from 'react-native';
-  import {I18NLang} from "./i18n";
- import {BankAccountType, CardType, GenericType} from "@/types/types";
+import { Dimensions } from 'react-native';
+import {BankAccountType, CardType, GenericType} from "@/types/types";
+import {I18NLang} from "@/i18n";
 
 
-const screen = Dimensions.get('screen');
+   const screen = Dimensions.get('screen');
 
 export const DEFAULT_LANG: I18NLang = 'it';
 
