@@ -7,9 +7,9 @@ import {
   StyleSheet,
   TextStyle,
 } from 'react-native';
- import Modal from 'react-native-modal';
-import {theme} from "../../../../theme";
-import env from "../../../../env";
+import Modal from 'react-native-modal';
+import { theme } from '@config/theme';
+import env from '@config/env';
 
 interface LoadingSpinnerProps {
   color?: string;

@@ -1,1 +1,1 @@
-export {ScreenContainer} from './ScreenContainer'
+export { ScreenContainer } from './ScreenContainer';

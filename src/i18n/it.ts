@@ -28,6 +28,7 @@ const it = {
     delete: 'Annulla',
     save: 'Salva',
     edit: 'Modifica',
+    or: 'or',
   },
   components: {
     bottomNavigator: {

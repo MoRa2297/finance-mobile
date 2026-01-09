@@ -9,6 +9,7 @@ const it = {
     login: 'Accedi',
     loading: 'Caricamento in corso...',
     payTheInstallment: 'Paga il bollettino',
+    or: 'or',
   },
   components: {
     bottomNavigator: {

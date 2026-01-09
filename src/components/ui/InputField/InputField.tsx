@@ -1,8 +1,7 @@
 import { Input, Text } from '@ui-kitten/components';
 import React from 'react';
 import { StyleProp, StyleSheet, TextStyle } from 'react-native';
-import {theme} from "../../../../theme";
-
+import { theme } from '@config/theme';
 
 interface InputFiledProps {
   label?: string;

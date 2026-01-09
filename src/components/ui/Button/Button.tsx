@@ -5,16 +5,16 @@ import {
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  TextStyle, View,
+  TextStyle,
+  View,
   ViewStyle,
 } from 'react-native';
 
 import { RenderProp } from '@ui-kitten/components/devsupport';
-import {theme} from "../../../../theme";
 
-import {LoadingSpinner} from "../../common/LoadingSpinner/LoadingSpinner";
-import { Icon } from "../Icon";
-
+import { LoadingSpinner } from '../../common/LoadingSpinner/LoadingSpinner';
+import { Icon } from '../Icon';
+import { theme } from '@config/theme';
 
 interface ButtonProps {
   adjustsFontSizeToFit?: boolean;
@@ -57,30 +57,33 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
     backgroundColor: backgroundColor
       ? backgroundColor
       : appearance === 'filled'
-      ? theme.colors.basic100
-      : theme.colors.transparent,
+        ? theme.colors.basic100
+        : theme.colors.transparent,
     color: color
       ? color
       : appearance === 'filled'
-      ? theme.colors.basic500
-      : theme.colors.basic100,
+        ? theme.colors.basic500
+        : theme.colors.basic100,
     borderWidth: 2,
     borderColor: borderColor
       ? borderColor
       : appearance === 'filled'
-      ? theme.colors.basic100
-      : theme.colors.transparent,
+        ? theme.colors.basic100
+        : theme.colors.transparent,
   };
-
 
   const getAccessoryRight = (): RenderProp<Partial<ImageProps>> | undefined => {
     if (isLoading) {
       return () => (
-          <LoadingSpinner
-              color={appearance === 'filled' ? theme.colors.primaryBK : theme.colors.basic100}
-              inline
-              size="small"
-          />
+        <LoadingSpinner
+          color={
+            appearance === 'filled'
+              ? theme.colors.primaryBK
+              : theme.colors.basic100
+          }
+          inline
+          size="small"
+        />
       );
     }
     return accessoryRight;
@@ -96,19 +99,19 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       style={[styles.button, extraStyle, isDisabled && styles.opacity, style]}
       onPress={onPress}
       onLayout={onLayout}>
-      {(evaProps:any) => (
-          <View style={styles.content}>
-            {!!buttonText && (
-                <Text
-                    {...evaProps}
-                    numberOfLines={numberOfLines}
-                    adjustsFontSizeToFit={adjustsFontSizeToFit}
-                    style={[styles.buttonText, textStyle]}>
-                  {buttonText.toUpperCase()}
-                </Text>
-            )}
-            {children}
-          </View>
+      {(evaProps: any) => (
+        <View style={styles.content}>
+          {!!buttonText && (
+            <Text
+              {...evaProps}
+              numberOfLines={numberOfLines}
+              adjustsFontSizeToFit={adjustsFontSizeToFit}
+              style={[styles.buttonText, textStyle]}>
+              {buttonText.toUpperCase()}
+            </Text>
+          )}
+          {children}
+        </View>
       )}
     </KittenButton>
   );
@@ -173,9 +176,7 @@ export const IconButton: React.FunctionComponent<IconButtonProps> = ({
         },
         style,
       ]}>
-
       {() => <Icon name={iconName} color={iconColor} size={size} />}
-
     </KittenButton>
   );
 };

@@ -1,60 +1,123 @@
-import { Layout } from '@ui-kitten/components';
 import React from 'react';
-import { StatusBar, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import {
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  StatusBar,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { Layout } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import env from "../../../../env";
-import {theme} from "../../../../theme";
-import {HORIZONTAL_PADDING} from "../../../../constants";
 
+import { theme } from '@/config/theme';
+import { HORIZONTAL_PADDING } from '@config/constants';
 
-
-interface Props {
-  horizontalMargin?: boolean;
+interface ScreenContainerProps {
+  children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
-  children?: React.ReactNode | React.ReactNode[];
-  isKeyboardOpen?: boolean;
+  contentStyle?: StyleProp<ViewStyle>;
+  horizontalPadding?: boolean;
   forceNoBottomPadding?: boolean;
+  scrollable?: boolean;
+  centered?: boolean;
+  keyboardAvoiding?: boolean;
+  dismissKeyboardOnTap?: boolean;
 }
 
-export const ScreenContainer: React.FunctionComponent<Props> = ({
-  horizontalMargin = true,
+export const ScreenContainer: React.FC<ScreenContainerProps> = ({
+  children,
   style,
-  isKeyboardOpen,
+  contentStyle,
+  horizontalPadding = true,
   forceNoBottomPadding = false,
-  ...props
+  scrollable = false,
+  centered = false,
+  keyboardAvoiding = true,
+  dismissKeyboardOnTap = true,
 }) => {
-  if (env.IS_ANDROID) {
+  const insets = useSafeAreaInsets();
+
+  // Android StatusBar
+  if (Platform.OS === 'android') {
     StatusBar.setBackgroundColor(theme.colors.transparent);
     StatusBar.setTranslucent(true);
   }
 
-  const insets = useSafeAreaInsets();
-
-  const extraStyle = {
+  const containerStyle: ViewStyle = {
+    flex: 1,
     backgroundColor: theme.colors.primaryBK,
-    paddingHorizontal: horizontalMargin ? HORIZONTAL_PADDING : 0,
     paddingTop: insets.top,
-    paddingBottom: isKeyboardOpen || forceNoBottomPadding ? 0 : insets.bottom,
+    paddingBottom: forceNoBottomPadding ? 0 : insets.bottom,
+    paddingHorizontal: horizontalPadding ? HORIZONTAL_PADDING : 0,
   };
 
-  return (
-    <Layout
-      {...props}
-      style={[
-        styles.container,
-        extraStyle,
-        style,
-        {
-          marginTop: -insets.top,
-        },
-      ]}>
-      {props.children}
-    </Layout>
-  );
+  const scrollContentStyle: ViewStyle = {
+    flexGrow: 1,
+    ...(centered && { justifyContent: 'center' }),
+  };
+
+  const renderContent = () => {
+    if (scrollable) {
+      return (
+        <ScrollView
+          contentContainerStyle={[scrollContentStyle, contentStyle]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
+          {children}
+        </ScrollView>
+      );
+    }
+
+    return (
+      <Layout
+        style={[styles.content, centered && styles.centered, contentStyle]}>
+        {children}
+      </Layout>
+    );
+  };
+
+  const renderWithKeyboard = () => {
+    if (keyboardAvoiding) {
+      return (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.flex}>
+          {renderContent()}
+        </KeyboardAvoidingView>
+      );
+    }
+
+    return renderContent();
+  };
+
+  const renderWithDismiss = () => {
+    if (dismissKeyboardOnTap) {
+      return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          {renderWithKeyboard()}
+        </TouchableWithoutFeedback>
+      );
+    }
+
+    return renderWithKeyboard();
+  };
+
+  return <Layout style={[containerStyle, style]}>{renderWithDismiss()}</Layout>;
 };
 
 const styles = StyleSheet.create({
-  container: {
+  flex: {
     flex: 1,
+  },
+  content: {
+    flex: 1,
+    backgroundColor: theme.colors.transparent,
+  },
+  centered: {
+    justifyContent: 'center',
   },
 });
