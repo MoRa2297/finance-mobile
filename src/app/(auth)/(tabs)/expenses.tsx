@@ -1,39 +1,15 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import React from 'react';
+import { Text } from '@ui-kitten/components';
+
+import { ScreenContainer } from '@/components/ui';
 
 export default function ExpensesScreen() {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Spese</Text>
-
-            <Link href="/transaction" asChild>
-                <Pressable style={styles.button}>
-                    <Text style={styles.buttonText}>+ Aggiungi Transazione</Text>
-                </Pressable>
-            </Link>
-        </View>
-    );
+  return (
+    <ScreenContainer centered>
+      <Text category="h1">Spese</Text>
+      <Text category="p1" appearance="hint">
+        Le tue transazioni
+      </Text>
+    </ScreenContainer>
+  );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-    },
-    button: {
-        backgroundColor: '#007AFF',
-        paddingHorizontal: 20,
-        paddingVertical: 12,
-        borderRadius: 8,
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '600',
-    },
-});

@@ -1,9 +1,8 @@
 import { Dimensions } from 'react-native';
-import {BankAccountType, CardType, GenericType} from "@/types/types";
-import {I18NLang} from "@/i18n";
+import { BankAccountType, CardType, GenericType } from '@/types/types';
+import { I18NLang } from '@/i18n';
 
-
-   const screen = Dimensions.get('screen');
+const screen = Dimensions.get('screen');
 
 export const DEFAULT_LANG: I18NLang = 'it';
 
@@ -746,3 +745,20 @@ export const DAYS_NUMBER: Array<GenericType> = [
 export const GENERAL_START_DATE = '2020-01-01';
 
 export const GENERAL_END_DATE = '2030-01-01';
+
+export const ROUTES = {
+  // Unauth
+  LOGIN: '/(unauth)/login',
+  REGISTER: '/(unauth)/register',
+
+  // Auth - Tabs
+  HOME: '/(auth)/(tabs)',
+  EXPENSES: '/(auth)/(tabs)/expenses',
+  BUDGET: '/(auth)/(tabs)/budget',
+  SETTINGS: '/(auth)/(tabs)/settings',
+
+  // Auth - Screens
+  TRANSACTION: '/(auth)/transaction',
+} as const;
+
+export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

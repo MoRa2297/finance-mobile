@@ -12,6 +12,8 @@ import {
 } from './LoginForm.helpers';
 import { StyleSheet } from 'react-native';
 import { theme } from '@config/theme';
+import { router } from 'expo-router';
+import { ROUTES } from '@config/constants';
 
 export type LoginFormValues = {
   email: string;
@@ -97,7 +99,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
             {/* Submit Button */}
             <Button
-              onPress={() => handleSubmit()}
+              // onPress={() => handleSubmit()}
+              onPress={() => router.replace(ROUTES.HOME)}
               style={styles.submitButton}
               buttonText={t('screens.loginScreen.signIn')}
               textStyle={styles.submitButtonText}
