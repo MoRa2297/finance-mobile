@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { BankAccount, Transaction } from '@types/types';
+import { BankAccount, Transaction } from '@/types/types';
 
 dayjs.extend(isBetween);
 

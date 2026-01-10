@@ -1,15 +1,156 @@
-import React from 'react';
-import { Text } from '@ui-kitten/components';
+import React, { useState, useMemo, useCallback } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Dayjs } from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 import { ScreenContainer } from '@/components/ui';
+import { TopBodyContainer, SpecificPrice } from '@/components/screens/home';
+import { HomeHeader } from '@/components/screens/home/HomeHeader';
+import {
+  ExpensesList,
+  SwipePicker,
+  SwipePickerMonth,
+  TransactionFilter,
+} from '@/components/screens/expenses';
+import {
+  filterByMonth,
+  calculateTotals,
+} from '@/components/screens/expenses/ExpensesList/ExpensesList.helpers';
+import { useDataStore, useUIStore, useAuthStore } from '@/stores';
+import { theme } from '@/config/theme';
+import { HORIZONTAL_PADDING } from '@/config/constants';
+import { DEFAULT_TABS, SliderBar } from '@/components/ui/SliderBar';
 
 export default function ExpensesScreen() {
+  const { t } = useTranslation();
+
+  // State
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const [filter, setFilter] = useState<TransactionFilter>('all');
+
+  // Stores
+  const user = useAuthStore(state => state.user);
+  const transactions = useDataStore(state => state.transactions);
+  const categories = useDataStore(state => state.categories);
+  const bankAccounts = useDataStore(state => state.bankAccounts);
+  const bankCards = useDataStore(state => state.bankCards);
+  const moneyIsVisible = useUIStore(state => state.moneyIsVisible);
+  const setMoneyIsVisible = useUIStore(state => state.setMoneyIsVisible);
+
+  // Calculate totals for selected month
+  const totals = useMemo(() => {
+    const filtered = filterByMonth(transactions, selectedDate);
+    return calculateTotals(filtered);
+  }, [transactions, selectedDate]);
+
+  // Handlers
+  const handleSelectMonth = useCallback((month: SwipePickerMonth) => {
+    setSelectedDate(month.date);
+  }, []);
+
+  const handleFilterChange = useCallback((value: string) => {
+    setFilter(value as TransactionFilter);
+  }, []);
+
+  const handleSelectTransaction = useCallback((transaction: any) => {
+    console.log('Selected transaction:', transaction);
+  }, []);
+
+  const handleToggleMoneyVisibility = useCallback(() => {
+    setMoneyIsVisible();
+  }, [setMoneyIsVisible]);
+
+  const formatAmount = (amount: number) => {
+    return moneyIsVisible ? `${amount.toFixed(2)} €` : '--';
+  };
+
   return (
-    <ScreenContainer centered>
-      <Text category="h1">Spese</Text>
-      <Text category="p1" appearance="hint">
-        Le tue transazioni
-      </Text>
+    <ScreenContainer
+      style={styles.container}
+      horizontalPadding={false}
+      forceNoBottomPadding>
+      {/* Header Section */}
+      <TopBodyContainer height="28%" paddingTop={10}>
+        <HomeHeader
+          profileImage={user?.imageUrl}
+          showMonthSelector={false}
+          moneyIsVisible={moneyIsVisible}
+          onSelectMonth={handleSelectMonth}
+          onToggleMoneyVisibility={handleToggleMoneyVisibility}
+        />
+
+        <View style={styles.headerContent}>
+          {/* Month Picker */}
+          <View style={styles.monthPickerContainer}>
+            <SwipePicker
+              onSelectMonth={handleSelectMonth}
+              containerWidth={150}
+              showArrows
+            />
+          </View>
+
+          {/* Income / Expense Summary */}
+          <View style={styles.summaryContainer}>
+            <SpecificPrice
+              title={t('screens.expensesScreen.income')}
+              amount={formatAmount(totals.income)}
+              amountColor={theme.colors.green}
+              iconName="arrow-circle-down"
+              iconColor={theme.colors.green}
+            />
+            <SpecificPrice
+              title={t('screens.expensesScreen.spent')}
+              amount={formatAmount(totals.expense)}
+              amountColor={theme.colors.red}
+              iconName="arrow-circle-up"
+              iconColor={theme.colors.red}
+            />
+          </View>
+        </View>
+      </TopBodyContainer>
+
+      {/* Body Section */}
+      <View style={styles.bodyContainer}>
+        <SliderBar tabs={DEFAULT_TABS} onTabChange={handleFilterChange} />
+
+        <ExpensesList
+          transactions={transactions}
+          categories={categories}
+          bankAccounts={bankAccounts}
+          bankCards={bankCards}
+          selectedDate={selectedDate}
+          filter={filter}
+          onSelectTransaction={handleSelectTransaction}
+        />
+      </View>
     </ScreenContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.secondaryBK,
+  },
+  headerContent: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    backgroundColor: theme.colors.transparent,
+  },
+  monthPickerContainer: {
+    alignItems: 'center',
+    width: '100%',
+    height: 40,
+    backgroundColor: theme.colors.transparent,
+  },
+  summaryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.transparent,
+  },
+  bodyContainer: {
+    flex: 1,
+    marginHorizontal: HORIZONTAL_PADDING,
+    backgroundColor: theme.colors.secondaryBK,
+  },
+});

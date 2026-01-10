@@ -1,3 +1,7 @@
 export * from './auth';
-export * from './ui';
-export * from './data';
+
+export { useUIStore } from './ui';
+export { useDataStore, USE_MOCK_DATA } from './data';
+
+export type { UIStore } from './ui';
+export type { DataStore } from './data';
