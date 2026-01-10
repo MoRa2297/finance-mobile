@@ -751,13 +751,11 @@ export const ROUTES = {
   LOGIN: '/(unauth)/login',
   REGISTER: '/(unauth)/register',
 
-  // Auth - Tabs
-  HOME: '/(auth)/(tabs)',
-  EXPENSES: '/(auth)/(tabs)/expenses',
-  BUDGET: '/(auth)/(tabs)/budget',
-  SETTINGS: '/(auth)/(tabs)/settings',
-
-  // Auth - Screens
+  // Auth
+  HOME: '/(auth)',
+  EXPENSES: '/(auth)/expenses',
+  BUDGET: '/(auth)/budget',
+  SETTINGS: '/(auth)/settings',
   TRANSACTION: '/(auth)/transaction',
 } as const;
 

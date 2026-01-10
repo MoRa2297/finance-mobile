@@ -33,8 +33,6 @@ export const colors = {
 
   // Transparent
   transparent: 'transparent',
-
-  primary500: '#319FB6',
 } as const;
 
 export const spacing = {

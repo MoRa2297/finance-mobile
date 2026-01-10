@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     borderRadius: 15,
-    backgroundColor: theme.colors.primary500,
+    backgroundColor: theme.colors.primaryBK,
     shadowColor: '#000',
     shadowOpacity: 0.6,
     shadowRadius: 10,
