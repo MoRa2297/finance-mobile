@@ -16,7 +16,9 @@
 // export {SliderBar} from './SliderBar';
 // export {SwitchInput} from './SwitchInput'
 
-export { Button, IconButton } from './ui/Button';
+// export { Button, IconButton } from './ui/Button';
 export { InputField } from './ui/InputField';
-export { ScreenContainer_old } from './ui/ScreenContainer';
 export { Icon } from './ui/Icon';
+
+export { LoadingSpinner } from './common/LoadingSpinner';
+export { CustomAvatar } from './common/CustomAvatar';

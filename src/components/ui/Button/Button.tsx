@@ -12,9 +12,9 @@ import {
 
 import { RenderProp } from '@ui-kitten/components/devsupport';
 
-import { LoadingSpinner } from '../../common/LoadingSpinner/LoadingSpinner';
 import { Icon } from '../Icon';
 import { theme } from '@config/theme';
+import { LoadingSpinner } from '@/components';
 
 interface ButtonProps {
   adjustsFontSizeToFit?: boolean;
