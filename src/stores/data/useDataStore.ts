@@ -33,6 +33,23 @@ export const useDataStore = create<DataStore>(set => ({
   // Categories
   setCategories: categories => set({ categories }),
 
+  addCategory: category =>
+    set(state => ({
+      categories: [...state.categories, category],
+    })),
+
+  updateCategory: (id, data) =>
+    set(state => ({
+      categories: state.categories.map(c =>
+        c.id === id ? { ...c, ...data } : c,
+      ),
+    })),
+
+  deleteCategory: id =>
+    set(state => ({
+      categories: state.categories.filter(c => c.id !== id),
+    })),
+
   // Bank
   setBankAccounts: bankAccounts => set({ bankAccounts }),
   setBankCards: bankCards => set({ bankCards }),

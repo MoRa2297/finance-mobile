@@ -1,6 +1,3 @@
-
-
-
 export type Theme = 'light' | 'dark';
 
 export enum TransactionFormTypes {

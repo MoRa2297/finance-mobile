@@ -18,6 +18,9 @@ export interface DataActions {
 
   // Categories
   setCategories: (categories: Category[]) => void;
+  addCategory: (category: Category) => void;
+  updateCategory: (id: number, data: Partial<Category>) => void;
+  deleteCategory: (id: number) => void;
 
   // Bank
   setBankAccounts: (bankAccounts: BankAccount[]) => void;

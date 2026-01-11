@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { BottomNavigation } from '@components/ui/BottomNavigation';
+import { BottomNavigation } from '@components/ui';
 
 export default function AuthLayout() {
   return (
