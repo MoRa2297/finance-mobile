@@ -16,5 +16,6 @@ export { TopBodyContainer } from './TopBodyContainer';
 export { SpecificPrice } from './SpecificPrice';
 export { GenericSmallDetail } from './GenericSmallDetail';
 export { SelectInput } from './SelectInput';
+export { SelectPickerInput } from './SelectPickerInput';
 
 export type { Tab } from './SliderBar';

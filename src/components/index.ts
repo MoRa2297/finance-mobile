@@ -26,3 +26,4 @@ export { TopBodyContainer } from './ui/TopBodyContainer';
 export { SpecificPrice } from './ui/SpecificPrice';
 export { GenericSmallDetail } from './ui/GenericSmallDetail';
 export { SelectInput } from './ui/SelectInput';
+export { SelectPickerInput } from './ui/SelectPickerInput';

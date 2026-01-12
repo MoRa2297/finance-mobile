@@ -5,6 +5,7 @@ import {
   BankCard,
   BankType,
   BankAccountType,
+  CardType,
 } from '@/types/types';
 
 export interface DataState {
@@ -14,6 +15,7 @@ export interface DataState {
   bankCards: BankCard[];
   bankTypes: BankType[];
   bankAccountTypes: BankAccountType[];
+  cardTypes: CardType[];
   isLoading: boolean;
   error: string | null;
 }
@@ -43,6 +45,12 @@ export interface DataActions {
 
   // Bank Cards
   setBankCards: (bankCards: BankCard[]) => void;
+  addBankCard: (bankCard: BankCard) => void;
+  updateBankCard: (id: number, data: Partial<BankCard>) => void;
+  deleteBankCard: (id: number) => void;
+
+  // Card Types
+  setCardTypes: (cardTypes: CardType[]) => void;
 
   // UI State
   setIsLoading: (isLoading: boolean) => void;
