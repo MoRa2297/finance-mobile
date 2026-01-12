@@ -50,8 +50,28 @@ export const useDataStore = create<DataStore>(set => ({
       categories: state.categories.filter(c => c.id !== id),
     })),
 
-  // Bank
+  // Bank Accounts
   setBankAccounts: bankAccounts => set({ bankAccounts }),
+  addBankAccount: bankAccount =>
+    set(state => ({
+      bankAccounts: [...state.bankAccounts, bankAccount],
+    })),
+  updateBankAccount: (id, data) =>
+    set(state => ({
+      bankAccounts: state.bankAccounts.map(b =>
+        b.id === id ? { ...b, ...data } : b,
+      ),
+    })),
+  deleteBankAccount: id =>
+    set(state => ({
+      bankAccounts: state.bankAccounts.filter(b => b.id !== id),
+    })),
+
+  // Bank Types
+  setBankTypes: bankTypes => set({ bankTypes }),
+  setBankAccountTypes: bankAccountTypes => set({ bankAccountTypes }),
+
+  // Bank Cards
   setBankCards: bankCards => set({ bankCards }),
 
   // UI State

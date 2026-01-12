@@ -1,0 +1,1 @@
+export { GenericSmallDetail } from './GenericSmallDetail';

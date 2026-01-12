@@ -65,7 +65,7 @@ export const SwipePicker: React.FC<SwipePickerProps> = ({
   // Notify parent of initial selection
   useEffect(() => {
     if (months[initialIndex]) {
-      onSelectMonth(months[initialIndex]);
+      // onSelectMonth(months[initialIndex]);
     }
   }, []);
 

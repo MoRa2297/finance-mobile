@@ -63,10 +63,13 @@ export const CategoryFormSheet: React.FC<
     actionSheetRef.current?.hide();
   }, []);
 
+  console.log('CIAOOOO');
+
   return (
     <ActionSheet
       ref={actionSheetRef}
-      id={props.sheetId}
+      // id={props.sheetId}
+      id={'category-form-sheet'}
       closable
       gestureEnabled
       closeOnTouchBackdrop

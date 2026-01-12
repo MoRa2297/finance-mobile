@@ -7,6 +7,7 @@ import ActionSheet, {
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
+import { COLORS } from '@/config';
 
 export const ColorSheet: React.FC<SheetProps<'color-sheet'>> = props => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
@@ -32,8 +33,6 @@ export const ColorSheet: React.FC<SheetProps<'color-sheet'>> = props => {
       containerStyle={styles.container}>
       <View style={styles.content}>
         <View style={styles.grid}>
-          {/*// TODO check */}
-          {/*// @ts-ignore*/}
           {COLORS.map(color => (
             <Pressable
               key={color.id}

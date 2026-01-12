@@ -22,3 +22,7 @@ export { Icon } from './ui/Icon';
 
 export { LoadingSpinner } from './common/LoadingSpinner';
 export { CustomAvatar } from './common/CustomAvatar';
+export { TopBodyContainer } from './ui/TopBodyContainer';
+export { SpecificPrice } from './ui/SpecificPrice';
+export { GenericSmallDetail } from './ui/GenericSmallDetail';
+export { SelectInput } from './ui/SelectInput';

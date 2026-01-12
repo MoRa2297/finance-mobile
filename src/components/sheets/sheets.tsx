@@ -2,10 +2,14 @@ import { SheetDefinition, registerSheet } from 'react-native-actions-sheet';
 import { ColorSheet } from './ColorSheet';
 import { IconSheet } from './IconSheet';
 import { CategoryFormSheet } from './CategoryFormSheet';
+import { BankSelectSheet } from './BankSelectSheet';
+import { BankAccountTypeSheet } from './BankAccountTypeSheet';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
 registerSheet('category-form-sheet', CategoryFormSheet);
+registerSheet('bank-select-sheet', BankSelectSheet);
+registerSheet('bank-account-type-sheet', BankAccountTypeSheet);
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {
@@ -20,17 +24,13 @@ declare module 'react-native-actions-sheet' {
     'category-form-sheet': SheetDefinition<{
       payload: { category: any | null; type: 'income' | 'expenses' };
     }>;
+    'bank-select-sheet': SheetDefinition<{
+      returnValue: { bank: any };
+    }>;
+    'bank-account-type-sheet': SheetDefinition<{
+      returnValue: { accountType: any };
+    }>;
   }
 }
 
-// export const Sheets = () => {
-//   return (
-//     <SheetRegister
-//       sheets={{
-//         'color-sheet': ColorSheet,
-//         'icon-sheet': IconSheet,
-//         'category-form-sheet': CategoryFormSheet,
-//       }}
-//     />
-//   );
-// };
+export {};

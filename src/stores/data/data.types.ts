@@ -1,10 +1,19 @@
-import { Transaction, Category, BankAccount, BankCard } from '@/types/types';
+import {
+  Transaction,
+  Category,
+  BankAccount,
+  BankCard,
+  BankType,
+  BankAccountType,
+} from '@/types/types';
 
 export interface DataState {
   transactions: Transaction[];
   categories: Category[];
   bankAccounts: BankAccount[];
   bankCards: BankCard[];
+  bankTypes: BankType[];
+  bankAccountTypes: BankAccountType[];
   isLoading: boolean;
   error: string | null;
 }
@@ -22,8 +31,17 @@ export interface DataActions {
   updateCategory: (id: number, data: Partial<Category>) => void;
   deleteCategory: (id: number) => void;
 
-  // Bank
+  // Bank Accounts
   setBankAccounts: (bankAccounts: BankAccount[]) => void;
+  addBankAccount: (bankAccount: BankAccount) => void;
+  updateBankAccount: (id: number, data: Partial<BankAccount>) => void;
+  deleteBankAccount: (id: number) => void;
+
+  // Bank Types
+  setBankTypes: (bankTypes: BankType[]) => void;
+  setBankAccountTypes: (bankAccountTypes: BankAccountType[]) => void;
+
+  // Bank Cards
   setBankCards: (bankCards: BankCard[]) => void;
 
   // UI State

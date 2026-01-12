@@ -1,15 +1,15 @@
 import React from 'react';
-import { DimensionValue, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 
 import { theme } from '@/config/theme';
 
 interface TopBodyContainerProps {
   children: React.ReactNode;
-  height?: DimensionValue;
+  height?: string | number;
   paddingTop?: number;
   style?: ViewStyle;
 }
-
+// TOD its duplicated
 export const TopBodyContainer: React.FC<TopBodyContainerProps> = ({
   children,
   height = '30%',
@@ -21,7 +21,7 @@ export const TopBodyContainer: React.FC<TopBodyContainerProps> = ({
       style={[
         styles.container,
         {
-          minHeight: height,
+          height: height as any,
           paddingTop,
         },
         style,
@@ -33,10 +33,9 @@ export const TopBodyContainer: React.FC<TopBodyContainerProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: theme.colors.secondaryBK,
     borderBottomLeftRadius: 45,
     borderBottomRightRadius: 45,
-    backgroundColor: theme.colors.primaryBK,
-    width: '100%',
     justifyContent: 'space-evenly',
   },
 });

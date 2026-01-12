@@ -7,13 +7,16 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SheetProvider } from 'react-native-actions-sheet';
 // import { Sheets } from '@components/sheets/sheets';
+import '@components/sheets/sheets.tsx';
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={eva.dark}>
-        <ActionSheetProvider>
+        <ActionSheetProvider
+          useCustomActionSheet={true}
+          useNativeDriver={false}>
           <SheetProvider>
             {/*<Sheets />*/}
             <Stack screenOptions={{ headerShown: false }}>
