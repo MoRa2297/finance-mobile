@@ -5,11 +5,20 @@ import { CategoryFormSheet } from './CategoryFormSheet';
 import { BankSelectSheet } from './BankSelectSheet';
 import { BankAccountTypeSheet } from './BankAccountTypeSheet';
 
+import { DatePickerSheet } from './DatePickerSheet';
+import { CardTypeSelectSheet } from '@components/sheets/CardTypeSelectSheet/CardTypeSelectSheet';
+import { BankAccountSelectSheet } from '@components/sheets/BankAccountSelectSheet/BankAccountSelectSheet';
+import { PickerSheet } from '@components/sheets/PickerSheet/PickerSheet';
+
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
 registerSheet('category-form-sheet', CategoryFormSheet);
 registerSheet('bank-select-sheet', BankSelectSheet);
 registerSheet('bank-account-type-sheet', BankAccountTypeSheet);
+registerSheet('card-type-select-sheet', CardTypeSelectSheet);
+registerSheet('bank-account-select-sheet', BankAccountSelectSheet);
+registerSheet('picker-sheet', PickerSheet);
+registerSheet('date-picker-sheet', DatePickerSheet);
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {
@@ -29,6 +38,20 @@ declare module 'react-native-actions-sheet' {
     }>;
     'bank-account-type-sheet': SheetDefinition<{
       returnValue: { accountType: any };
+    }>;
+    'card-type-select-sheet': SheetDefinition<{
+      returnValue: { cardType: any };
+    }>;
+    'bank-account-select-sheet': SheetDefinition<{
+      returnValue: { bankAccount: any };
+    }>;
+    'picker-sheet': SheetDefinition<{
+      payload: { data: { id: number; name?: string; value?: number }[] };
+      returnValue: { item: number };
+    }>;
+    'date-picker-sheet': SheetDefinition<{
+      payload: { day: string; month: string; year: string };
+      returnValue: { day: string; month: string; year: string };
     }>;
   }
 }

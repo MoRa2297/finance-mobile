@@ -6,6 +6,7 @@ import type { AuthState, User } from '@/stores';
 import { AUTH_STORAGE_KEY, AUTH_INITIAL_STATE } from '@/stores';
 
 type SetState = (partial: Partial<AuthState>) => void;
+type GetState = () => AuthState;
 
 /**
  * Performs user login.
@@ -48,6 +49,20 @@ const setUser =
   };
 
 /**
+ * Updates current user partially.
+ */
+const updateUser =
+  (set: SetState, get: GetState) =>
+  (updates: Partial<User>): void => {
+    const currentUser = get().user;
+    if (currentUser) {
+      set({
+        user: { ...currentUser, ...updates },
+      });
+    }
+  };
+
+/**
  * Clears current error.
  */
 const clearError = (set: SetState) => (): void => {
@@ -67,13 +82,14 @@ const reset = (set: SetState) => (): void => {
  */
 export const useAuthStore = create<AuthState>()(
   persist(
-    set => ({
+    (set, get) => ({
       ...AUTH_INITIAL_STATE,
 
       // Actions
       login: login(set),
       logout: logout(set),
       setUser: setUser(set),
+      updateUser: updateUser(set, get), // <-- Aggiungi questa
       clearError: clearError(set),
       reset: reset(set),
     }),

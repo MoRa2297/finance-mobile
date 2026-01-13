@@ -232,7 +232,7 @@ export default function BankAccountFormScreen() {
           {/* Submit Button */}
           <View style={styles.buttonContainer}>
             <Button
-              text={t('common.save')}
+              buttonText={t('common.save')}
               onPress={handleSubmit}
               backgroundColor={theme.colors.primary}
               style={styles.submitButton}
