@@ -1,4 +1,4 @@
-import { Category, Color, CategoryIcon } from '@/types/types';
+import { Category, Color, CategoryIcon } from '@/types';
 
 const COLORS: Color[] = [
   { id: 1, hexCode: '#FF6B6B' },

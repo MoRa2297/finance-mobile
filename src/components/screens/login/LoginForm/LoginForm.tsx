@@ -31,7 +31,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   errorMessage,
   onSubmit,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['loginPage']);
 
   const handleFormSubmit = async (
     values: LoginFormValues,
@@ -62,7 +62,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <Layout style={styles.container}>
             {/* Email Field */}
             <InputField
-              placeholder={t('screens.loginScreen.emailPlaceholder')}
+              placeholder={t('loginPage:form.emailPlaceholder')}
               value={values.email}
               textContentType="emailAddress"
               onChange={handleChange('email')}
@@ -74,7 +74,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
             {/* Password Field */}
             <InputField
-              placeholder={t('screens.loginScreen.passwordPlaceholder')}
+              placeholder={t('loginPage:form.passwordPlaceholder')}
               value={values.password}
               textContentType="password"
               secureTextEntry
@@ -93,7 +93,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             {/* Forgot Password */}
             <Layout style={styles.forgotPasswordContainer}>
               <Text category="s1" style={styles.linkText}>
-                {t('screens.loginScreen.forgotPassword')}
+                {t('loginPage:form.forgotPassword')}
               </Text>
             </Layout>
 
@@ -102,7 +102,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               // onPress={() => handleSubmit()}
               onPress={() => router.replace(ROUTES.HOME)}
               style={styles.submitButton}
-              buttonText={t('screens.loginScreen.signIn')}
+              buttonText={t('loginPage:form.signIn')}
               textStyle={styles.submitButtonText}
               isLoading={isLoading}
               isDisabled={isLoading}

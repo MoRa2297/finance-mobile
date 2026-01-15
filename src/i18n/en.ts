@@ -1,16 +1,16 @@
 const it = {
-  common: {
-    retry: 'Riprova',
-    welcome: 'Benvenuto',
-    continue: 'Continua',
-    confirm: 'Conferma',
-    send: 'Invia',
-    support: 'Supporto',
-    login: 'Accedi',
-    loading: 'Caricamento in corso...',
-    payTheInstallment: 'Paga il bollettino',
-    or: 'or',
-  },
+  // common: {
+  //   retry: 'Riprova',
+  //   welcome: 'Benvenuto',
+  //   continue: 'Continua',
+  //   confirm: 'Conferma',
+  //   send: 'Invia',
+  //   support: 'Supporto',
+  //   login: 'Accedi',
+  //   loading: 'Caricamento in corso...',
+  //   payTheInstallment: 'Paga il bollettino',
+  //   or: 'or',
+  // },
   components: {
     bottomNavigator: {
       home: 'Home',

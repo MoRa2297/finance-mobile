@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Transaction } from '@/types/types';
+import { Transaction } from '@/types';
 
 const today = dayjs();
 

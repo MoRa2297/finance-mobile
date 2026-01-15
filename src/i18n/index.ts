@@ -1,18 +1,30 @@
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import it from './it';
+import en from './en';
+import commonEn from './en/common.json';
+import commonIt from './it/common.json';
+
+import loginEn from './en/loginPage.json';
+import loginIt from './it/loginPage.json';
+
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-const DEFAULT_LANG = 'it';
+const DEFAULT_LANG = 'en';
 
 const i18nResources = {
   it: {
-    translation: it,
+    common: commonIt,
+    loginPage: loginIt,
+    // translation: it,
   },
-  // en: {
-  //   translation: it,
-  // },
+  en: {
+    common: commonEn,
+    loginPage: loginEn,
+
+    // translation: en,
+  },
 };
 
 /**
@@ -52,10 +64,12 @@ i18next
   })
   .use(initReactI18next)
   .init({
+    ns: ['common', 'validation', 'loginPage'],
     // TODO compatibilityJSON: 'v3',
     fallbackLng: DEFAULT_LANG,
     resources: i18nResources,
     debug: false,
+    defaultNS: 'common', // default namespace
     react: {
       useSuspense: false,
     },

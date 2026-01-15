@@ -11,7 +11,7 @@ import { ScreenContainer } from '@components/ui';
 import { useLogin } from '@hooks/screens/login';
 
 export default function LoginScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['loginPage']);
 
   // TODO handle clearError in LoginForm
   const { isLoading, errorMessage, handleLogin, clearError } = useLogin();
@@ -32,8 +32,8 @@ export default function LoginScreen() {
         </View>
 
         <LoginFooter
-          message={t('screens.loginScreen.noAccount')}
-          linkText={t('screens.loginScreen.signUp')}
+          message={t('loginPage:noAccount')}
+          linkText={t('loginPage:signUp')}
           linkHref={''}
         />
       </View>

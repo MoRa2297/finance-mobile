@@ -1,4 +1,4 @@
-import { BankAccount, BankType, BankAccountType } from '@/types/types';
+import { BankAccount, BankType, BankAccountType } from '@/types';
 
 export const MOCK_BANK_TYPES: BankType[] = [
   {

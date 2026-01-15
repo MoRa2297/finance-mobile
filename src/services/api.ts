@@ -1,3 +1,4 @@
+// TODO to reorder and improve security at the end of the UI
 import axios, { AxiosResponse } from 'axios';
 import {
   BankAccount,
@@ -16,13 +17,13 @@ import {
   SignInResponse,
   Transaction,
   User,
-} from '@types/types';
+} from '@/types';
 
 // Config
 const BASE_API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
 
 const handleServerError = (
-    error: unknown,
+  error: unknown,
 ): { error: string; code?: string; details?: string } => {
   if (axios.isAxiosError(error)) {
     if (error.response) {
@@ -59,9 +60,9 @@ const handleServerError = (
 };
 
 const get = async ({
-                     url,
-                     token,
-                   }: {
+  url,
+  token,
+}: {
   url: string;
   token?: string;
 }): Promise<{ data?: any; error?: string }> => {
@@ -74,7 +75,10 @@ const get = async ({
     };
 
     console.log('GET:', `${BASE_API_URL}/${url}`);
-    const response: AxiosResponse = await axios.get(`${BASE_API_URL}/${url}`, config);
+    const response: AxiosResponse = await axios.get(
+      `${BASE_API_URL}/${url}`,
+      config,
+    );
 
     return { data: response.data };
   } catch (error) {
@@ -84,10 +88,10 @@ const get = async ({
 };
 
 const post = async ({
-                      path,
-                      body,
-                      token,
-                    }: {
+  path,
+  body,
+  token,
+}: {
   path: string;
   body: object;
   token?: string;
@@ -101,7 +105,11 @@ const post = async ({
     };
 
     console.log('POST:', `${BASE_API_URL}/${path}`);
-    const response: AxiosResponse = await axios.post(`${BASE_API_URL}/${path}`, body, config);
+    const response: AxiosResponse = await axios.post(
+      `${BASE_API_URL}/${path}`,
+      body,
+      config,
+    );
 
     return { data: response.data };
   } catch (error) {
@@ -111,10 +119,10 @@ const post = async ({
 };
 
 const patch = async ({
-                       path,
-                       body,
-                       token,
-                     }: {
+  path,
+  body,
+  token,
+}: {
   path: string;
   body: object;
   token?: string;
@@ -128,7 +136,11 @@ const patch = async ({
     };
 
     console.log('PATCH:', `${BASE_API_URL}/${path}`);
-    const response: AxiosResponse = await axios.patch(`${BASE_API_URL}/${path}`, body, config);
+    const response: AxiosResponse = await axios.patch(
+      `${BASE_API_URL}/${path}`,
+      body,
+      config,
+    );
 
     return { data: response.data };
   } catch (error) {
@@ -138,9 +150,9 @@ const patch = async ({
 };
 
 const apiDelete = async ({
-                           path,
-                           token,
-                         }: {
+  path,
+  token,
+}: {
   path: string;
   token?: string;
 }): Promise<{ data?: any; error?: string }> => {
@@ -153,7 +165,10 @@ const apiDelete = async ({
     };
 
     console.log('DELETE:', `${BASE_API_URL}/${path}`);
-    const response: AxiosResponse = await axios.delete(`${BASE_API_URL}/${path}`, config);
+    const response: AxiosResponse = await axios.delete(
+      `${BASE_API_URL}/${path}`,
+      config,
+    );
 
     return { data: response.data };
   } catch (error) {
@@ -165,10 +180,10 @@ const apiDelete = async ({
 // ============ AUTH ============
 
 const signup = async (
-    email: string,
-    password: string,
-    acceptedTerms: boolean,
-    name: string,
+  email: string,
+  password: string,
+  acceptedTerms: boolean,
+  name: string,
 ): Promise<SignInResponse> => {
   const response = await post({
     path: 'auth/signup',
@@ -181,7 +196,10 @@ const signup = async (
   };
 };
 
-const login = async (email: string, password: string): Promise<LogInResponse> => {
+const login = async (
+  email: string,
+  password: string,
+): Promise<LogInResponse> => {
   const response = await post({
     path: 'auth/login',
     body: { email, password },
@@ -205,8 +223,8 @@ const me = async (sessionToken: string): Promise<{ user: User }> => {
 };
 
 const deleteUser = async (
-    sessionToken: string,
-    userEmail: string,
+  sessionToken: string,
+  userEmail: string,
 ): Promise<{ status: string }> => {
   const response = await apiDelete({
     path: `auth/basic/delete-profile/${userEmail}`,
@@ -219,8 +237,8 @@ const deleteUser = async (
 };
 
 const updateUser = async (
-    sessionToken: string,
-    user: Partial<User>,
+  sessionToken: string,
+  user: Partial<User>,
 ): Promise<{ user: string }> => {
   const response = await patch({
     path: 'auth/basic/update-profile',
@@ -235,7 +253,9 @@ const updateUser = async (
 
 // ============ COLORS ============
 
-const getColors = async (sessionToken: string): Promise<{ colors: Color[] }> => {
+const getColors = async (
+  sessionToken: string,
+): Promise<{ colors: Color[] }> => {
   const response = await get({
     url: 'color/colors',
     token: sessionToken,
@@ -249,7 +269,7 @@ const getColors = async (sessionToken: string): Promise<{ colors: Color[] }> => 
 // ============ CATEGORY ICONS ============
 
 const getCategoryIcons = async (
-    sessionToken: string,
+  sessionToken: string,
 ): Promise<{ categoryIcons: CategoryIcon[] }> => {
   const response = await get({
     url: 'categoryIcon/categoryIcons',
@@ -264,8 +284,8 @@ const getCategoryIcons = async (
 // ============ CATEGORIES ============
 
 const getCategories = async (
-    sessionToken: string,
-    userId: string,
+  sessionToken: string,
+  userId: string,
 ): Promise<{ categories: Category[] }> => {
   const response = await get({
     url: `category/user/${userId}`,
@@ -278,8 +298,8 @@ const getCategories = async (
 };
 
 const createCategory = async (
-    sessionToken: string,
-    category: EditCategory,
+  sessionToken: string,
+  category: EditCategory,
 ): Promise<{ category: Category }> => {
   const response = await post({
     path: 'category',
@@ -293,8 +313,8 @@ const createCategory = async (
 };
 
 const updateCategory = async (
-    sessionToken: string,
-    category: EditCategory,
+  sessionToken: string,
+  category: EditCategory,
 ): Promise<{ category: Category }> => {
   const response = await patch({
     path: 'category',
@@ -308,8 +328,8 @@ const updateCategory = async (
 };
 
 const deleteCategory = async (
-    sessionToken: string,
-    categoryId: string,
+  sessionToken: string,
+  categoryId: string,
 ): Promise<{ category: Category[] }> => {
   const response = await apiDelete({
     path: `category/${categoryId}`,
@@ -323,7 +343,9 @@ const deleteCategory = async (
 
 // ============ BANK TYPES ============
 
-const getBankTypes = async (sessionToken: string): Promise<{ bankTypes: BankType[] }> => {
+const getBankTypes = async (
+  sessionToken: string,
+): Promise<{ bankTypes: BankType[] }> => {
   const response = await get({
     url: 'bankType/bankTypes',
     token: sessionToken,
@@ -335,7 +357,7 @@ const getBankTypes = async (sessionToken: string): Promise<{ bankTypes: BankType
 };
 
 const getBankAccountTypes = async (
-    sessionToken: string,
+  sessionToken: string,
 ): Promise<{ bankAccountTypes: BankAccountType[] }> => {
   const response = await get({
     url: 'bankAccountType/bankAccountTypes',
@@ -350,8 +372,8 @@ const getBankAccountTypes = async (
 // ============ BANK ACCOUNTS ============
 
 const getBankAccounts = async (
-    sessionToken: string,
-    userId: string,
+  sessionToken: string,
+  userId: string,
 ): Promise<{ bankAccounts: BankAccount[] }> => {
   const response = await get({
     url: `bankAccount/user/${userId}`,
@@ -364,8 +386,8 @@ const getBankAccounts = async (
 };
 
 const createBankAccount = async (
-    sessionToken: string,
-    bankAccount: EditBankAccount,
+  sessionToken: string,
+  bankAccount: EditBankAccount,
 ): Promise<{ bankAccount: BankAccount }> => {
   const response = await post({
     path: 'bankAccount',
@@ -379,8 +401,8 @@ const createBankAccount = async (
 };
 
 const updateBankAccount = async (
-    sessionToken: string,
-    bankAccount: EditBankAccount,
+  sessionToken: string,
+  bankAccount: EditBankAccount,
 ): Promise<{ bankAccount: BankAccount }> => {
   const response = await patch({
     path: 'bankAccount',
@@ -394,8 +416,8 @@ const updateBankAccount = async (
 };
 
 const deleteBankAccount = async (
-    sessionToken: string,
-    bankAccountId: string,
+  sessionToken: string,
+  bankAccountId: string,
 ): Promise<{ category: BankAccount[] }> => {
   const response = await apiDelete({
     path: `bankAccount/${bankAccountId}`,
@@ -409,7 +431,9 @@ const deleteBankAccount = async (
 
 // ============ CARD TYPES ============
 
-const getCardTypes = async (sessionToken: string): Promise<{ cardTypes: CardType[] }> => {
+const getCardTypes = async (
+  sessionToken: string,
+): Promise<{ cardTypes: CardType[] }> => {
   const response = await get({
     url: 'cardType/cardTypes',
     token: sessionToken,
@@ -423,8 +447,8 @@ const getCardTypes = async (sessionToken: string): Promise<{ cardTypes: CardType
 // ============ BANK CARDS ============
 
 const getBankCard = async (
-    sessionToken: string,
-    userId: string,
+  sessionToken: string,
+  userId: string,
 ): Promise<{ cardAccounts: BankCard[] }> => {
   const response = await get({
     url: `cardAccount/user/${userId}`,
@@ -437,8 +461,8 @@ const getBankCard = async (
 };
 
 const createBankCard = async (
-    sessionToken: string,
-    bankCard: EditBankCard,
+  sessionToken: string,
+  bankCard: EditBankCard,
 ): Promise<{ cardAccount: BankCard }> => {
   const response = await post({
     path: 'cardAccount',
@@ -452,8 +476,8 @@ const createBankCard = async (
 };
 
 const updateBankCard = async (
-    sessionToken: string,
-    bankCard: EditBankCard,
+  sessionToken: string,
+  bankCard: EditBankCard,
 ): Promise<{ cardAccount: BankCard }> => {
   const response = await patch({
     path: 'cardAccount',
@@ -467,8 +491,8 @@ const updateBankCard = async (
 };
 
 const deleteBankCard = async (
-    sessionToken: string,
-    bankCardId: string,
+  sessionToken: string,
+  bankCardId: string,
 ): Promise<{ cardAccount: BankCard }> => {
   const response = await apiDelete({
     path: `cardAccount/${bankCardId}`,
@@ -483,8 +507,8 @@ const deleteBankCard = async (
 // ============ TRANSACTIONS ============
 
 const getTransactions = async (
-    sessionToken: string,
-    userId: string,
+  sessionToken: string,
+  userId: string,
 ): Promise<{ transactions: Transaction[] }> => {
   const response = await get({
     url: `transaction/user/${userId}`,
@@ -497,8 +521,8 @@ const getTransactions = async (
 };
 
 const createTransaction = async (
-    sessionToken: string,
-    transaction: EditTransaction,
+  sessionToken: string,
+  transaction: EditTransaction,
 ): Promise<{ transaction: Transaction }> => {
   const response = await post({
     path: 'transaction',
@@ -512,8 +536,8 @@ const createTransaction = async (
 };
 
 const updateTransaction = async (
-    sessionToken: string,
-    transaction: EditTransaction,
+  sessionToken: string,
+  transaction: EditTransaction,
 ): Promise<{ transaction: Transaction }> => {
   const response = await patch({
     path: 'transaction',
@@ -527,8 +551,8 @@ const updateTransaction = async (
 };
 
 const deleteTransaction = async (
-    sessionToken: string,
-    transactionId: string,
+  sessionToken: string,
+  transactionId: string,
 ): Promise<{ transaction: Transaction }> => {
   const response = await apiDelete({
     path: `transaction/${transactionId}`,

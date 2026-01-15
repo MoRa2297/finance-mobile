@@ -19,6 +19,7 @@ export const getMonths = (): SwipePickerMonth[] => {
   return months;
 };
 
+// TODO not used
 export const formatCurrency = (amount: number, currency = '€'): string => {
   return `${currency} ${amount.toFixed(2)}`;
 };

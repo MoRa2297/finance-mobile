@@ -1,1 +1,1 @@
-export * from './date';
+export { getMonths, formatCurrency } from './date';

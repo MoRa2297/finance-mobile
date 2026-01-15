@@ -1,4 +1,4 @@
-import { BankCard, CardType } from '@/types/types';
+import { BankCard, CardType } from '@/types';
 
 export const MOCK_CARD_TYPES: CardType[] = [
   { id: 1, name: 'Visa', imageUrl: 'https://logo.clearbit.com/visa.com' },

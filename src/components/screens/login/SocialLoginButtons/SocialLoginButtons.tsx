@@ -24,7 +24,7 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
   disabled = true,
   showDivider = true,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['loginPage']);
 
   const socialButtons = createSocialButtons(
     onGooglePress,
@@ -35,7 +35,7 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
   return (
     <View style={styles.container}>
       {showDivider && (
-        <LoginDivider text={t('common.or')} style={styles.divider} />
+        <LoginDivider text={t('loginPage:or')} style={styles.divider} />
       )}
 
       <View style={styles.buttonsContainer}>

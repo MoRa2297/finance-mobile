@@ -1,0 +1,14 @@
+{
+  "welcome": "Hello!",
+  "welcomeSub": "Bentornat*, accedi al tuo account!",
+  "form": {
+    "emailPlaceholder": "E-mail",
+    "passwordPlaceholder": "Password",
+    "forgotPassword": "Password dimenticata?",
+    "signIn": "Accedi",
+    "validation": {}
+  },
+  "or": "OPPURE",
+  "noAccount": "Non hai un'account?",
+  "signUp": "Registrati"
+}

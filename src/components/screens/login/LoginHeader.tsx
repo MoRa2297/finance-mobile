@@ -6,13 +6,13 @@ import { StyleSheet } from 'react-native';
 import { theme } from '@config/theme';
 
 export const LoginHeader: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['loginPage']);
 
   return (
     <Layout style={styles.container}>
-      <Text category="h1">{t('screens.loginScreen.welcome')}</Text>
+      <Text category="h1">{t('loginPage:welcome')}</Text>
       <Text category="c2" appearance="hint">
-        {t('screens.loginScreen.welcomeSub')}
+        {t('loginPage:welcomeSub')}
       </Text>
     </Layout>
   );
