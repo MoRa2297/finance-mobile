@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { FormikErrors, FormikTouched } from 'formik';
 
 import { i18n } from '@/i18n';
-import { LoginFormValues } from '@components/screens/login/LoginForm/LoginForm.types';
+import { LoginFormValues } from './LoginForm';
 
 const t = (key: string) => i18n.t(key);
 
@@ -20,27 +20,15 @@ const PASSWORD_RULES = {
 
 export const loginValidationSchema = Yup.object().shape({
   email: Yup.string()
-    .email(t('messages.formValidations.general.emailNotValid'))
-    .required(t('messages.formValidations.general.required')),
+    .email(t('validation:emailNotValid'))
+    .required(t('validation:required')),
   password: Yup.string()
-    .required(t('messages.formValidations.general.required'))
-    .min(PASSWORD_RULES.minLength, t('messages.formValidations.general.min7'))
-    .matches(
-      PASSWORD_RULES.patterns.number,
-      t('messages.formValidations.general.number'),
-    )
-    .matches(
-      PASSWORD_RULES.patterns.lowercase,
-      t('messages.formValidations.general.lowercaseLetter'),
-    )
-    .matches(
-      PASSWORD_RULES.patterns.uppercase,
-      t('messages.formValidations.general.uppercaseLetter'),
-    )
-    .matches(
-      PASSWORD_RULES.patterns.symbol,
-      t('messages.formValidations.general.symbol'),
-    ),
+    .required(t('validation:required'))
+    .min(PASSWORD_RULES.minLength, t('validation:min7'))
+    .matches(PASSWORD_RULES.patterns.number, t('validation:number'))
+    .matches(PASSWORD_RULES.patterns.lowercase, t('validation:lowercaseLetter'))
+    .matches(PASSWORD_RULES.patterns.uppercase, t('validation:uppercaseLetter'))
+    .matches(PASSWORD_RULES.patterns.symbol, t('validation:symbol')),
 });
 
 export const initialFormValues: LoginFormValues = {

@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
 import { Link } from 'expo-router';
 
 import { theme } from '@config/theme';
 
-export interface LoginFooterProps {
+export interface ILoginFooterProps {
   message: string;
   linkText: string;
   linkHref: string;
 }
 
-export const LoginFooter: React.FC<LoginFooterProps> = ({
+export const LoginFooter: FC<ILoginFooterProps> = ({
   message,
   linkText,
   linkHref,

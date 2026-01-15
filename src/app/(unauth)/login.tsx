@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import {
+  LoginDivider,
   LoginFooter,
   LoginForm,
   LoginHeader,
@@ -21,13 +22,12 @@ export default function LoginScreen() {
       <View style={styles.content}>
         <View style={styles.mainSection}>
           <LoginHeader />
-
           <LoginForm
             isLoading={isLoading}
             errorMessage={errorMessage}
             onSubmit={handleLogin}
           />
-
+          <LoginDivider text={t('loginPage:or')} />
           <SocialLoginButtons disabled />
         </View>
 

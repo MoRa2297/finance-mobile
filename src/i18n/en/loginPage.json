@@ -5,8 +5,7 @@
     "emailPlaceholder": "E-mail",
     "passwordPlaceholder": "Password",
     "forgotPassword": "Password dimenticata?",
-    "signIn": "Accedi",
-    "validation": {}
+    "signIn": "Accedi"
   },
   "or": "OPPURE",
   "noAccount": "Non hai un'account?",

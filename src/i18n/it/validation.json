@@ -1,0 +1,9 @@
+{
+  "required": "Campo richiesto",
+  "emailNotValid": "E-mail non valida",
+  "min7": "Password troppo corta, deve essere di minimo 7 caratteri",
+  "lowercaseLetter": "Deve esserci almeno una lettera minuscola",
+  "uppercaseLetter": "Deve esserci almeno una lettera maiuscola",
+  "symbol": "Deve esserci almeno un simbolo",
+  "number": "Deve esserci almeno un numero"
+}

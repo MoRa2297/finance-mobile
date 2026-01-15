@@ -8,6 +8,9 @@ import commonIt from './it/common.json';
 import loginEn from './en/loginPage.json';
 import loginIt from './it/loginPage.json';
 
+import validationEn from './en/validation.json';
+import validationIt from './it/validation.json';
+
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
@@ -17,12 +20,13 @@ const i18nResources = {
   it: {
     common: commonIt,
     loginPage: loginIt,
+    validation: validationIt,
     // translation: it,
   },
   en: {
     common: commonEn,
     loginPage: loginEn,
-
+    validation: validationEn,
     // translation: en,
   },
 };

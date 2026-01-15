@@ -1,31 +1,25 @@
-import React from 'react';
-import { View } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import React, { FC } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { IconButton } from '@/components/ui';
 import { theme } from '@/config/theme';
 
-import { LoginDivider } from '../LoginDivider';
-import { styles } from './SocialLoginButtons.styles';
-import { createSocialButtons, noop } from './SocialLoginButtons.helpers';
+import { createSocialButtons } from './SocialLoginButtons.helpers';
+import { noop } from '@babel/types';
 
-export interface SocialLoginButtonsProps {
+interface ISocialLoginButtonsProps {
   onGooglePress?: () => void;
   onFacebookPress?: () => void;
   onApplePress?: () => void;
   disabled?: boolean;
-  showDivider?: boolean;
 }
 
-export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
+export const SocialLoginButtons: FC<ISocialLoginButtonsProps> = ({
   onGooglePress,
   onFacebookPress,
   onApplePress,
   disabled = true,
-  showDivider = true,
 }) => {
-  const { t } = useTranslation(['loginPage']);
-
   const socialButtons = createSocialButtons(
     onGooglePress,
     onFacebookPress,
@@ -34,10 +28,6 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
 
   return (
     <View style={styles.container}>
-      {showDivider && (
-        <LoginDivider text={t('loginPage:or')} style={styles.divider} />
-      )}
-
       <View style={styles.buttonsContainer}>
         {socialButtons.map(button => (
           <IconButton
@@ -53,3 +43,26 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
     </View>
   );
 };
+
+export const styles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.colors.transparent,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    backgroundColor: theme.colors.transparent,
+  },
+  socialButton: {
+    flex: 1,
+    height: 55,
+    backgroundColor: theme.colors.primaryBK,
+    borderColor: theme.colors.textHint,
+    borderWidth: 1,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

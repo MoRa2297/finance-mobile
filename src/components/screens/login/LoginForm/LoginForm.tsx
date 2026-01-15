@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Layout, Text } from '@ui-kitten/components';
 import { Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -20,13 +20,13 @@ export type LoginFormValues = {
   password: string;
 };
 
-export interface LoginFormProps {
+interface ILoginFormProps {
   isLoading: boolean;
   errorMessage: string;
   onSubmit: (values: LoginFormValues) => Promise<void>;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({
+export const LoginForm: FC<ILoginFormProps> = ({
   isLoading,
   errorMessage,
   onSubmit,

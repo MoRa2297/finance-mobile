@@ -33,4 +33,5 @@ export const createSocialButtons = (
   return buttons;
 };
 
+// TODO fix empty function
 export const noop = () => {};

@@ -1,14 +1,16 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { FC } from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { theme } from '@/config/theme';
 
-import { LoginDividerProps } from './LoginDivider.types';
-import { styles } from './LoginDivider.styles';
+interface ILoginDividerProps {
+  text?: string;
+  style?: StyleProp<ViewStyle>;
+}
 
-export const LoginDivider: React.FC<LoginDividerProps> = ({ text, style }) => {
+export const LoginDivider: FC<ILoginDividerProps> = ({ text, style }) => {
   if (!text) {
     return (
       <View style={[styles.container, style]}>
@@ -42,3 +44,21 @@ export const LoginDivider: React.FC<LoginDividerProps> = ({ text, style }) => {
     </View>
   );
 };
+
+export const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.transparent,
+  },
+  line: {
+    flex: 1,
+    height: 1,
+  },
+  text: {
+    marginHorizontal: 16,
+    color: theme.colors.textHint,
+    fontWeight: '300',
+  },
+});
