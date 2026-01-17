@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import {
   BottomNavigation as BottomNavigationUI,
@@ -21,23 +21,24 @@ import {
   TransactionType,
 } from './BottomNavigation.helpers';
 
-interface BottomNavigationProps {
+interface IBottomNavigationProps {
   visible?: boolean;
 }
 
-export const BottomNavigation: React.FC<BottomNavigationProps> = ({
+// TODO improve animations on switch screens and selected screen UI
+export const BottomNavigation: FC<IBottomNavigationProps> = ({
   visible = true,
 }) => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const pathname = usePathname();
 
   const [height, setHeight] = useState(60);
   const selectedIndex = getSelectedIndex(pathname);
 
   const handleSelect = useCallback((index: number) => {
-    // Index 2 è il FloatingButton, non navigare
+    // Index 2 it's the FloatingButton, not navigate
     if (index === 2) return;
     navigateToTab(index);
   }, []);
@@ -61,7 +62,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
       style={[
         styles.bottomNavigation,
         {
-          bottom: insets.bottom + 15,
+          bottom: insets.bottom + 5,
           width: width - 30,
           height,
         },
@@ -74,11 +75,20 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         title={(props: TextProps | undefined) => (
           <TabLabel
             textProps={props}
-            labelText={t('components.bottomNavigator.home')}
+            labelText={t('common:bottomNavigator.home')}
             selected={selectedIndex === 0}
           />
         )}
-        icon={() => <Icon name="home-outline" color={theme.colors.white} />}
+        icon={() => (
+          <Icon
+            name="home-outline"
+            color={
+              selectedIndex === 0
+                ? theme.colors.basic100
+                : theme.colors.basic400
+            }
+          />
+        )}
       />
 
       {/* Expenses */}
@@ -86,12 +96,19 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         title={(props: TextProps | undefined) => (
           <TabLabel
             textProps={props}
-            labelText={t('components.bottomNavigator.transaction')}
+            labelText={t('common:bottomNavigator.transaction')}
             selected={selectedIndex === 1}
           />
         )}
         icon={() => (
-          <Icon name="clipboard-outline" color={theme.colors.white} />
+          <Icon
+            name="clipboard-outline"
+            color={
+              selectedIndex === 1
+                ? theme.colors.basic100
+                : theme.colors.basic400
+            }
+          />
         )}
       />
 
@@ -109,11 +126,20 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         title={(props: TextProps | undefined) => (
           <TabLabel
             textProps={props}
-            labelText={t('components.bottomNavigator.budgets')}
+            labelText={t('common:bottomNavigator.budgets')}
             selected={selectedIndex === 3}
           />
         )}
-        icon={() => <Icon name="flag-outline" color={theme.colors.white} />}
+        icon={() => (
+          <Icon
+            name="flag-outline"
+            color={
+              selectedIndex === 3
+                ? theme.colors.basic100
+                : theme.colors.basic400
+            }
+          />
+        )}
       />
 
       {/* Settings */}
@@ -121,12 +147,19 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         title={(props: TextProps | undefined) => (
           <TabLabel
             textProps={props}
-            labelText={t('components.bottomNavigator.more')}
+            labelText={t('common:bottomNavigator.more')}
             selected={selectedIndex === 4}
           />
         )}
         icon={() => (
-          <Icon name="more-horizontal-outline" color={theme.colors.white} />
+          <Icon
+            name="more-horizontal-outline"
+            color={
+              selectedIndex === 4
+                ? theme.colors.basic100
+                : theme.colors.basic400
+            }
+          />
         )}
       />
     </BottomNavigationUI>

@@ -7,7 +7,7 @@ export default function AuthLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: 'none', // Transizione fade invece di slide
+          animation: 'none',
           gestureEnabled: false,
         }}>
         <Stack.Screen name="transaction" />

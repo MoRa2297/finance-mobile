@@ -8,5 +8,11 @@
   "login": "Accedi",
   "loading": "Caricamento in corso...",
   "payTheInstallment": "Paga il bollettino",
-  "or": "or"
+  "or": "or",
+  "bottomNavigator": {
+    "home": "Home",
+    "transaction": "Transazioni",
+    "budgets": "Budget",
+    "more": "Altro"
+  }
 }
