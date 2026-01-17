@@ -1,29 +1,40 @@
+import { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
-
+import { StatusBar } from 'expo-status-bar';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SheetProvider } from 'react-native-actions-sheet';
-import '@services/sheets.tsx';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import '@/services/sheets';
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={eva.dark}>
-        <ActionSheetProvider
-          useCustomActionSheet={true}
-          useNativeDriver={false}>
-          <SheetProvider>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(unauth)" />
-              <Stack.Screen name="(auth)" />
-            </Stack>
-          </SheetProvider>
-        </ActionSheetProvider>
-      </ApplicationProvider>
+    <GestureHandlerRootView style={styles.container}>
+      <SafeAreaProvider>
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider {...eva} theme={{ ...eva.dark }}>
+          <ActionSheetProvider useCustomActionSheet useNativeDriver={false}>
+            <SheetProvider>
+              <StatusBar style="light" />
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="(unauth)" />
+                <Stack.Screen name="(auth)" />
+              </Stack>
+            </SheetProvider>
+          </ActionSheetProvider>
+        </ApplicationProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

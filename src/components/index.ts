@@ -35,3 +35,7 @@ export {
   SocialLoginButtons,
   LoginDivider,
 } from './screens/login';
+
+//SCREENS
+
+export { TopRoundedContainer } from './screens/home/TopRoundedContainer';

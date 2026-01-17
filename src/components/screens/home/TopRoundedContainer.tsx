@@ -3,14 +3,14 @@ import { DimensionValue, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { theme } from '@/config/theme';
 
-interface TopBodyContainerProps {
+interface ITopRoundedContainerProps {
   children: React.ReactNode;
   height?: DimensionValue;
   paddingTop?: number;
   style?: ViewStyle;
 }
 
-export const TopBodyContainer: React.FC<TopBodyContainerProps> = ({
+export const TopRoundedContainer: FC<ITopRoundedContainerProps> = ({
   children,
   height = '30%',
   paddingTop = 0,

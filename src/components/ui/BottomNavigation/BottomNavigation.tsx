@@ -21,14 +21,8 @@ import {
   TransactionType,
 } from './BottomNavigation.helpers';
 
-interface IBottomNavigationProps {
-  visible?: boolean;
-}
-
 // TODO improve animations on switch screens and selected screen UI
-export const BottomNavigation: FC<IBottomNavigationProps> = ({
-  visible = true,
-}) => {
+export const BottomNavigation = ({}) => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const { t } = useTranslation('common');
@@ -53,8 +47,6 @@ export const BottomNavigation: FC<IBottomNavigationProps> = ({
     },
     [],
   );
-
-  if (!visible) return null;
 
   return (
     <BottomNavigationUI

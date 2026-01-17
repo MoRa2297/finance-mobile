@@ -1,6 +1,8 @@
 import { Dimensions } from 'react-native';
-import { BankAccountType, CardType, GenericType } from '@/types/types';
+import { BankAccountType, CardType, GenericType } from '@/types';
 import { I18NLang } from '@/i18n';
+
+// TODO CLEAN
 
 const screen = Dimensions.get('screen');
 
@@ -751,12 +753,24 @@ export const ROUTES = {
   LOGIN: '/(unauth)/login',
   REGISTER: '/(unauth)/register',
 
-  // Auth
-  HOME: '/(auth)',
-  EXPENSES: '/(auth)/expenses',
-  BUDGET: '/(auth)/budget',
-  SETTINGS: '/(auth)/settings',
+  // Auth - Tabs
+  HOME: '/(auth)/(tabs)',
+  EXPENSES: '/(auth)/(tabs)/expenses',
+  BUDGET: '/(auth)/(tabs)/budget',
+  SETTINGS: '/(auth)/(tabs)/settings',
+
+  // Auth - Stack (da Settings)
   TRANSACTION: '/(auth)/transaction',
+  PROFILE: '/(auth)/profile',
+  CATEGORIES: '/(auth)/categories',
+  CATEGORY_DETAIL: '/(auth)/categories/[id]',
+  CATEGORY_FORM: '/(auth)/categories/form',
+  BANK_ACCOUNTS: '/(auth)/bank-accounts',
+  BANK_ACCOUNT_DETAIL: '/(auth)/bank-accounts/[id]',
+  BANK_ACCOUNT_FORM: '/(auth)/bank-accounts/form',
+  BANK_CARDS: '/(auth)/bank-cards',
+  BANK_CARD_DETAIL: '/(auth)/bank-cards/[id]',
+  BANK_CARD_FORM: '/(auth)/bank-cards/form',
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];
