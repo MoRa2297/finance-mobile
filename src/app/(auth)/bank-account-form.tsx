@@ -18,7 +18,7 @@ import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { COLORS } from '@/config';
-import { BankType, BankAccountType } from '@/types/types';
+import { BankType, BankAccountType } from '@/types';
 
 export default function BankAccountFormScreen() {
   const { t } = useTranslation();

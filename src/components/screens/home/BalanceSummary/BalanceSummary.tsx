@@ -17,15 +17,13 @@ export const BalanceSummary: React.FC<BalanceSummaryProps> = ({
   balance,
   moneyIsVisible,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('homePage');
 
   return (
     <View style={styles.container}>
       {/* Account Balance */}
       <View style={styles.accountBalanceContainer}>
-        <Text style={styles.smallText}>
-          {t('screens.homeScreen.accountBalance')}
-        </Text>
+        <Text style={styles.smallText}>{t('homePage:accountBalance')}</Text>
         <Text style={styles.bigText}>
           {formatMoney(balance.totalResidue, moneyIsVisible)}
         </Text>
@@ -34,14 +32,14 @@ export const BalanceSummary: React.FC<BalanceSummaryProps> = ({
       {/* Income / Expense */}
       <View style={styles.amountContainer}>
         <SpecificPrice
-          title={t('screens.homeScreen.incomesMiniTitle')}
+          title={t('homePage:incomesMiniTitle')}
           amount={formatMoney(balance.totalIncome, moneyIsVisible)}
           amountColor={theme.colors.green}
           iconName="arrow-circle-down"
           iconColor={theme.colors.green}
         />
         <SpecificPrice
-          title={t('screens.homeScreen.expensesMiniTitle')}
+          title={t('homePage:expensesMiniTitle')}
           amount={formatMoney(balance.totalExpense, moneyIsVisible)}
           amountColor={theme.colors.red}
           iconName="arrow-circle-up"
@@ -55,20 +53,13 @@ export const BalanceSummary: React.FC<BalanceSummaryProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderBottomLeftRadius: 45,
-    borderBottomRightRadius: 45,
     justifyContent: 'space-evenly',
-    backgroundColor: theme.colors.transparent,
   },
   accountBalanceContainer: {
     alignItems: 'center',
-    backgroundColor: theme.colors.transparent,
   },
   amountContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: theme.colors.transparent,
   },
   smallText: {
     color: theme.colors.textHint,

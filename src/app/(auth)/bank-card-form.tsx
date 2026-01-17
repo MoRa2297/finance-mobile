@@ -22,7 +22,7 @@ import {
   MONTH_NUMBER,
   YEARS_NUMBER,
 } from '@/config/constants';
-import { CardType, BankAccount } from '@/types/types';
+import { CardType, BankAccount } from '@/types';
 
 export default function BankCardFormScreen() {
   const { t } = useTranslation();

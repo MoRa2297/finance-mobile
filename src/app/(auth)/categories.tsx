@@ -17,7 +17,7 @@ import { CategoryListCard } from '@/components/screens/settings/categories';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
-import { Category } from '@/types/types';
+import { Category } from '@/types';
 
 const TABS = [
   { title: 'expenses', value: 'expenses' },

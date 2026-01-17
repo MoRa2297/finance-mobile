@@ -1,3 +1,8 @@
+export { TopRoundedContainer } from './TopRoundedContainer';
+export { Header } from './Header';
+
+// NOT ORDERED
+
 export { Button, IconButton } from './Button';
 export { Icon } from './Icon';
 export { InputField } from './InputField';
@@ -11,8 +16,6 @@ export { BottomNavigation } from './BottomNavigation';
 export { EmptyData } from './EmptyData';
 export { SliderBar, DEFAULT_TABS } from './SliderBar';
 export { Alert } from './Alert';
-export { Header } from './Header';
-export { TopBodyContainer } from './TopBodyContainer';
 export { SpecificPrice } from './SpecificPrice';
 export { GenericSmallDetail } from './GenericSmallDetail';
 export { SelectInput } from './SelectInput';

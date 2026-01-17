@@ -8,6 +8,9 @@ import commonIt from './it/common.json';
 import loginEn from './en/loginPage.json';
 import loginIt from './it/loginPage.json';
 
+import homeIt from './it/homePage.json';
+import homeEn from './en/homePage.json';
+
 import validationEn from './en/validation.json';
 import validationIt from './it/validation.json';
 
@@ -20,12 +23,14 @@ const i18nResources = {
   it: {
     common: commonIt,
     loginPage: loginIt,
+    homePage: homeIt,
     validation: validationIt,
     // translation: it,
   },
   en: {
     common: commonEn,
     loginPage: loginEn,
+    homePage: homeEn,
     validation: validationEn,
     // translation: en,
   },

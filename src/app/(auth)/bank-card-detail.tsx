@@ -16,7 +16,7 @@ import { ExpenseCard, SwipePicker } from '@/components/screens/expenses';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { Transaction, SwipePickerMonth } from '@/types/types';
+import { Transaction, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
 
 interface TransactionSection {

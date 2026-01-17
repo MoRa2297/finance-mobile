@@ -9,7 +9,7 @@ import { SettingsHeader, SettingRow } from '@/components/screens/settings';
 import { useAuthStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { ROUTES } from '@/config/constants';
-import { SettingsList } from '@/types/types';
+import { SettingsList } from '@/types';
 import { SliderBar } from '@components/ui/SliderBar';
 
 const TABS = [

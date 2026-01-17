@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { DimensionValue, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { theme } from '@/config/theme';

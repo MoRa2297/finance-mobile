@@ -10,16 +10,16 @@ import { SwipePicker } from '@/components/screens/expenses';
 import {
   ScreenContainer,
   Header,
-  TopBodyContainer,
   SpecificPrice,
   EmptyData,
   Alert,
+  TopRoundedContainer,
 } from '@/components/ui';
 import { BankAccountListCard } from '@/components/screens/settings/bankAccounts';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { BankAccount, SwipePickerMonth } from '@/types/types';
+import { BankAccount, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
 import { LoadingSpinner } from '@/components';
 
@@ -223,7 +223,7 @@ export default function BankAccountsScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       {/* Top Section */}
-      <TopBodyContainer height="30%" paddingTop={0}>
+      <TopRoundedContainer height="30%" paddingTop={0}>
         <Header
           title={t('screens.bankAccountScreen.headerTitle')}
           showBackButton
@@ -260,7 +260,7 @@ export default function BankAccountsScreen() {
             />
           </View>
         </View>
-      </TopBodyContainer>
+      </TopRoundedContainer>
 
       {/* List */}
       <View style={[styles.listContainer, { paddingBottom: bottomTabHeight }]}>

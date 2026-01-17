@@ -2,14 +2,14 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { Dayjs } from 'dayjs';
 
-import { ScreenContainer } from '@/components/ui';
+import { Header, ScreenContainer, TopRoundedContainer } from '@/components/ui';
+
 import {
-  TopBodyContainer,
-  HomeHeader,
   BalanceSummary,
   calculateBalance,
   MonthItem,
-} from '@/components/screens/home';
+  MonthPopover,
+} from '@/components/screens';
 import { useDataStore, useUIStore, useAuthStore } from '@/stores';
 import { theme } from '@/config/theme';
 
@@ -47,15 +47,25 @@ export default function HomeScreen() {
       style={styles.container}
       horizontalPadding={false}
       forceNoBottomPadding>
-      <TopBodyContainer height={'35%'} paddingTop={10}>
-        <HomeHeader
-          profileImage={user?.imageUrl}
-          moneyIsVisible={moneyIsVisible}
-          onSelectMonth={handleSelectMonth}
-          onToggleMoneyVisibility={handleToggleMoneyVisibility}
+      <TopRoundedContainer height={'35%'} paddingTop={10}>
+        <Header
+          left={{
+            type: 'avatar',
+            source: user?.imageUrl,
+            onPress: () => {},
+          }}
+          center={{
+            type: 'custom',
+            render: () => <MonthPopover onSelectMonth={handleSelectMonth} />,
+          }}
+          right={{
+            type: 'visibility',
+            isVisible: moneyIsVisible,
+            onToggle: handleToggleMoneyVisibility,
+          }}
         />
         <BalanceSummary balance={balance} moneyIsVisible={moneyIsVisible} />
-      </TopBodyContainer>
+      </TopRoundedContainer>
 
       {/* TODO: Add transactions list, charts, etc. */}
     </ScreenContainer>

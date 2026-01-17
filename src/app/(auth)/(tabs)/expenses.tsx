@@ -3,9 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
-import { ScreenContainer } from '@/components/ui';
-import { TopBodyContainer, SpecificPrice } from '@/components/screens/home';
-import { HomeHeader } from '@/components/screens/home/HomeHeader';
+import { Header, ScreenContainer, TopRoundedContainer } from '@/components/ui';
+import { MonthPopover, SpecificPrice } from '@/components/screens/home';
 import {
   ExpensesList,
   SwipePicker,
@@ -70,13 +69,22 @@ export default function ExpensesScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       {/* Header Section */}
-      <TopBodyContainer height="28%" paddingTop={10}>
-        <HomeHeader
-          profileImage={user?.imageUrl}
-          showMonthSelector={false}
-          moneyIsVisible={moneyIsVisible}
-          onSelectMonth={handleSelectMonth}
-          onToggleMoneyVisibility={handleToggleMoneyVisibility}
+      <TopRoundedContainer height="28%" paddingTop={10}>
+        <Header
+          left={{
+            type: 'avatar',
+            source: user?.imageUrl,
+            onPress: () => {},
+          }}
+          center={{
+            type: 'custom',
+            render: () => <MonthPopover onSelectMonth={handleSelectMonth} />,
+          }}
+          right={{
+            type: 'visibility',
+            isVisible: moneyIsVisible,
+            onToggle: handleToggleMoneyVisibility,
+          }}
         />
 
         <View style={styles.headerContent}>
@@ -107,7 +115,7 @@ export default function ExpensesScreen() {
             />
           </View>
         </View>
-      </TopBodyContainer>
+      </TopRoundedContainer>
 
       {/* Body Section */}
       <View style={styles.bodyContainer}>

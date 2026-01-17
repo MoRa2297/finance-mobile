@@ -1,8 +1,10 @@
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { BankAccount, Transaction } from '@/types/types';
+import { BankAccount, Transaction } from '@/types';
 
 dayjs.extend(isBetween);
+
+// TODO check when logic will be totally done
 
 export interface BalanceData {
   totalIncome: number;

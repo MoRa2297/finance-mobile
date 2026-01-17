@@ -17,12 +17,12 @@ interface MonthPopoverProps {
   onSelectMonth: (month: MonthItem) => void;
 }
 
+// TODO to improve the UI. It's not good enough (Maybe use sheet)
 export const MonthPopover: React.FC<MonthPopoverProps> = ({
   onSelectMonth,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
-  // Memoize months to avoid regenerating on each render
   const months = useMemo(() => generateMonths(), []);
   const currentYear = useMemo(() => dayjs().year(), []);
 
@@ -31,7 +31,6 @@ export const MonthPopover: React.FC<MonthPopoverProps> = ({
     getCurrentMonthIndex(months),
   );
 
-  // Handlers
   const openMenu = useCallback(() => setVisible(true), []);
   const closeMenu = useCallback(() => setVisible(false), []);
 
@@ -44,10 +43,9 @@ export const MonthPopover: React.FC<MonthPopoverProps> = ({
     [months, onSelectMonth, closeMenu],
   );
 
-  // Formatters
   const formatMonthLabel = useCallback(
     (month: MonthItem): string => {
-      const monthText = t(`common.month.${month.month}`);
+      const monthText = t(`common:month.${month.month}`);
       return month.year === currentYear
         ? monthText
         : `${monthText} ${month.year}`;
@@ -138,10 +136,5 @@ const styles = StyleSheet.create({
   },
   overflowContent: {
     backgroundColor: theme.colors.primaryBK,
-    // TODO improve style
-    // shadowColor: theme.colors.basic100,
-    // shadowOffset: { width: 0, height: 10 },
-    // shadowOpacity: 0.12,
-    // elevation: 5,
   },
 });

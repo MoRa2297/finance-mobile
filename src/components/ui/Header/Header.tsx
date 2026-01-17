@@ -1,95 +1,168 @@
-import React, { useCallback } from 'react';
-import { StyleSheet, View, Pressable } from 'react-native';
+import React, { useCallback, ReactNode, FC } from 'react';
+import { StyleSheet, View, Pressable, ViewStyle } from 'react-native';
 import { Text } from '@ui-kitten/components';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 
 import { Icon } from '@/components/ui';
+import { CustomAvatar } from '@/components/common';
 import { theme } from '@/config/theme';
+import { HORIZONTAL_PADDING } from '@/config/constants';
 
-interface HeaderProps {
-  title: string;
-  subtitle?: string;
-  showBackButton?: boolean;
-  backText?: string;
-  onSettingsPress?: () => void;
-  onBackPress?: () => void;
+type LeftContentType =
+  | {
+      type: 'back';
+      variant?: 'icon' | 'text';
+      text?: string;
+      onPress?: () => void;
+    }
+  | { type: 'avatar'; source?: string; onPress?: () => void }
+  | { type: 'custom'; render: () => ReactNode }
+  | { type: 'none' };
+
+type CenterContentType =
+  | { type: 'title'; title: string; subtitle?: string }
+  | { type: 'custom'; render: () => ReactNode }
+  | { type: 'none' };
+
+type RightContentType =
+  | { type: 'settings'; onPress: () => void }
+  | { type: 'visibility'; isVisible: boolean; onToggle: () => void }
+  | { type: 'custom'; render: () => ReactNode }
+  | { type: 'none' };
+
+interface IHeaderProps {
+  left?: LeftContentType;
+  center?: CenterContentType;
+  right?: RightContentType;
+  style?: ViewStyle;
 }
 
-export const Header: React.FC<HeaderProps> = ({
-  title,
-  subtitle,
-  showBackButton = true,
-  backText,
-  onSettingsPress,
-  onBackPress,
+export const Header: FC<IHeaderProps> = ({
+  left = { type: 'none' },
+  center = { type: 'none' },
+  right = { type: 'none' },
+  style,
 }) => {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
 
   const handleBack = useCallback(() => {
-    if (onBackPress) {
-      onBackPress();
+    if (left.type === 'back' && left.onPress) {
+      left.onPress();
     } else {
       router.back();
     }
-  }, [onBackPress, router]);
+  }, [left, router]);
 
-  // Back button con icona
-  const renderBackIcon = () => (
-    <Pressable onPress={handleBack} style={styles.backIconContainer}>
-      <Icon
-        name="arrow-ios-back-outline"
-        color={theme.colors.basic100}
-        size={24}
-      />
-    </Pressable>
-  );
+  const renderLeft = () => {
+    switch (left.type) {
+      case 'back':
+        return left.variant === 'text' ? (
+          <Pressable onPress={handleBack} hitSlop={8}>
+            <Text category="p1" style={styles.backText}>
+              {left.text || 'Back'}
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={handleBack}
+            style={styles.backIconButton}
+            hitSlop={8}>
+            <Icon
+              name="arrow-ios-back-outline"
+              color={theme.colors.basic100}
+              size={24}
+            />
+          </Pressable>
+        );
 
-  // Back button con testo
-  const renderBackText = () => (
-    <Pressable onPress={handleBack}>
-      <Text category="p1" style={styles.backText}>
-        {backText}
-      </Text>
-    </Pressable>
-  );
+      case 'avatar':
+        return (
+          <Pressable onPress={left.onPress} disabled={!left.onPress}>
+            <CustomAvatar size="medium" source={left.source} />
+          </Pressable>
+        );
 
-  // Settings button
-  const renderSettingsButton = () => (
-    <Pressable onPress={onSettingsPress} style={styles.settingsContainer}>
-      <Icon
-        name="more-horizontal-outline"
-        color={theme.colors.basic100}
-        size={28}
-      />
-    </Pressable>
-  );
+      case 'custom':
+        return left.render();
+
+      default:
+        return null;
+    }
+  };
+
+  const renderCenter = () => {
+    switch (center.type) {
+      case 'title':
+        return (
+          <View style={styles.titleContainer}>
+            <Text category="h6" style={styles.title} numberOfLines={1}>
+              {center.title}
+            </Text>
+            {center.subtitle && (
+              <Text category="c1" style={styles.subtitle} numberOfLines={1}>
+                {center.subtitle}
+              </Text>
+            )}
+          </View>
+        );
+
+      case 'custom':
+        return center.render();
+
+      default:
+        return null;
+    }
+  };
+
+  const renderRight = () => {
+    switch (right.type) {
+      case 'settings':
+        return (
+          <Pressable
+            onPress={right.onPress}
+            style={styles.iconButton}
+            hitSlop={8}>
+            <Icon
+              name="more-horizontal-outline"
+              color={theme.colors.basic100}
+              size={34}
+            />
+          </Pressable>
+        );
+
+      case 'visibility':
+        return (
+          <Pressable
+            onPress={right.onToggle}
+            style={styles.iconButton}
+            hitSlop={8}>
+            <Icon
+              name={right.isVisible ? 'eye-outline' : 'eye-off-outline'}
+              color={theme.colors.basic100}
+              size={34}
+            />
+          </Pressable>
+        );
+
+      case 'custom':
+        return right.render();
+
+      default:
+        return null;
+    }
+  };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, style]}>
       <View style={styles.content}>
         {/* Left */}
-        <View style={styles.leftContainer}>
-          {showBackButton && (backText ? renderBackText() : renderBackIcon())}
-        </View>
+        <View style={styles.leftContainer}>{renderLeft()}</View>
 
         {/* Center */}
-        <View style={styles.centerContainer}>
-          <Text category="h6" style={styles.title}>
-            {title}
-          </Text>
-          {subtitle && (
-            <Text category="c1" style={styles.subtitle}>
-              {subtitle}
-            </Text>
-          )}
-        </View>
+        <View style={styles.centerContainer}>{renderCenter()}</View>
 
         {/* Right */}
-        <View style={styles.rightContainer}>
-          {onSettingsPress && renderSettingsButton()}
-        </View>
+        <View style={styles.rightContainer}>{renderRight()}</View>
       </View>
     </View>
   );
@@ -103,8 +176,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: HORIZONTAL_PADDING,
     paddingVertical: 12,
+    minHeight: 56,
   },
   leftContainer: {
     flex: 1,
@@ -118,17 +192,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
   },
-  backIconContainer: {
-    borderColor: theme.colors.basic100,
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 4,
-  },
-  backText: {
-    color: theme.colors.basic100,
-  },
-  settingsContainer: {
-    padding: 4,
+  titleContainer: {
+    alignItems: 'center',
   },
   title: {
     color: theme.colors.basic100,
@@ -138,5 +203,17 @@ const styles = StyleSheet.create({
     color: theme.colors.textHint,
     textAlign: 'center',
     marginTop: 2,
+  },
+  backIconButton: {
+    borderColor: theme.colors.basic100,
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 4,
+  },
+  backText: {
+    color: theme.colors.basic100,
+  },
+  iconButton: {
+    padding: 4,
   },
 });

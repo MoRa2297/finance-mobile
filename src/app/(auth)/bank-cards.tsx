@@ -8,15 +8,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ScreenContainer,
   Header,
-  TopBodyContainer,
   SpecificPrice,
   EmptyData,
   Alert,
+  TopRoundedContainer,
 } from '@/components/ui';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
-import { BankCard, SwipePickerMonth } from '@/types/types';
+import { BankCard, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
 import { SwipePicker } from '@components/screens/expenses';
 import { BankCardListCard } from '@components/screens/settings/bankCards/BankCardListCard';
@@ -192,7 +192,7 @@ export default function BankCardsScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       {/* Top Section */}
-      <TopBodyContainer height="30%" paddingTop={0}>
+      <TopRoundedContainer height="30%" paddingTop={0}>
         <View style={styles.topBodyContent}>
           <Header
             title={t('screens.bankCardListScreen.headerTitle')}
@@ -231,7 +231,7 @@ export default function BankCardsScreen() {
             </View>
           </View>
         </View>
-      </TopBodyContainer>
+      </TopRoundedContainer>
 
       {/* List */}
       <View style={styles.listContainer}>

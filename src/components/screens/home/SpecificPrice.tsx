@@ -4,7 +4,6 @@ import { Text } from '@ui-kitten/components';
 
 import { Icon } from '@/components/ui';
 import { theme } from '@/config/theme';
-import { HORIZONTAL_PADDING } from '@config/constants';
 
 interface SpecificPriceProps {
   title: string;
@@ -36,17 +35,12 @@ export const SpecificPrice: React.FC<SpecificPriceProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: HORIZONTAL_PADDING,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
     flex: 1,
   },
   subContainer: {
-    paddingHorizontal: HORIZONTAL_PADDING,
     flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
   },
   smallText: {
     color: theme.colors.textHint,
