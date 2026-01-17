@@ -11,6 +11,7 @@ import {
 import { ScreenContainer } from '@components/ui';
 import { useLogin } from '@hooks/screens/login';
 
+// TODO lock the scroll
 export default function LoginScreen() {
   const { t } = useTranslation(['loginPage']);
 
@@ -18,7 +19,7 @@ export default function LoginScreen() {
   const { isLoading, errorMessage, handleLogin, clearError } = useLogin();
 
   return (
-    <ScreenContainer scrollable>
+    <ScreenContainer scrollable={true}>
       <View style={styles.content}>
         <View style={styles.mainSection}>
           <LoginHeader />
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
   },
   mainSection: {
     flex: 1,
+    flexShrink: 1,
     justifyContent: 'center',
     gap: 32,
   },

@@ -4,8 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { IconButton } from '@/components/ui';
 import { theme } from '@/config/theme';
 
-import { createSocialButtons } from './SocialLoginButtons.helpers';
-import { noop } from '@babel/types';
+import { createSocialButtons, noop } from './SocialLoginButtons.helpers';
 
 interface ISocialLoginButtonsProps {
   onGooglePress?: () => void;

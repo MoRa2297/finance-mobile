@@ -2,11 +2,9 @@ import * as Yup from 'yup';
 import { FormikErrors, FormikTouched } from 'formik';
 
 import { i18n } from '@/i18n';
-import { LoginFormValues } from './LoginForm';
+import { TLoginFormValues } from '@hooks/screens/login/useLogin';
 
 const t = (key: string) => i18n.t(key);
-
-// ============ VALIDATION ============
 
 const PASSWORD_RULES = {
   minLength: 7,
@@ -17,6 +15,11 @@ const PASSWORD_RULES = {
     symbol: /[^\w]/,
   },
 } as const;
+
+export const initialFormValues: TLoginFormValues = {
+  email: '',
+  password: '',
+};
 
 export const loginValidationSchema = Yup.object().shape({
   email: Yup.string()
@@ -31,23 +34,16 @@ export const loginValidationSchema = Yup.object().shape({
     .matches(PASSWORD_RULES.patterns.symbol, t('validation:symbol')),
 });
 
-export const initialFormValues: LoginFormValues = {
-  email: '',
-  password: '',
-};
-
-// ============ FIELD HELPERS ============
-
 export const getFieldError = (
-  field: keyof LoginFormValues,
-  errors: FormikErrors<LoginFormValues>,
-  touched: FormikTouched<LoginFormValues>,
+  field: keyof TLoginFormValues,
+  errors: FormikErrors<TLoginFormValues>,
+  touched: FormikTouched<TLoginFormValues>,
 ): string | undefined => {
   return touched[field] && errors[field] ? errors[field] : undefined;
 };
 
 export const canSubmit = (
-  values: LoginFormValues,
+  values: TLoginFormValues,
   isLoading: boolean,
 ): boolean => {
   const hasEmail = values.email.trim().length > 0;

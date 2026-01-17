@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Keyboard } from 'react-native';
 
-export const useIsKeyboardOpen = (): [focus: boolean] => {
+export const useIsKeyboardOpen = () => {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   useEffect(() => {
@@ -24,5 +24,5 @@ export const useIsKeyboardOpen = (): [focus: boolean] => {
     };
   }, [isKeyboardOpen]);
 
-  return [isKeyboardOpen];
+  return { isKeyboardOpen } as const;
 };

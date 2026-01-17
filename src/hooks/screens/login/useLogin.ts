@@ -2,13 +2,16 @@ import { useState, useCallback } from 'react';
 
 import { useAuthStore } from '@/stores';
 
-import { LoginFormValues } from '@components/screens/login/LoginForm/LoginForm';
 import { getAuthErrorMessage, isAuthError } from './helpers';
+export type TLoginFormValues = {
+  email: string;
+  password: string;
+};
 
 export interface UseLoginReturn {
   isLoading: boolean;
   errorMessage: string;
-  handleLogin: (values: LoginFormValues) => Promise<void>;
+  handleLogin: (values: TLoginFormValues) => Promise<void>;
   clearError: () => void;
 }
 
@@ -23,7 +26,7 @@ export const useLogin = (): UseLoginReturn => {
   }, []);
 
   const handleLogin = useCallback(
-    async (values: LoginFormValues) => {
+    async (values: TLoginFormValues) => {
       try {
         setIsLoading(true);
         clearError();

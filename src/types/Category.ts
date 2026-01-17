@@ -1,4 +1,4 @@
-import { Color } from '@types/General';
+import { Color } from '@types';
 
 export type Category = {
   id: number;
