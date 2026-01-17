@@ -6,7 +6,6 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { SwipePicker } from '@/components/screens/expenses';
 import {
   ScreenContainer,
   Header,
@@ -233,13 +232,13 @@ export default function BankAccountsScreen() {
         <View style={styles.subContainer}>
           {/* Month Picker */}
           <View style={styles.pickerContainer}>
-            <SwipePicker
-              currentSelectIndex={currentSelectIndex}
-              data={MONTHS}
-              showButtons
-              onSelect={handleGetSelectedMonth}
-              containerWidth={100}
-            />
+            {/*<SwipePicker*/}
+            {/*  currentSelectIndex={currentSelectIndex}*/}
+            {/*  data={MONTHS}*/}
+            {/*  showButtons*/}
+            {/*  onSelect={handleGetSelectedMonth}*/}
+            {/*  containerWidth={100}*/}
+            {/*/>*/}
           </View>
 
           {/* Amounts */}

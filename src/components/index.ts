@@ -10,7 +10,7 @@ export { SelectPickerInput } from './ui/SelectPickerInput';
 
 //SCREENS
 
-export { TopRoundedContainer, Header } from './ui';
+export { TopRoundedContainer, Header, MonthSwipePicker } from './ui';
 export {
   LoginForm,
   LoginFooter,

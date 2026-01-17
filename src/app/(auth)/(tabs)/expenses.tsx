@@ -5,12 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Header, ScreenContainer, TopRoundedContainer } from '@/components/ui';
 import { MonthPopover, SpecificPrice } from '@/components/screens/home';
-import {
-  ExpensesList,
-  SwipePicker,
-  SwipePickerMonth,
-  TransactionFilter,
-} from '@/components/screens/expenses';
+import { ExpensesList, TransactionFilter } from '@/components/screens/expenses';
 import {
   filterByMonth,
   calculateTotals,
@@ -18,7 +13,7 @@ import {
 import { useDataStore, useUIStore, useAuthStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
-import { DEFAULT_TABS, SliderBar } from '@/components/ui/SliderBar';
+import { SwipePickerMonth } from '@/types';
 
 export default function ExpensesScreen() {
   const { t } = useTranslation();
@@ -90,11 +85,11 @@ export default function ExpensesScreen() {
         <View style={styles.headerContent}>
           {/* Month Picker */}
           <View style={styles.monthPickerContainer}>
-            <SwipePicker
-              onSelectMonth={handleSelectMonth}
-              containerWidth={150}
-              showArrows
-            />
+            {/*<SwipePicker*/}
+            {/*  onSelectMonth={handleSelectMonth}*/}
+            {/*  containerWidth={150}*/}
+            {/*  showArrows*/}
+            {/*/>*/}
           </View>
 
           {/* Income / Expense Summary */}
@@ -119,7 +114,10 @@ export default function ExpensesScreen() {
 
       {/* Body Section */}
       <View style={styles.bodyContainer}>
-        <SliderBar tabs={DEFAULT_TABS} onTabChange={handleFilterChange} />
+        {/*<MonthSwipePicker*/}
+        {/*  tabs={DEFAULT_TABS}*/}
+        {/*  onTabChange={handleFilterChange}*/}
+        {/*/>*/}
 
         <ExpensesList
           transactions={transactions}

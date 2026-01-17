@@ -14,6 +14,7 @@ interface SliderBarProps {
   initialTab?: string;
 }
 
+// TODO agg gesture
 export const SliderBar: React.FC<SliderBarProps> = ({
   tabs,
   onTabChange,

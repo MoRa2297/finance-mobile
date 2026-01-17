@@ -203,7 +203,7 @@ export default function BankCardsScreen() {
           <View style={styles.subContainer}>
             {/* Month Picker */}
             <View style={styles.pickerContainer}>
-              {/*<SwipePicker*/}
+              {/*<MonthSwipePicker*/}
               {/*  currentSelectIndex={currentSelectIndex}*/}
               {/*  arrSwipeData={MONTHS}*/}
               {/*  showSwipeBtn*/}

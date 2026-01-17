@@ -1,5 +1,6 @@
 export { TopRoundedContainer } from './TopRoundedContainer';
 export { Header } from './Header';
+export { MonthSwipePicker } from './MonthSwipePicker';
 
 // NOT ORDERED
 

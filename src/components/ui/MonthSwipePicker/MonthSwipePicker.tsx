@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useState,
   useEffect,
+  FC,
 } from 'react';
 import {
   View,
@@ -26,15 +27,15 @@ import {
   generateMonths,
   getCurrentMonthIndex,
   formatMonthLabel,
-} from './SwipePicker.helpers';
+} from './MonthSwipePicker.helpers';
 
-interface SwipePickerProps {
+interface IMonthSwipePickerProps {
   onSelectMonth: (month: SwipePickerMonth) => void;
   containerWidth?: number;
   showArrows?: boolean;
 }
 
-export const SwipePicker: React.FC<SwipePickerProps> = ({
+export const MonthSwipePicker: FC<IMonthSwipePickerProps> = ({
   onSelectMonth,
   containerWidth = 150,
   showArrows = true,
