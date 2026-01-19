@@ -14,6 +14,8 @@ export const SCREEN_HEIGHT: number = screen.height;
 
 export const HORIZONTAL_PADDING: number = 16;
 
+export const BOTTOM_NAV_HEIGHT = 110;
+
 export const MONTH = [
   {
     row: 0,

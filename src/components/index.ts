@@ -1,7 +1,6 @@
 export { InputField } from './ui/InputField';
 export { Icon } from './ui/Icon';
 
-export { LoadingSpinner } from './common/LoadingSpinner';
 export { CustomAvatar } from './common/CustomAvatar';
 export { SpecificPrice } from './ui/SpecificPrice';
 export { GenericSmallDetail } from './ui/GenericSmallDetail';
@@ -10,7 +9,7 @@ export { SelectPickerInput } from './ui/SelectPickerInput';
 
 //SCREENS
 
-export { TopRoundedContainer, Header, MonthSwipePicker } from './ui';
+export { TopRoundedContainer, Header, MonthSwipePicker, SliderBar } from './ui';
 export {
   LoginForm,
   LoginFooter,
@@ -21,6 +20,11 @@ export {
   calculateBalance,
   // SpecificPrice, DUPLICATED
   MonthPopover,
+  ExpensesList,
+  ExpenseCard,
 } from './screens';
 
+export { EmptyData, LoadingSpinner } from './common';
+
 export type { MonthItem } from './screens';
+export type { Tab } from './ui';

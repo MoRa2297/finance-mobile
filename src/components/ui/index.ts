@@ -1,7 +1,9 @@
 export { TopRoundedContainer } from './TopRoundedContainer';
 export { Header } from './Header';
 export { MonthSwipePicker } from './MonthSwipePicker';
+export { SliderBar } from './SliderBar';
 
+export type { Tab } from './SliderBar';
 // NOT ORDERED
 
 export { Button, IconButton } from './Button';
@@ -14,12 +16,9 @@ export { IconInputField } from './IconInputField';
 export { ScreenContainer } from './ScreenContainer';
 export { BottomNavigation } from './BottomNavigation';
 // export { Skeleton } from './Skeleton';
-export { EmptyData } from './EmptyData';
-export { SliderBar, DEFAULT_TABS } from './SliderBar';
+
 export { Alert } from './Alert';
 export { SpecificPrice } from './SpecificPrice';
 export { GenericSmallDetail } from './GenericSmallDetail';
 export { SelectInput } from './SelectInput';
 export { SelectPickerInput } from './SelectPickerInput';
-
-export type { Tab } from './SliderBar';

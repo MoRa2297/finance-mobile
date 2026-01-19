@@ -14,3 +14,6 @@ export {
 } from './home';
 
 export type { MonthItem } from './home';
+
+// ORDERED
+export { ExpensesList, ExpenseCard } from './expenses';

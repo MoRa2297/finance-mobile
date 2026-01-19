@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { theme } from '@/config/theme';
 
-import { Tab } from './SliderBar.helpers';
+import { Tab } from '@/components';
 import { GLOBAL_BORDER_RADIUS } from '@config/constants';
 
 interface SliderBarProps {
@@ -14,7 +14,7 @@ interface SliderBarProps {
   initialTab?: string;
 }
 
-// TODO agg gesture
+// TODO add gesture to swipe with finger
 export const SliderBar: React.FC<SliderBarProps> = ({
   tabs,
   onTabChange,
@@ -44,7 +44,7 @@ export const SliderBar: React.FC<SliderBarProps> = ({
             <Text
               category="s2"
               style={[styles.tabText, isSelected && styles.tabTextSelected]}>
-              {t(`common.tabs.${tab.title}`)}
+              {t(`${tab.title}`)}
             </Text>
           </Pressable>
         );

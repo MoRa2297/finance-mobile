@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
-import { Transaction, Category, BankAccount, BankCard } from '@/types/types';
+import { Transaction, Category, BankAccount, BankCard } from '@/types';
 
 import { getExpenseCardData, formatSubtitle } from './ExpenseCard.helpers';
 
-interface ExpenseCardProps {
+interface IExpenseCardProps {
   transaction: Transaction;
   categories: Category[];
   bankAccounts: BankAccount[];
@@ -18,14 +18,14 @@ interface ExpenseCardProps {
   onPress: (transaction: Transaction) => void;
 }
 
-export const ExpenseCard: React.FC<ExpenseCardProps> = ({
+export const ExpenseCard: FC<IExpenseCardProps> = ({
   transaction,
   categories,
   bankAccounts,
   bankCards,
   onPress,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('expensesPage');
 
   // Derived data
   const cardData = useMemo(
@@ -38,7 +38,7 @@ export const ExpenseCard: React.FC<ExpenseCardProps> = ({
       formatSubtitle(
         cardData,
         transaction.recurrent,
-        t('components.expenseCard.recurrent'),
+        t('expensesPage:recurrent'),
       ),
     [cardData, transaction.recurrent, t],
   );
@@ -126,14 +126,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
-    color: theme.colors.basic100,
   },
   subtitle: {
     fontSize: 12,
     color: theme.colors.textHint,
   },
   amount: {
-    color: theme.colors.basic100,
     marginBottom: 4,
   },
 });

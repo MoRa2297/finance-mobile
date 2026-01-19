@@ -3,5 +3,11 @@
   "income": "Entrate",
   "title": "Transaction history",
   "loadingTitle": "Caricamento transazioni...",
-  "emptyData": "Nessuna transazione disponibile al momento"
+  "emptyData": "Nessuna transazione disponibile al momento",
+  "recurrent": "Ricorrente",
+  "tabs": {
+    "all": "Tutte",
+    "income": "Entrate",
+    "expenses": "Uscite"
+  }
 }

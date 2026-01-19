@@ -1,51 +1,40 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, FC } from 'react';
 import { StyleSheet, SectionList, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
-import { Dayjs } from 'dayjs';
 
 import { theme } from '@/config/theme';
-import { Transaction, Category, BankAccount, BankCard } from '@/types/types';
+import { Transaction, Category, BankAccount, BankCard } from '@/types';
 
-import { ExpenseCard } from '../ExpenseCard';
-import {
-  TransactionFilter,
-  filterByMonth,
-  filterByType,
-  groupByDate,
-} from './ExpensesList.helpers';
-import { EmptyData } from '@components/ui/EmptyData';
-import { LoadingSpinner } from '@/components';
+import { groupByDate } from './ExpensesList.helpers';
+import { LoadingSpinner, ExpenseCard, EmptyData } from '@/components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BOTTOM_NAV_HEIGHT } from '@config/constants';
 
-interface ExpensesListProps {
+interface IExpensesListProps {
   transactions: Transaction[];
   categories: Category[];
   bankAccounts: BankAccount[];
   bankCards: BankCard[];
-  selectedDate: Dayjs | null;
-  filter: TransactionFilter;
   loading?: boolean;
   onSelectTransaction: (transaction: Transaction) => void;
 }
 
-export const ExpensesList: React.FC<ExpensesListProps> = ({
+export const ExpensesList: FC<IExpensesListProps> = ({
   transactions,
   categories,
   bankAccounts,
   bankCards,
-  selectedDate,
-  filter,
   loading = false,
   onSelectTransaction,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('expensesPage');
+  const insets = useSafeAreaInsets();
 
-  // Filter and group transactions
+  // Group transactions
   const sections = useMemo(() => {
-    const byMonth = filterByMonth(transactions, selectedDate);
-    const byType = filterByType(byMonth, filter);
-    return groupByDate(byType);
-  }, [transactions, selectedDate, filter]);
+    return groupByDate(transactions);
+  }, [transactions]);
 
   // Render helpers
   const renderItem = useCallback(
@@ -76,13 +65,21 @@ export const ExpensesList: React.FC<ExpensesListProps> = ({
   );
 
   const renderEmpty = useCallback(
-    () => <EmptyData title={t('screens.expensesScreen.emptyData')} />,
+    () => <EmptyData title={t('expensesPage:emptyData')} />,
     [t],
   );
 
   const keyExtractor = useCallback(
     (item: Transaction, index: number) => `${item.id}-${index}`,
     [],
+  );
+
+  // TODO check if use inset is good enough or I can remove it
+  const listContentStyle = useMemo(
+    () => ({
+      paddingBottom: BOTTOM_NAV_HEIGHT + insets.bottom,
+    }),
+    [insets.bottom],
   );
 
   if (loading) {
@@ -103,7 +100,7 @@ export const ExpensesList: React.FC<ExpensesListProps> = ({
       ListEmptyComponent={renderEmpty}
       showsVerticalScrollIndicator={false}
       stickySectionHeadersEnabled={false}
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={[styles.contentContainer, listContentStyle]}
     />
   );
 };

@@ -1,4 +1,4 @@
-import { Transaction, Category, BankAccount, BankCard } from '@/types/types';
+import { Transaction, Category, BankAccount, BankCard } from '@/types';
 
 export interface ExpenseCardData {
   category?: Category;

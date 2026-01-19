@@ -7,29 +7,35 @@ import {
   Header,
   MonthSwipePicker,
   ScreenContainer,
+  SliderBar,
+  Tab,
   TopRoundedContainer,
 } from '@/components/ui';
-import {
-  MonthItem,
-  MonthPopover,
-  SpecificPrice,
-} from '@/components/screens/home';
-import { ExpensesList, TransactionFilter } from '@/components/screens/expenses';
-import {
-  filterByMonth,
-  calculateTotals,
-} from '@/components/screens/expenses/ExpensesList/ExpensesList.helpers';
+import { MonthItem, SpecificPrice } from '@/components/screens/home';
+import { ExpensesList } from '@/components/screens/expenses';
 import { useDataStore, useUIStore, useAuthStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
-import { SwipePickerMonth } from '@/types';
+import {
+  calculateTotals,
+  filterTransactions,
+  filterTransactionsByMonth,
+} from '@stores/data/data.selectors';
 
+const TABS: Tab[] = [
+  { title: 'expensesPage:tabs.all', value: 'all' },
+  { title: 'expensesPage:tabs.expenses', value: 'expense' },
+  { title: 'expensesPage:tabs.income', value: 'income' },
+];
+
+// TODO add the open function
 export default function ExpensesScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('expensesPage');
 
   // State
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [filter, setFilter] = useState<TransactionFilter>('all');
+
+  const [selectedTab, setSelectedTab] = useState(TABS[0].value);
 
   // Stores
   const user = useAuthStore(state => state.user);
@@ -40,23 +46,36 @@ export default function ExpensesScreen() {
   const moneyIsVisible = useUIStore(state => state.moneyIsVisible);
   const setMoneyIsVisible = useUIStore(state => state.setMoneyIsVisible);
 
+  // Derived data - usa selectors
+  const filteredTransactions = useMemo(
+    () => filterTransactions(transactions, selectedDate, selectedTab),
+    [transactions, selectedDate, selectedTab],
+  );
+
   // Calculate totals for selected month
-  const totals = useMemo(() => {
-    const filtered = filterByMonth(transactions, selectedDate);
-    return calculateTotals(filtered);
-  }, [transactions, selectedDate]);
+  const totals = useMemo(
+    () =>
+      calculateTotals(filterTransactionsByMonth(transactions, selectedDate)),
+    [transactions, selectedDate],
+  );
 
   // Handlers
   const handleSelectMonth = useCallback((month: MonthItem) => {
     setSelectedDate(month.date);
   }, []);
-
-  const handleFilterChange = useCallback((value: string) => {
-    setFilter(value as TransactionFilter);
+  const handleTabChange = useCallback((value: string) => {
+    setSelectedTab(value);
   }, []);
 
   const handleSelectTransaction = useCallback((transaction: any) => {
     console.log('Selected transaction:', transaction);
+    // TODO transaction-detail-sheet
+    // await SheetManager.show('transaction-detail-sheet', {
+    //   payload: {
+    //     transaction: transaction,
+    //     handleEdit: handleEdit,
+    //   },
+    // });
   }, []);
 
   const handleToggleMoneyVisibility = useCallback(() => {
@@ -119,18 +138,13 @@ export default function ExpensesScreen() {
 
       {/* Body Section */}
       <View style={styles.bodyContainer}>
-        {/*<MonthSwipePicker*/}
-        {/*  tabs={DEFAULT_TABS}*/}
-        {/*  onTabChange={handleFilterChange}*/}
-        {/*/>*/}
+        <SliderBar tabs={TABS} onTabChange={handleTabChange} />
 
         <ExpensesList
-          transactions={transactions}
+          transactions={filteredTransactions}
           categories={categories}
           bankAccounts={bankAccounts}
           bankCards={bankCards}
-          selectedDate={selectedDate}
-          filter={filter}
           onSelectTransaction={handleSelectTransaction}
         />
       </View>
@@ -150,18 +164,12 @@ const styles = StyleSheet.create({
   },
   monthPickerContainer: {
     alignItems: 'center',
-    width: '100%',
-    height: 40,
-    backgroundColor: theme.colors.transparent,
   },
   summaryContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.colors.transparent,
   },
   bodyContainer: {
     flex: 1,
     marginHorizontal: HORIZONTAL_PADDING,
-    backgroundColor: theme.colors.secondaryBK,
   },
 });
