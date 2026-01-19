@@ -11,6 +11,9 @@ import loginIt from './it/loginPage.json';
 import homeIt from './it/homePage.json';
 import homeEn from './en/homePage.json';
 
+import expensesIt from './it/expensesPage.json';
+import expensesEn from './en/expensesPage.json';
+
 import validationEn from './en/validation.json';
 import validationIt from './it/validation.json';
 
@@ -24,6 +27,7 @@ const i18nResources = {
     common: commonIt,
     loginPage: loginIt,
     homePage: homeIt,
+    expensesPage: expensesIt,
     validation: validationIt,
     // translation: it,
   },
@@ -31,6 +35,7 @@ const i18nResources = {
     common: commonEn,
     loginPage: loginEn,
     homePage: homeEn,
+    expensesPage: expensesEn,
     validation: validationEn,
     // translation: en,
   },
@@ -73,7 +78,7 @@ i18next
   })
   .use(initReactI18next)
   .init({
-    ns: ['common', 'validation', 'loginPage'],
+    ns: ['common', 'validation', 'loginPage', 'expensesPage'],
     // TODO compatibilityJSON: 'v3',
     fallbackLng: DEFAULT_LANG,
     resources: i18nResources,

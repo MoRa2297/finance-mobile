@@ -3,8 +3,17 @@ import { StyleSheet, View } from 'react-native';
 import { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
-import { Header, ScreenContainer, TopRoundedContainer } from '@/components/ui';
-import { MonthPopover, SpecificPrice } from '@/components/screens/home';
+import {
+  Header,
+  MonthSwipePicker,
+  ScreenContainer,
+  TopRoundedContainer,
+} from '@/components/ui';
+import {
+  MonthItem,
+  MonthPopover,
+  SpecificPrice,
+} from '@/components/screens/home';
 import { ExpensesList, TransactionFilter } from '@/components/screens/expenses';
 import {
   filterByMonth,
@@ -38,7 +47,7 @@ export default function ExpensesScreen() {
   }, [transactions, selectedDate]);
 
   // Handlers
-  const handleSelectMonth = useCallback((month: SwipePickerMonth) => {
+  const handleSelectMonth = useCallback((month: MonthItem) => {
     setSelectedDate(month.date);
   }, []);
 
@@ -71,10 +80,6 @@ export default function ExpensesScreen() {
             source: user?.imageUrl,
             onPress: () => {},
           }}
-          center={{
-            type: 'custom',
-            render: () => <MonthPopover onSelectMonth={handleSelectMonth} />,
-          }}
           right={{
             type: 'visibility',
             isVisible: moneyIsVisible,
@@ -85,24 +90,24 @@ export default function ExpensesScreen() {
         <View style={styles.headerContent}>
           {/* Month Picker */}
           <View style={styles.monthPickerContainer}>
-            {/*<SwipePicker*/}
-            {/*  onSelectMonth={handleSelectMonth}*/}
-            {/*  containerWidth={150}*/}
-            {/*  showArrows*/}
-            {/*/>*/}
+            <MonthSwipePicker
+              onSelectMonth={handleSelectMonth}
+              containerWidth={150}
+              showArrows
+            />
           </View>
 
           {/* Income / Expense Summary */}
           <View style={styles.summaryContainer}>
             <SpecificPrice
-              title={t('screens.expensesScreen.income')}
+              title={t('expensesPage:income')}
               amount={formatAmount(totals.income)}
               amountColor={theme.colors.green}
               iconName="arrow-circle-down"
               iconColor={theme.colors.green}
             />
             <SpecificPrice
-              title={t('screens.expensesScreen.spent')}
+              title={t('expensesPage:spent')}
               amount={formatAmount(totals.expense)}
               amountColor={theme.colors.red}
               iconName="arrow-circle-up"

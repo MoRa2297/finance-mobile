@@ -11,7 +11,6 @@ import {
   FlatList,
   StyleSheet,
   Pressable,
-  ViewToken,
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
@@ -35,6 +34,7 @@ interface IMonthSwipePickerProps {
   showArrows?: boolean;
 }
 
+// TODO improve buttons UI and horizontal scroll with finger (its working only if press the button)
 export const MonthSwipePicker: FC<IMonthSwipePickerProps> = ({
   onSelectMonth,
   containerWidth = 150,
@@ -66,7 +66,7 @@ export const MonthSwipePicker: FC<IMonthSwipePickerProps> = ({
   // Notify parent of initial selection
   useEffect(() => {
     if (months[initialIndex]) {
-      // onSelectMonth(months[initialIndex]);
+      onSelectMonth(months[initialIndex]);
     }
   }, []);
 
@@ -176,6 +176,8 @@ export const MonthSwipePicker: FC<IMonthSwipePickerProps> = ({
         snapToAlignment="start"
         decelerationRate="fast"
         bounces={false}
+        scrollEnabled={true}
+        nestedScrollEnabled={true}
       />
 
       {/* Next Button */}

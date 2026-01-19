@@ -52,6 +52,6 @@ export const formatMonthLabel = (
   currentYear: number,
   t: (key: string) => string,
 ): string => {
-  const monthText = t(`common.month.${month.month}`);
+  const monthText = t(`common:month.${month.month}`);
   return month.year === currentYear ? monthText : `${monthText} ${month.year}`;
 };

@@ -1,0 +1,7 @@
+{
+  "spent": "Uscite",
+  "income": "Entrate",
+  "title": "Transaction history",
+  "loadingTitle": "Caricamento transazioni...",
+  "emptyData": "Nessuna transazione disponibile al momento"
+}
