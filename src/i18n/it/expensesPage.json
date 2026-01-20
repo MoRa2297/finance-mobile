@@ -9,5 +9,16 @@
     "all": "Tutte",
     "income": "Entrate",
     "expenses": "Uscite"
+  },
+  "transactionDetailSheet": {
+    "paid": "Pagato",
+    "recurring": "Ricorrente",
+    "description": "Descrizione",
+    "date": "Data",
+    "category": "Categoria",
+    "value": "Valore",
+    "bankAccount": "Account (conto)",
+    "cardAccount": "Account (carta)",
+    "note": "Nota"
   }
 }

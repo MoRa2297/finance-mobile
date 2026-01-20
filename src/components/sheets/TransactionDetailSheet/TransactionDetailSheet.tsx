@@ -38,7 +38,7 @@ type TransactionDetailSheetPayload = {
 export const TransactionDetailSheet: FC<
   SheetProps<'transaction-detail-sheet'>
 > = props => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['expensesPage', 'common']);
   const actionSheetRef = useRef<ActionSheetRef>(null);
 
   // Stores
@@ -92,11 +92,11 @@ export const TransactionDetailSheet: FC<
         <View style={styles.topSection}>
           <StatusIcon
             isActive={transaction.recived} // ← 'recived' non 'received' TODO FIX TYPO NAME
-            label={t('transactionDetail.paid')}
+            label={t('expensesPage:transactionDetailSheet.paid')}
           />
           <StatusIcon
             isActive={transaction.recurrent}
-            label={t('transactionDetail.recurring')}
+            label={t('expensesPage:transactionDetailSheet.recurring')}
           />
         </View>
 
@@ -108,17 +108,17 @@ export const TransactionDetailSheet: FC<
           <View style={styles.detailsColumn}>
             <DetailRow
               iconName="edit-outline"
-              label={t('transactionDetail.description')}
+              label={t('expensesPage:transactionDetailSheet.description')}
               value={transaction.description}
             />
             <DetailRow
               iconName="calendar-outline"
-              label={t('transactionDetail.date')}
+              label={t('expensesPage:transactionDetailSheet.date')}
               value={dayjs(transaction.date).format('DD-MM-YYYY')}
             />
             <DetailRow
               iconName="bookmark-outline"
-              label={t('transactionDetail.category')}
+              label={t('expensesPage:transactionDetailSheet.category')}
               value={selectedCategory?.name}
             />
           </View>
@@ -132,21 +132,21 @@ export const TransactionDetailSheet: FC<
             {/*/>*/}
             <DetailRow
               iconName="pricetags-outline"
-              label={t('transactionDetail.value')}
+              label={t('expensesPage:transactionDetailSheet.value')}
               value={`${transaction.money} €`} // ← 'money' non 'amount'
             />
             <DetailRow
               iconName="grid-outline"
               label={
                 selectedBank
-                  ? t('transactionDetail.bankAccount')
-                  : t('transactionDetail.cardAccount')
+                  ? t('expensesPage:transactionDetailSheet.bankAccount')
+                  : t('expensesPage:transactionDetailSheet.cardAccount')
               }
               value={selectedBank?.name ?? selectedCard?.name}
             />
             <DetailRow
               iconName="file-text-outline"
-              label={t('transactionDetail.note')}
+              label={t('expensesPage:transactionDetailSheet.note')}
               value={transaction.note}
             />
           </View>
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingTop: 25,
-    minHeight: SCREEN_HEIGHT - SCREEN_HEIGHT / 3,
+    minHeight: SCREEN_HEIGHT - SCREEN_HEIGHT / 2,
     paddingHorizontal: HORIZONTAL_PADDING,
     backgroundColor: theme.colors.transparent,
   },
@@ -274,10 +274,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingBottom: BOTTOM_NAV_HEIGHT + 20,
   },
   editButton: {
     width: '60%',
     borderRadius: GLOBAL_BORDER_RADIUS,
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+    color: theme.colors.basic100,
   },
 });
