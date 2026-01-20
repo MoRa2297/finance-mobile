@@ -21,6 +21,8 @@ import {
   filterTransactions,
   filterTransactionsByMonth,
 } from '@stores/data/data.selectors';
+import { SheetManager } from 'react-native-actions-sheet';
+import { router } from 'expo-router';
 
 const TABS: Tab[] = [
   { title: 'expensesPage:tabs.all', value: 'all' },
@@ -76,6 +78,19 @@ export default function ExpensesScreen() {
     //     handleEdit: handleEdit,
     //   },
     // });
+
+    SheetManager.show('transaction-detail-sheet', {
+      payload: {
+        transaction,
+        onEdit: tx => {
+          SheetManager.hide('transaction-detail-sheet');
+          router.push({
+            pathname: '/transaction',
+            params: { id: tx.id, mode: 'edit' },
+          });
+        },
+      },
+    });
   }, []);
 
   const handleToggleMoneyVisibility = useCallback(() => {

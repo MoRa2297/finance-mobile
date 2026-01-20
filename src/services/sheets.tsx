@@ -9,6 +9,8 @@ import { CategoryFormSheet } from '@components/sheets/CategoryFormSheet';
 import { BankSelectSheet } from '@components/sheets/BankSelectSheet';
 import { BankAccountTypeSheet } from '@components/sheets/BankAccountTypeSheet';
 import { DatePickerSheet } from '@components/sheets/DatePickerSheet';
+import { TransactionDetailSheet } from '@components/sheets/TransactionDetailSheet';
+import { Transaction } from '@/types';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -19,6 +21,7 @@ registerSheet('card-type-select-sheet', CardTypeSelectSheet);
 registerSheet('bank-account-select-sheet', BankAccountSelectSheet);
 registerSheet('picker-sheet', PickerSheet);
 registerSheet('date-picker-sheet', DatePickerSheet);
+registerSheet('transaction-detail-sheet', TransactionDetailSheet);
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {
@@ -52,6 +55,12 @@ declare module 'react-native-actions-sheet' {
     'date-picker-sheet': SheetDefinition<{
       payload: { day: string; month: string; year: string };
       returnValue: { day: string; month: string; year: string };
+    }>;
+    'transaction-detail-sheet': SheetDefinition<{
+      payload: {
+        transaction: Transaction;
+        onEdit: (transaction: Transaction) => void;
+      };
     }>;
   }
 }
