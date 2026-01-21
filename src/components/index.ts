@@ -9,7 +9,13 @@ export { SelectPickerInput } from './ui/SelectPickerInput';
 
 //SCREENS
 
-export { TopRoundedContainer, Header, MonthSwipePicker, SliderBar } from './ui';
+export {
+  TopRoundedContainer,
+  Header,
+  MonthSwipePicker,
+  SliderBar,
+  Alert,
+} from './ui';
 export {
   LoginForm,
   LoginFooter,
@@ -22,6 +28,8 @@ export {
   MonthPopover,
   ExpensesList,
   ExpenseCard,
+  SettingsHeader,
+  CategoryListCard,
 } from './screens';
 
 export { EmptyData, LoadingSpinner } from './common';

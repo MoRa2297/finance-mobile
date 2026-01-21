@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, FC } from 'react';
 import { StyleSheet } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
@@ -14,7 +14,7 @@ import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { useDataStore } from '@/stores';
 import { CATEGORY_ICONS, COLORS } from '@/config';
 
-export const CategoryFormSheet: React.FC<
+export const CategoryFormSheet: FC<
   SheetProps<'category-form-sheet'>
 > = props => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
@@ -63,13 +63,10 @@ export const CategoryFormSheet: React.FC<
     actionSheetRef.current?.hide();
   }, []);
 
-  console.log('CIAOOOO');
-
   return (
     <ActionSheet
       ref={actionSheetRef}
-      // id={props.sheetId}
-      id={'category-form-sheet'}
+      id={props.sheetId}
       closable
       gestureEnabled
       closeOnTouchBackdrop

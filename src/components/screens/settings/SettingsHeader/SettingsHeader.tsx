@@ -1,25 +1,22 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { Text } from '@ui-kitten/components';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { theme } from '@/config/theme';
 
-interface SettingsHeaderProps {
+interface ISettingsHeaderProps {
   name: string;
   email: string;
   imageUrl?: string;
 }
 
-export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
+export const SettingsHeader: FC<ISettingsHeaderProps> = ({
   name,
   email,
   imageUrl,
 }) => {
-  const insets = useSafeAreaInsets();
-
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 20 }]}>
+    <View style={[styles.container, { paddingTop: 20 }]}>
       <Image
         source={
           imageUrl ? { uri: imageUrl } : require('@/assets/userPlaceholder.png')
@@ -30,9 +27,11 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
         <Text category="s1" style={styles.name}>
           {name}
         </Text>
-        <Text category="p1" style={styles.email}>
-          {email}
-        </Text>
+        {email && (
+          <Text category="p1" style={styles.email}>
+            {email}
+          </Text>
+        )}
       </View>
     </View>
   );

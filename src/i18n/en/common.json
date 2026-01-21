@@ -9,6 +9,10 @@
   "loading": "Caricamento in corso...",
   "payTheInstallment": "Paga il bollettino",
   "or": "or",
+  "delete": "Annulla",
+  "edit": "Modifica",
+  "income": "Entrate",
+  "expenses": "Uscite",
   "bottomNavigator": {
     "home": "Home",
     "transaction": "Transazioni",

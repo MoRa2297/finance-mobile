@@ -2,6 +2,7 @@ export { TopRoundedContainer } from './TopRoundedContainer';
 export { Header } from './Header';
 export { MonthSwipePicker } from './MonthSwipePicker';
 export { SliderBar } from './SliderBar';
+export { Alert } from './Alert';
 
 export type { Tab } from './SliderBar';
 // NOT ORDERED
@@ -17,7 +18,6 @@ export { ScreenContainer } from './ScreenContainer';
 export { BottomNavigation } from './BottomNavigation';
 // export { Skeleton } from './Skeleton';
 
-export { Alert } from './Alert';
 export { SpecificPrice } from './SpecificPrice';
 export { GenericSmallDetail } from './GenericSmallDetail';
 export { SelectInput } from './SelectInput';

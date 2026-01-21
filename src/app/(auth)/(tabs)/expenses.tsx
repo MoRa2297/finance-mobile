@@ -70,15 +70,6 @@ export default function ExpensesScreen() {
   }, []);
 
   const handleSelectTransaction = useCallback((transaction: any) => {
-    console.log('Selected transaction:', transaction);
-    // TODO transaction-detail-sheet
-    // await SheetManager.show('transaction-detail-sheet', {
-    //   payload: {
-    //     transaction: transaction,
-    //     handleEdit: handleEdit,
-    //   },
-    // });
-
     SheetManager.show('transaction-detail-sheet', {
       payload: {
         transaction,

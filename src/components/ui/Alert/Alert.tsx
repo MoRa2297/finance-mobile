@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View, Modal, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 
-interface AlertProps {
+interface IAlertProps {
   visible: boolean;
   title: string;
   subtitle?: string;
@@ -15,7 +15,7 @@ interface AlertProps {
   onSecondaryPress?: () => void;
 }
 
-export const Alert: React.FC<AlertProps> = ({
+export const Alert: FC<IAlertProps> = ({
   visible,
   title,
   subtitle,

@@ -1,107 +1,104 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useRouter } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import {
-  ScreenContainer,
-  Header,
-  SliderBar,
-  EmptyData,
-  Alert,
-} from '@/components/ui';
-import { CategoryListCard } from '@/components/screens/settings/categories';
+import { ScreenContainer, Header, SliderBar, Alert } from '@/components/ui';
+import { CategoryListCard } from '@/components';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { Category } from '@/types';
+import { EmptyData } from '@/components';
 
 const TABS = [
-  { title: 'expenses', value: 'expenses' },
-  { title: 'income', value: 'income' },
+  { title: 'common:expenses', value: 'expenses' },
+  { title: 'common:income', value: 'income' },
 ];
 
 export default function CategoriesScreen() {
-  const { t } = useTranslation();
-  const router = useRouter();
+  const { t } = useTranslation(['categoriesPage', 'common']);
   const insets = useSafeAreaInsets();
   const { showActionSheetWithOptions } = useActionSheet();
 
-  // Stores
   const categories = useDataStore(state => state.categories);
   const deleteCategory = useDataStore(state => state.deleteCategory);
   const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
-  // State
   const [selectedTab, setSelectedTab] = useState(TABS[0].value);
   const [alertVisible, setAlertVisible] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
     null,
   );
 
-  // Filter categories by type
+  // Filter categories based on selected tab (expenses/income)
   const filteredCategories = useMemo(
     () => categories.filter(cat => cat.type === selectedTab),
     [categories, selectedTab],
   );
 
-  // Handlers - TUTTI definiti al livello top del componente
+  // Memoized action sheet container style to avoid recreation on each render
+  const actionSheetContainerStyle = useMemo(
+    () => ({
+      ...styles.actionSheetContainer,
+      marginBottom: insets.bottom,
+    }),
+    [insets.bottom],
+  );
+
+  // Handle tab switch between expenses and income
   const handleTabChange = useCallback((value: string) => {
     setSelectedTab(value);
   }, []);
 
+  // Open edit sheet when category is pressed
   const handleCategoryPress = useCallback((category: Category) => {
-    // Open edit sheet
     SheetManager.show('category-form-sheet', {
       payload: { category, type: category.type as 'income' | 'expenses' },
     });
   }, []);
 
-  // Handler per aggiungere categoria - definito QUI, non dentro showActionSheetWithOptions
+  // Open create category sheet
   const openCreateCategorySheet = useCallback(() => {
-    console.log('SHOWWW');
     SheetManager.show('category-form-sheet', {
       payload: { category: null, type: selectedTab as 'income' | 'expenses' },
-    })
-      .then(r => console.log('r: ', r))
-      .catch(e => console.error(e));
+    });
   }, [selectedTab]);
 
+  // Show action sheet with "Create Category" option
   const handleAddCategory = useCallback(() => {
-    const options = [
-      t('screens.categoriesScreen.createCategory'),
-      t('common.cancel'),
-    ];
+    const options = [t('categoriesPage:createCategory'), t('common:cancel')];
     const cancelButtonIndex = 1;
 
     showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
-        containerStyle: [
-          styles.actionSheetContainer,
-          { marginBottom: insets.bottom },
-        ],
+        containerStyle: actionSheetContainerStyle,
         textStyle: styles.actionSheetText,
       },
       selectedIndex => {
         if (selectedIndex === 0) {
-          // Chiama la funzione già definita
           openCreateCategorySheet();
         }
       },
     );
-  }, [t, insets.bottom, showActionSheetWithOptions, openCreateCategorySheet]);
+  }, [
+    t,
+    showActionSheetWithOptions,
+    actionSheetContainerStyle,
+    openCreateCategorySheet,
+  ]);
 
+  // Show action sheet with Edit/Delete options for a category
   const handleOptionsPress = useCallback(
     (category: Category) => {
       const options = [
-        t('screens.categoriesScreen.edit'),
-        t('screens.categoriesScreen.delete'),
-        t('common.cancel'),
+        t('common:edit'),
+        t('common:delete'),
+        t('common:cancel'),
       ];
       const destructiveButtonIndex = 1;
       const cancelButtonIndex = 2;
@@ -111,20 +108,15 @@ export default function CategoriesScreen() {
           options,
           cancelButtonIndex,
           destructiveButtonIndex,
-          containerStyle: [
-            styles.actionSheetContainer,
-            { marginBottom: insets.bottom },
-          ],
+          containerStyle: actionSheetContainerStyle,
           textStyle: styles.actionSheetText,
         },
         selectedIndex => {
           switch (selectedIndex) {
-            case 0:
-              // Edit - chiama funzione esistente
+            case 0: // Edit
               handleCategoryPress(category);
               break;
-            case 1:
-              // Delete
+            case 1: // Delete
               setCategoryToDelete(category);
               setAlertVisible(true);
               break;
@@ -132,9 +124,15 @@ export default function CategoriesScreen() {
         },
       );
     },
-    [t, insets.bottom, showActionSheetWithOptions, handleCategoryPress],
+    [
+      t,
+      showActionSheetWithOptions,
+      actionSheetContainerStyle,
+      handleCategoryPress,
+    ],
   );
 
+  // Confirm category deletion
   const handleDeleteConfirm = useCallback(() => {
     if (categoryToDelete) {
       deleteCategory(categoryToDelete.id);
@@ -143,12 +141,12 @@ export default function CategoriesScreen() {
     }
   }, [categoryToDelete, deleteCategory]);
 
+  // Cancel category deletion
   const handleDeleteCancel = useCallback(() => {
     setCategoryToDelete(null);
     setAlertVisible(false);
   }, []);
 
-  // Render functions
   const renderItem = useCallback(
     ({ item }: { item: Category }) => (
       <CategoryListCard
@@ -161,7 +159,7 @@ export default function CategoriesScreen() {
   );
 
   const renderEmpty = useCallback(
-    () => <EmptyData title={t('screens.categoriesScreen.emptyData')} />,
+    () => <EmptyData title={t('categoriesPage:emptyData')} />,
     [t],
   );
 
@@ -172,19 +170,18 @@ export default function CategoriesScreen() {
       style={styles.container}
       horizontalPadding={false}
       forceNoBottomPadding>
-      {/* Header */}
+      {/* Header with back button and settings */}
       <Header
-        title={t('screens.categoriesScreen.title')}
-        showBackButton
-        onSettingsPress={handleAddCategory}
+        left={{ type: 'back', variant: 'icon' }}
+        right={{ type: 'settings', onPress: handleAddCategory }}
       />
 
-      {/* Tab Selector */}
+      {/* Tab selector for expenses/income */}
       <View style={styles.sliderContainer}>
         <SliderBar tabs={TABS} onTabChange={handleTabChange} />
       </View>
 
-      {/* List */}
+      {/* Category list */}
       <View style={[styles.listContainer, { paddingBottom: bottomTabHeight }]}>
         <FlatList
           data={filteredCategories}
@@ -199,13 +196,13 @@ export default function CategoriesScreen() {
         />
       </View>
 
-      {/* Delete Confirmation Alert */}
+      {/* Delete confirmation alert */}
       <Alert
         visible={alertVisible}
-        title={t('screens.categoriesScreen.deleteTitle')}
-        subtitle={t('screens.categoriesScreen.deleteSubtitle')}
-        primaryButtonText={t('common.delete')}
-        secondaryButtonText={t('common.cancel')}
+        title={t('categoriesPage:alertTitle')}
+        subtitle={t('categoriesPage:alertSubTitle')}
+        primaryButtonText={t('categoriesPage:alertButtonYes')}
+        secondaryButtonText={t('categoriesPage:alertButtonNo')}
         onPrimaryPress={handleDeleteConfirm}
         onSecondaryPress={handleDeleteCancel}
       />
@@ -228,6 +225,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
     marginTop: 10,
+    overflow: 'hidden',
   },
   listContent: {
     paddingTop: 15,

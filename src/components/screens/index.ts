@@ -1,3 +1,7 @@
+export type { MonthItem } from './home';
+
+// ORDERED
+
 export {
   LoginDivider,
   SocialLoginButtons,
@@ -13,7 +17,6 @@ export {
   calculateBalance,
 } from './home';
 
-export type { MonthItem } from './home';
-
-// ORDERED
 export { ExpensesList, ExpenseCard } from './expenses';
+
+export { SettingsHeader, CategoryListCard } from './settings';

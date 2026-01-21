@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import {
 } from '@/components/ui';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { Category } from '@/types/types';
+import { Category } from '@/types';
 import { useUIStore } from '@/stores';
 
 export interface CategoryFormValues {
@@ -22,18 +22,18 @@ export interface CategoryFormValues {
   icon: string;
 }
 
-interface CategoryFormProps {
+interface ICategoryFormProps {
   category: Category | null;
   onSubmit: (values: CategoryFormValues) => void;
   onClose: () => void;
 }
 
-export const CategoryForm: React.FC<CategoryFormProps> = ({
+export const CategoryForm: FC<ICategoryFormProps> = ({
   category,
   onSubmit,
   onClose,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['categoriesPage', 'common']);
   const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
   // Form state
@@ -52,7 +52,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   const handleSubmit = useCallback(() => {
     // Validation
     if (!name.trim()) {
-      setAlertMessage(t('components.categoryForm.alertNameError'));
+      setAlertMessage(t('categoriesPage:categoryForm.alertNameError'));
       setAlertVisible(true);
       return;
     }
@@ -70,14 +70,14 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       {/* Title */}
       <Text category="h4" style={styles.title}>
         {category
-          ? t('components.categoryForm.editCategory')
-          : t('components.categoryForm.newCategory')}
+          ? t('categoriesPage:categoryForm.editCategory')
+          : t('categoriesPage:categoryForm.newCategory')}
       </Text>
 
       {/* Form Fields */}
       <View style={styles.form}>
         <InputIconField
-          placeholder={t('components.categoryForm.namePlaceholder')}
+          placeholder={t('categoriesPage:categoryForm.namePlaceholder')}
           value={name}
           onChange={setName}
           iconName="edit-outline"
@@ -101,14 +101,14 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       <View style={[styles.buttonContainer, { marginBottom: bottomTabHeight }]}>
         <Button
           size="small"
-          buttonText={t('common.cancel')}
+          buttonText={t('common:cancel')}
           style={styles.button}
           // variant="outline"
           onPress={onClose}
         />
         <Button
           size="small"
-          buttonText={t('common.save')}
+          buttonText={t('common:save')}
           style={styles.button}
           backgroundColor={theme.colors.primary}
           onPress={handleSubmit}
@@ -118,9 +118,9 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       {/* Validation Alert */}
       <Alert
         visible={alertVisible}
-        title={t('components.categoryForm.alertTitle')}
+        title={t('categoriesPage:categoryForm.alertTitle')}
         subtitle={alertMessage}
-        primaryButtonText={t('components.categoryForm.alertButtonText')}
+        primaryButtonText={t('categoriesPage:categoryForm.alertButtonText')}
         onPrimaryPress={() => setAlertVisible(false)}
       />
     </View>

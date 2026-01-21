@@ -34,7 +34,7 @@ type TransactionDetailSheetPayload = {
 // ============================================================
 // COMPONENT
 // ============================================================
-
+// TODO split components
 export const TransactionDetailSheet: FC<
   SheetProps<'transaction-detail-sheet'>
 > = props => {

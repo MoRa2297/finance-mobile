@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, FC } from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -8,14 +8,14 @@ import { theme } from '@/config/theme';
 import { Tab } from '@/components';
 import { GLOBAL_BORDER_RADIUS } from '@config/constants';
 
-interface SliderBarProps {
+interface ISliderBarProps {
   tabs: Tab[];
   onTabChange: (value: string) => void;
   initialTab?: string;
 }
 
 // TODO add gesture to swipe with finger
-export const SliderBar: React.FC<SliderBarProps> = ({
+export const SliderBar: FC<ISliderBarProps> = ({
   tabs,
   onTabChange,
   initialTab,

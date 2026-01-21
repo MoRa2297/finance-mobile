@@ -13,13 +13,13 @@ import { SettingsList } from '@/types';
 import { SliderBar } from '@components/ui/SliderBar';
 
 const TABS = [
-  { title: 'general', value: 'general' },
-  { title: 'charts', value: 'charts' },
-  { title: 'profile', value: 'profile' },
+  { title: 'settingsPage:general', value: 'general' },
+  { title: 'settingsPage:charts', value: 'charts' },
+  { title: 'settingsPage:profile', value: 'profile' },
 ];
 
 export default function SettingsScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('settingsPage');
   const router = useRouter();
 
   // Stores
@@ -59,17 +59,17 @@ export default function SettingsScreen() {
         value: 'general',
         rows: [
           {
-            title: t('screens.settingsScreen.menuCategories'),
+            title: t('settingsPage:menuCategories'),
             iconName: 'bookmark-outline',
             navigationScreen: '/(auth)/categories',
           },
           {
-            title: t('screens.settingsScreen.menuBankAccounts'),
+            title: t('settingsPage:menuBankAccounts'),
             iconName: 'grid-outline',
             navigationScreen: '/(auth)/bank-accounts',
           },
           {
-            title: t('screens.settingsScreen.menuBankCards'),
+            title: t('settingsPage:menuBankCards'),
             iconName: 'credit-card-outline',
             navigationScreen: '/(auth)/bank-cards',
           },
@@ -83,18 +83,18 @@ export default function SettingsScreen() {
         value: 'profile',
         rows: [
           {
-            title: t('screens.settingsScreen.profile'),
+            title: t('settingsPage:profile'),
             iconName: 'person-outline',
             navigationScreen: '/(auth)/profile',
           },
           {
-            title: t('screens.settingsScreen.deleteAccount'),
+            title: t('settingsPage:deleteAccount'),
             iconName: 'person-delete-outline',
             color: theme.colors.red,
             callback: handleDeleteAccount,
           },
           {
-            title: t('screens.settingsScreen.logOut'),
+            title: t('settingsPage:logOut'),
             iconName: 'log-out-outline',
             color: theme.colors.red,
             callback: handleLogout,

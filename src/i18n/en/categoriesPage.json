@@ -1,0 +1,18 @@
+{
+  "headerTitle": "Categorie",
+  "loadingTitle": "Caricamento categorie",
+  "emptyData": "Nessuna categoria presente al momento!",
+  "createCategory": "Crea categoria",
+  "alertTitle": "Attenzione",
+  "alertSubTitle": "Sicuro di voler cancellare la categoria?",
+  "alertButtonYes": "Si",
+  "alertButtonNo": "No",
+  "categoryForm": {
+    "newCategory": "Nuova categoria",
+    "editCategory": "Modifica categoria",
+    "namePlaceholder": "Nome...",
+    "alertTitle": "Attenzione",
+    "alertNameError": "Errore, nome obbligatorio",
+    "alertButtonText": "Capito"
+  }
+}

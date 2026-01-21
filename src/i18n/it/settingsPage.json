@@ -1,0 +1,14 @@
+{
+  "menuCategories": "Categorie",
+  "menuBankAccounts": "Conti bancari",
+  "menuBankCards": "Carte",
+  "logOut": "Log Out",
+  "deleteAccount": "Elimina account",
+  "deleteAccountModalTitle": "Eliminazione  account",
+  "deleteAccountModalSubTitle": "Sei sicuro di volere eliminare definitivamente il tuo account?",
+  "deleteAccountPrimaryButtonTitle": "Si",
+  "deleteAccountSecondaryButtonTitle": "No",
+  "charts": "Grafici",
+  "profile": "Profilo",
+  "general": "Generale"
+}

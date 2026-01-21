@@ -14,6 +14,12 @@ import homeEn from './en/homePage.json';
 import expensesIt from './it/expensesPage.json';
 import expensesEn from './en/expensesPage.json';
 
+import settingsIt from './it/settingsPage.json';
+import settingsEn from './en/settingsPage.json';
+
+import categoriesIt from './it/categoriesPage.json';
+import categoriesEn from './en/categoriesPage.json';
+
 import validationEn from './en/validation.json';
 import validationIt from './it/validation.json';
 
@@ -28,6 +34,8 @@ const i18nResources = {
     loginPage: loginIt,
     homePage: homeIt,
     expensesPage: expensesIt,
+    settingsPage: settingsIt,
+    categoriesPage: categoriesIt,
     validation: validationIt,
     // translation: it,
   },
@@ -36,6 +44,8 @@ const i18nResources = {
     loginPage: loginEn,
     homePage: homeEn,
     expensesPage: expensesEn,
+    settingsPage: settingsEn,
+    categoriesPage: categoriesEn,
     validation: validationEn,
     // translation: en,
   },
@@ -78,7 +88,14 @@ i18next
   })
   .use(initReactI18next)
   .init({
-    ns: ['common', 'validation', 'loginPage', 'expensesPage'],
+    ns: [
+      'common',
+      'validation',
+      'loginPage',
+      'expensesPage',
+      'settingsPage',
+      'categoriesPage',
+    ],
     // TODO compatibilityJSON: 'v3',
     fallbackLng: DEFAULT_LANG,
     resources: i18nResources,

@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 
 import { Icon } from '@/components/ui';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { Category } from '@/types/types';
+import { Category } from '@/types';
 
-interface CategoryListCardProps {
+interface ICategoryListCardProps {
   category: Category;
   onPress: (category: Category) => void;
   onOptionsPress: (category: Category) => void;
 }
 
-export const CategoryListCard: React.FC<CategoryListCardProps> = ({
+export const CategoryListCard: FC<ICategoryListCardProps> = ({
   category,
   onPress,
   onOptionsPress,
