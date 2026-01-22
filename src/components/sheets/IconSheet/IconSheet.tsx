@@ -1,7 +1,8 @@
-import React, { useRef } from 'react';
+import React, { FC, useRef } from 'react';
 import { StyleSheet, View, Pressable, useWindowDimensions } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
+  SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,25 +10,31 @@ import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { CATEGORY_ICONS } from '@/config';
+import { Icon } from '@/components';
 
-export const IconSheet: React.FC<SheetProps<'icon-sheet'>> = props => {
+export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
+  sheetId,
+  payload,
+}) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const { width } = useWindowDimensions();
-  const selected = props.payload?.selected;
-  const selectedColor = props.payload?.selectedColor;
+  const selected = payload?.selected;
+  const selectedColor = payload?.selectedColor;
 
   const itemSize = (width - HORIZONTAL_PADDING * 2 - 50) / 6;
 
   const handlePressIcon = (icon: string) => {
-    // TODO check
-    // @ts-ignore
-    actionSheetRef.current?.hide({ icon });
+    SheetManager.hide(sheetId, {
+      payload: { icon },
+    });
   };
+
+  console.log('CATEGORY_ICONS: ', CATEGORY_ICONS);
 
   return (
     <ActionSheet
       ref={actionSheetRef}
-      id={props.sheetId}
+      id={sheetId}
       closable
       gestureEnabled
       useBottomSafeAreaPadding
@@ -56,10 +63,11 @@ export const IconSheet: React.FC<SheetProps<'icon-sheet'>> = props => {
                 },
               ]}
               onPress={() => handlePressIcon(icon.iconName)}>
-              <Ionicons
-                name={icon.iconName as any}
+              <Icon
+                name={icon.iconName}
                 size={24}
                 color={theme.colors.basic100}
+                pack="ionicons"
               />
             </Pressable>
           ))}

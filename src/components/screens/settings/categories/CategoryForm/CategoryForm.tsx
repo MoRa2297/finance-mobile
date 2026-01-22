@@ -86,7 +86,7 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
         <ColorInputField
           value={color}
           onChange={setColor}
-          iconName="color-palette-outline"
+          iconName="cart-outline"
         />
 
         <IconInputField

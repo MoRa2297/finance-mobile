@@ -165,23 +165,23 @@ export const CATEGORY_COLORS: Array<{ value: string }> = [
   },
 ];
 
-export const CATEGORY_ICONS: Array<{ value: string }> = [
-  {
-    value: 'plus-outline',
-  },
-  {
-    value: 'wifi-outline',
-  },
-  {
-    value: 'volume-mute-outline',
-  },
-  {
-    value: 'video-off-outline',
-  },
-  {
-    value: 'thermometer-plus-outline',
-  },
-];
+// export const CATEGORY_ICONS: Array<{ value: string }> = [
+//   {
+//     value: 'plus-outline',
+//   },
+//   {
+//     value: 'wifi-outline',
+//   },
+//   {
+//     value: 'volume-mute-outline',
+//   },
+//   {
+//     value: 'video-off-outline',
+//   },
+//   {
+//     value: 'thermometer-plus-outline',
+//   },
+// ];
 
 export const BANK_ACCOUNT_TYPE: Array<BankAccountType> = [
   {

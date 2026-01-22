@@ -1,5 +1,4 @@
 export { InputField } from './ui/InputField';
-export { Icon } from './ui/Icon';
 
 export { CustomAvatar } from './common/CustomAvatar';
 export { SpecificPrice } from './ui/SpecificPrice';
@@ -10,6 +9,7 @@ export { SelectPickerInput } from './ui/SelectPickerInput';
 //SCREENS
 
 export {
+  Icon,
   TopRoundedContainer,
   Header,
   MonthSwipePicker,

@@ -32,5 +32,13 @@
     "october": "Ottobre",
     "november": "Novembre",
     "december": "Dicembre"
+  },
+  "colorInputField": {
+    "title": "Colore",
+    "buttonText": "Altri"
+  },
+  "iconInputField": {
+    "title": "Icona",
+    "buttonText": "Altri"
   }
 }

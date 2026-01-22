@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { FC, useCallback } from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -9,18 +9,18 @@ import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { COLORS } from '@/config';
 
-interface ColorInputFieldProps {
+interface IColorInputFieldProps {
   value: string;
   onChange: (color: string) => void;
   iconName?: string;
 }
 
-export const ColorInputField: React.FC<ColorInputFieldProps> = ({
+export const ColorInputField: FC<IColorInputFieldProps> = ({
   value,
   onChange,
   iconName,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   // Get first 3 colors for quick selection
   const quickColors = COLORS.slice(0, 3);
@@ -58,9 +58,7 @@ export const ColorInputField: React.FC<ColorInputFieldProps> = ({
             <Icon name={iconName} color={theme.colors.textHint} size={24} />
           </View>
         )}
-        <Text style={styles.label}>
-          {t('components.colorInputField.title')}
-        </Text>
+        <Text style={styles.label}>{t('common:colorInputField.title')}</Text>
       </View>
 
       {/* Bottom row */}
@@ -81,7 +79,7 @@ export const ColorInputField: React.FC<ColorInputFieldProps> = ({
         ))}
         <Button
           size="small"
-          buttonText={t('components.colorInputField.buttonText')}
+          buttonText={t('common:colorInputField.buttonText')}
           style={styles.moreButton}
           backgroundColor={theme.colors.textHint}
           onPress={handleOpenSheet}

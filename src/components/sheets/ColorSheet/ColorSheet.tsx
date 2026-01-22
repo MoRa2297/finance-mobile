@@ -1,31 +1,32 @@
-import React, { useRef, useState } from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View, Pressable, useWindowDimensions } from 'react-native';
 import ActionSheet, {
-  ActionSheetRef,
   SheetProps,
+  SheetManager,
 } from 'react-native-actions-sheet';
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { COLORS } from '@/config';
 
-export const ColorSheet: React.FC<SheetProps<'color-sheet'>> = props => {
-  const actionSheetRef = useRef<ActionSheetRef>(null);
+export const ColorSheet: FC<SheetProps<'color-sheet'>> = ({
+  payload,
+  sheetId,
+}) => {
   const { width } = useWindowDimensions();
-  const selected = props.payload?.selected;
+  const selected = payload?.selected;
 
   const itemSize = (width - HORIZONTAL_PADDING * 2 - 50) / 6;
 
   const handlePressColor = (color: string) => {
-    // TODO check
-    // @ts-ignore
-    actionSheetRef.current?.hide({ color });
+    SheetManager.hide(sheetId, {
+      payload: { color },
+    });
   };
 
   return (
     <ActionSheet
-      ref={actionSheetRef}
-      id={props.sheetId}
+      id={sheetId}
       closable
       gestureEnabled
       useBottomSafeAreaPadding

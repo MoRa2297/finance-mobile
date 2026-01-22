@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View, TextInput, KeyboardTypeOptions } from 'react-native';
 
 import { Icon } from '@/components/ui';
 import { theme } from '@/config/theme';
 
-interface InputIconFieldProps {
+interface IInputIconFieldProps {
   value?: string;
   placeholder?: string;
   onChange: (text: string) => void;
@@ -17,7 +17,7 @@ interface InputIconFieldProps {
   editable?: boolean;
 }
 
-export const InputIconField: React.FC<InputIconFieldProps> = ({
+export const InputIconField: FC<IInputIconFieldProps> = ({
   value,
   placeholder,
   onChange,

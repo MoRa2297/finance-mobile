@@ -7,7 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { Icon, Button } from '@/components/ui';
 import { theme } from '@/config/theme';
-import { GLOBAL_BORDER_RADIUS, CATEGORY_ICONS } from '@/config/constants';
+import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
+import { CATEGORY_ICONS } from '@/config';
 
 interface IconInputFieldProps {
   value: string;
@@ -22,7 +23,7 @@ export const IconInputField: React.FC<IconInputFieldProps> = ({
   selectedColor,
   iconName,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   // Get first 3 icons for quick selection
   const quickIcons = CATEGORY_ICONS.slice(0, 3);
@@ -60,7 +61,7 @@ export const IconInputField: React.FC<IconInputFieldProps> = ({
             <Icon name={iconName} color={theme.colors.textHint} size={24} />
           </View>
         )}
-        <Text style={styles.label}>{t('components.iconInputField.title')}</Text>
+        <Text style={styles.label}>{t('common:iconInputField.title')}</Text>
       </View>
 
       {/* Bottom row */}
@@ -86,7 +87,7 @@ export const IconInputField: React.FC<IconInputFieldProps> = ({
         ))}
         <Button
           size="small"
-          buttonText={t('components.iconInputField.buttonText')}
+          buttonText={t('common:iconInputField.buttonText')}
           style={styles.moreButton}
           backgroundColor={theme.colors.textHint}
           onPress={handleOpenSheet}

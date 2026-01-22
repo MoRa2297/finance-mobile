@@ -1,3 +1,4 @@
+export { Icon } from './Icon';
 export { TopRoundedContainer } from './TopRoundedContainer';
 export { Header } from './Header';
 export { MonthSwipePicker } from './MonthSwipePicker';
@@ -8,7 +9,7 @@ export type { Tab } from './SliderBar';
 // NOT ORDERED
 
 export { Button, IconButton } from './Button';
-export { Icon } from './Icon';
+
 export { InputField } from './InputField';
 export { InputIconField } from './InputIconField';
 export { ColorInputField } from './ColorInputField';

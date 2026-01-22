@@ -157,15 +157,15 @@ export default function BankAccountFormScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       {/* Header */}
-      <Header
-        title={
-          isEditing
-            ? t('screens.bankAccountFormScreen.headerTitleEdit')
-            : t('screens.bankAccountFormScreen.headerTitleNew')
-        }
-        showBackButton
-        backText={t('common.cancel')}
-      />
+      {/*<Header*/}
+      {/*  title={*/}
+      {/*    isEditing*/}
+      {/*      ? t('screens.bankAccountFormScreen.headerTitleEdit')*/}
+      {/*      : t('screens.bankAccountFormScreen.headerTitleNew')*/}
+      {/*  }*/}
+      {/*  showBackButton*/}
+      {/*  backText={t('common.cancel')}*/}
+      {/*/>*/}
 
       {/* Form */}
       <View style={styles.formContainer}>
@@ -226,7 +226,7 @@ export default function BankAccountFormScreen() {
           <ColorInputField
             value={color}
             onChange={setColor}
-            iconName="color-palette-outline"
+            iconName="cart-outline"
           />
 
           {/* Submit Button */}
