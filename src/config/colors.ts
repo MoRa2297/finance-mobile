@@ -34,29 +34,67 @@ export const COLORS: Color[] = [
   { id: 31, hexCode: '#000000' },
 ];
 
+// export const CATEGORY_ICONS: CategoryIcon[] = [
+//   // { id: 1, iconName: 'cart-outline' },
+//   // { id: 2, iconName: 'car-outline' },
+//   // { id: 3, iconName: 'film-outline' },
+//   // { id: 4, iconName: 'medical-outline' },
+//   // { id: 5, iconName: 'cash-outline' },
+//   // { id: 6, iconName: 'flash-outline' },
+//   // { id: 7, iconName: 'bag-outline' },
+//   // { id: 8, iconName: 'restaurant-outline' },
+//   // { id: 9, iconName: 'home-outline' },
+//   // { id: 10, iconName: 'airplane-outline' },
+//   // { id: 11, iconName: 'gift-outline' },
+//   // { id: 12, iconName: 'school-outline' },
+//   // { id: 13, iconName: 'fitness-outline' },
+//   // { id: 14, iconName: 'paw-outline' },
+//   // { id: 15, iconName: 'game-controller-outline' },
+//   // { id: 16, iconName: 'musical-notes-outline' },
+//   // { id: 17, iconName: 'book-outline' },
+//   // { id: 18, iconName: 'cafe-outline' },
+//   // { id: 19, iconName: 'beer-outline' },
+//   // { id: 20, iconName: 'heart-outline' },
+//   // { id: 21, iconName: 'star-outline' },
+//   // { id: 22, iconName: 'wallet-outline' },
+//   // { id: 23, iconName: 'card-outline' },
+//   // { id: 24, iconName: 'briefcase-outline' },
+// ];
+
 export const CATEGORY_ICONS: CategoryIcon[] = [
-  // { id: 1, iconName: 'cart-outline' },
-  // { id: 2, iconName: 'car-outline' },
-  // { id: 3, iconName: 'film-outline' },
-  // { id: 4, iconName: 'medical-outline' },
-  // { id: 5, iconName: 'cash-outline' },
-  // { id: 6, iconName: 'flash-outline' },
-  // { id: 7, iconName: 'bag-outline' },
-  // { id: 8, iconName: 'restaurant-outline' },
-  // { id: 9, iconName: 'home-outline' },
-  // { id: 10, iconName: 'airplane-outline' },
-  // { id: 11, iconName: 'gift-outline' },
-  // { id: 12, iconName: 'school-outline' },
-  // { id: 13, iconName: 'fitness-outline' },
-  // { id: 14, iconName: 'paw-outline' },
-  // { id: 15, iconName: 'game-controller-outline' },
-  // { id: 16, iconName: 'musical-notes-outline' },
-  // { id: 17, iconName: 'book-outline' },
-  // { id: 18, iconName: 'cafe-outline' },
-  // { id: 19, iconName: 'beer-outline' },
-  // { id: 20, iconName: 'heart-outline' },
-  // { id: 21, iconName: 'star-outline' },
-  // { id: 22, iconName: 'wallet-outline' },
-  // { id: 23, iconName: 'card-outline' },
-  // { id: 24, iconName: 'briefcase-outline' },
+  // Essentials
+  { id: 1, iconName: 'shopping-cart-outline' }, // Groceries
+  { id: 2, iconName: 'home-outline' }, // Housing / Rent
+  { id: 3, iconName: 'car-outline' }, // Transportation
+  { id: 4, iconName: 'flash-outline' }, // Utilities
+  { id: 5, iconName: 'phone-outline' }, // Phone / Bills
+  { id: 6, iconName: 'wifi-outline' }, // Internet
+
+  // Lifestyle
+  { id: 7, iconName: 'shopping-bag-outline' }, // Shopping
+  { id: 8, iconName: 'heart-outline' }, // Health
+  { id: 9, iconName: 'activity-outline' }, // Fitness
+  { id: 10, iconName: 'film-outline' }, // Entertainment
+  { id: 11, iconName: 'music-outline' }, // Music / Streaming
+  { id: 12, iconName: 'book-outline' }, // Education
+
+  // Finance
+  { id: 13, iconName: 'credit-card-outline' }, // Card / Banking
+  { id: 14, iconName: 'trending-up-outline' }, // Investments
+  { id: 15, iconName: 'pie-chart-outline' }, // Savings
+  { id: 16, iconName: 'shield-outline' }, // Insurance
+
+  // Other
+  { id: 17, iconName: 'briefcase-outline' }, // Work
+  { id: 18, iconName: 'compass-outline' }, // Travel
+  { id: 19, iconName: 'gift-outline' }, // Gifts
+  { id: 20, iconName: 'people-outline' }, // Family
+  { id: 21, iconName: 'file-text-outline' }, // Taxes / Fees
+
+  // Income
+  { id: 22, iconName: 'arrow-circle-down-outline' }, // Income received
+  { id: 23, iconName: 'layers-outline' }, // Other income
+
+  // Misc
+  { id: 24, iconName: 'more-horizontal-outline' }, // Other
 ];

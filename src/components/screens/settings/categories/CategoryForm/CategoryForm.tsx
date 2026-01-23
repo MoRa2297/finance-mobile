@@ -86,7 +86,7 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
         <ColorInputField
           value={color}
           onChange={setColor}
-          iconName="cart-outline"
+          iconName="color-palette-outline"
         />
 
         <IconInputField
@@ -103,7 +103,15 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
           size="small"
           buttonText={t('common:cancel')}
           style={styles.button}
-          // variant="outline"
+          appearance="outline"
+          onPress={onClose}
+        />
+        <Button
+          size="small"
+          appearance="outline"
+          backgroundColor={theme.colors.primary}
+          textStyle={{ color: theme.colors.primary }}
+          style={styles.button}
           onPress={onClose}
         />
         <Button

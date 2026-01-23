@@ -3,12 +3,12 @@ import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 import { SheetManager } from 'react-native-actions-sheet';
-import { Ionicons } from '@expo/vector-icons';
 
-import { Icon, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { CATEGORY_ICONS } from '@/config';
+import { Icon } from '@components/ui/Icon';
 
 interface IconInputFieldProps {
   value: string;
@@ -78,8 +78,8 @@ export const IconInputField: React.FC<IconInputFieldProps> = ({
               },
             ]}
             onPress={() => handleSelectIcon(icon.iconName)}>
-            <Ionicons
-              name={icon.iconName as any}
+            <Icon
+              name={icon.iconName}
               size={20}
               color={theme.colors.basic100}
             />

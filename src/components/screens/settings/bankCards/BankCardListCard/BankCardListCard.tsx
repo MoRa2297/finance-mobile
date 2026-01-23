@@ -3,7 +3,7 @@ import { StyleSheet, View, Pressable, Image } from 'react-native';
 import { ProgressBar, Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankCard } from '@/types/types';

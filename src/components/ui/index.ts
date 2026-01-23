@@ -1,4 +1,3 @@
-export { Icon } from './Icon';
 export { TopRoundedContainer } from './TopRoundedContainer';
 export { Header } from './Header';
 export { MonthSwipePicker } from './MonthSwipePicker';

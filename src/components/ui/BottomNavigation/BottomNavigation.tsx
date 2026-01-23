@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePathname } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 
 import { TabLabel } from './TabLabel';

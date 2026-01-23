@@ -4,7 +4,7 @@ import { MenuItem, OverflowMenu } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 
-import { Button, Icon } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { theme } from '@/config/theme';
 
 import {
@@ -12,6 +12,7 @@ import {
   getCurrentMonthIndex,
   MonthItem,
 } from './MonthPopover.helpers';
+import { Icon } from '@components/ui/Icon';
 
 interface MonthPopoverProps {
   onSelectMonth: (month: MonthItem) => void;

@@ -18,7 +18,7 @@ import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 
 import {

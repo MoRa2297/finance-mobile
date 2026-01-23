@@ -9,7 +9,6 @@ export { SelectPickerInput } from './ui/SelectPickerInput';
 //SCREENS
 
 export {
-  Icon,
   TopRoundedContainer,
   Header,
   MonthSwipePicker,

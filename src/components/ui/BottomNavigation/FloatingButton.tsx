@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 
 // ============ TYPES ============

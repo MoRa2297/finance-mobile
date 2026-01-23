@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 
-import { Icon } from '@/components/ui';
 import { theme } from '@/config/theme';
+import { Icon } from '@components/ui/Icon';
 
 interface SpecificPriceProps {
   title: string;

@@ -5,12 +5,11 @@ import ActionSheet, {
   SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
-import { Ionicons } from '@expo/vector-icons';
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { CATEGORY_ICONS } from '@/config';
-import { Icon } from '@/components';
+import { Icon } from '@components/ui/Icon';
 
 export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
   sheetId,
@@ -67,7 +66,6 @@ export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
                 name={icon.iconName}
                 size={24}
                 color={theme.colors.basic100}
-                pack="ionicons"
               />
             </Pressable>
           ))}

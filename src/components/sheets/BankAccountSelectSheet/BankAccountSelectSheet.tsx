@@ -6,7 +6,7 @@ import ActionSheet, {
   SheetProps,
 } from 'react-native-actions-sheet';
 
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { useDataStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';

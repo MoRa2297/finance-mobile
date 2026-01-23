@@ -34,7 +34,7 @@ interface ButtonProps {
   color?: string;
   borderColor?: string;
 }
-
+// TODO refactor
 export const Button: React.FunctionComponent<ButtonProps> = ({
   adjustsFontSizeToFit,
   buttonText,

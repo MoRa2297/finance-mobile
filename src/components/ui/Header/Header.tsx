@@ -3,10 +3,10 @@ import { StyleSheet, View, Pressable, ViewStyle } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useRouter } from 'expo-router';
 
-import { Icon } from '@/components/ui';
 import { CustomAvatar } from '@/components/common';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
+import { Icon } from '@components/ui/Icon';
 
 type LeftContentType =
   | {

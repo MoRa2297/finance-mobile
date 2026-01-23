@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Pressable, Image } from 'react-native';
 import { Text } from '@ui-kitten/components';
 
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 

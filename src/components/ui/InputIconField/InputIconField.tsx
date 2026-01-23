@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { StyleSheet, View, TextInput, KeyboardTypeOptions } from 'react-native';
 
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 
 interface IInputIconFieldProps {
