@@ -14,8 +14,8 @@ import {
   loginValidationSchema,
 } from './LoginForm.helpers';
 import { TLoginFormValues } from '@hooks/screens/login/useLogin';
-import { InputField } from '@/components';
 import { Button } from '@components/ui/Button';
+import { InputField } from '@components/ui/InputField';
 
 interface ILoginFormProps {
   isLoading: boolean;

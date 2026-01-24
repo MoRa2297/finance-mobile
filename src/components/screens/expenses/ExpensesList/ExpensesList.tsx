@@ -7,9 +7,11 @@ import { theme } from '@/config/theme';
 import { Transaction, Category, BankAccount, BankCard } from '@/types';
 
 import { groupByDate } from './ExpensesList.helpers';
-import { LoadingSpinner, ExpenseCard, EmptyData } from '@/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BOTTOM_NAV_HEIGHT } from '@config/constants';
+// import { EmptyData, ExpenseCard, LoadingSpinner } from '@/components';
+import { LoadingSpinner, EmptyData } from '../../../common';
+import { ExpenseCard } from '../ExpenseCard';
 
 interface IExpensesListProps {
   transactions: Transaction[];

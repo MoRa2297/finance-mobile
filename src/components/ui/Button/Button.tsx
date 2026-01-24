@@ -14,7 +14,9 @@ import { RenderProp } from '@ui-kitten/components/devsupport';
 
 import { Icon } from '../Icon';
 import { theme } from '@config/theme';
-import { LoadingSpinner } from '@/components';
+// import { LoadingSpinner } from '@/components';
+
+import { LoadingSpinner } from '../../common/LoadingSpinner';
 
 type ButtonAppearance = 'filled' | 'outline' | 'ghost';
 

@@ -65,7 +65,7 @@ export default function HomeScreen() {
             onToggle: handleToggleMoneyVisibility,
           }}
         />
-        {/*<BalanceSummary balance={balance} moneyIsVisible={moneyIsVisible} />*/}
+        <BalanceSummary balance={balance} moneyIsVisible={moneyIsVisible} />
       </TopRoundedContainer>
 
       {/* TODO: Add transactions list, charts, etc. */}
