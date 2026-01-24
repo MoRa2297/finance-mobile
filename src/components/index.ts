@@ -14,6 +14,10 @@ export {
   MonthSwipePicker,
   SliderBar,
   Alert,
+  Button,
+  IconButton,
+  InputIconField,
+  Icon,
 } from './ui';
 export {
   LoginForm,

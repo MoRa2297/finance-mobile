@@ -16,10 +16,36 @@ import { Icon } from '../Icon';
 import { theme } from '@config/theme';
 import { LoadingSpinner } from '@/components';
 
+type ButtonAppearance = 'filled' | 'outline' | 'ghost';
+
+const appearanceStyles: Record<
+  ButtonAppearance,
+  { bg: string; text: string; border: string; borderWidth: number }
+> = {
+  filled: {
+    bg: theme.colors.primary,
+    text: theme.colors.basic100,
+    border: theme.colors.primary,
+    borderWidth: 0,
+  },
+  outline: {
+    bg: theme.colors.transparent,
+    text: theme.colors.primary,
+    border: theme.colors.primary,
+    borderWidth: 2,
+  },
+  ghost: {
+    bg: theme.colors.transparent,
+    text: theme.colors.primary,
+    border: theme.colors.transparent,
+    borderWidth: 0,
+  },
+};
+
 interface ButtonProps {
   adjustsFontSizeToFit?: boolean;
   buttonText?: string;
-  appearance?: 'filled' | 'outline' | 'ghost';
+  appearance?: ButtonAppearance;
   isDisabled?: boolean;
   numberOfLines?: number;
   size?: 'tiny' | 'small' | 'medium' | 'large' | 'giant';
@@ -34,7 +60,7 @@ interface ButtonProps {
   color?: string;
   borderColor?: string;
 }
-// TODO refactor
+
 export const Button: React.FunctionComponent<ButtonProps> = ({
   adjustsFontSizeToFit,
   buttonText,
@@ -53,24 +79,15 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   color,
   borderColor,
 }) => {
+  const variantStyle = appearanceStyles[appearance];
+
   const extraStyle = {
-    backgroundColor: backgroundColor
-      ? backgroundColor
-      : appearance === 'filled'
-        ? theme.colors.basic100
-        : theme.colors.transparent,
-    color: color
-      ? color
-      : appearance === 'filled'
-        ? theme.colors.basic500
-        : theme.colors.basic100,
-    borderWidth: 2,
-    borderColor: borderColor
-      ? borderColor
-      : appearance === 'filled'
-        ? theme.colors.basic100
-        : theme.colors.transparent,
+    backgroundColor: backgroundColor ?? variantStyle.bg,
+    borderWidth: variantStyle.borderWidth,
+    borderColor: borderColor ?? variantStyle.border,
   };
+
+  const textColor = color ?? variantStyle.text;
 
   const getAccessoryRight = (): RenderProp<Partial<ImageProps>> | undefined => {
     if (isLoading) {
@@ -78,8 +95,8 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
         <LoadingSpinner
           color={
             appearance === 'filled'
-              ? theme.colors.primaryBK
-              : theme.colors.basic100
+              ? theme.colors.basic100
+              : theme.colors.primary
           }
           inline
           size="small"
@@ -92,7 +109,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   return (
     <KittenButton
       appearance={appearance}
-      disabled={isDisabled}
+      disabled={isDisabled || isLoading}
       size={size}
       accessoryRight={getAccessoryRight()}
       status="control"
@@ -106,7 +123,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
               {...evaProps}
               numberOfLines={numberOfLines}
               adjustsFontSizeToFit={adjustsFontSizeToFit}
-              style={[styles.buttonText, textStyle]}>
+              style={[styles.buttonText, { color: textColor }, textStyle]}>
               {buttonText.toUpperCase()}
             </Text>
           )}
@@ -133,7 +150,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   opacity: {
-    opacity: 0.85,
+    opacity: 0.5,
   },
 });
 
@@ -149,7 +166,7 @@ interface IconButtonProps {
 
 export const IconButton: React.FunctionComponent<IconButtonProps> = ({
   iconName,
-  iconColor = theme.colors.basic500,
+  iconColor = theme.colors.primary,
   isDisabled = false,
   size = 32,
   onPress,

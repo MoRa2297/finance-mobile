@@ -8,8 +8,8 @@ import ActionSheet, {
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { CATEGORY_ICONS } from '@/config';
 import { Icon } from '@components/ui/Icon';
+import { CATEGORY_ICONS } from '@config/icons';
 
 export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
   sheetId,
@@ -28,8 +28,6 @@ export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
     });
   };
 
-  console.log('CATEGORY_ICONS: ', CATEGORY_ICONS);
-
   return (
     <ActionSheet
       ref={actionSheetRef}
@@ -41,7 +39,6 @@ export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
       containerStyle={styles.container}>
       <View style={styles.content}>
         <View style={styles.grid}>
-          {/*TODO CHECK IMPORT IS A DUPLICATED*/}
           {CATEGORY_ICONS.map(icon => (
             <Pressable
               key={icon.id}

@@ -4,11 +4,10 @@ import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import { Button } from '@/components/ui';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { COLORS } from '@/config';
-import { Icon } from '@components/ui/Icon';
+import { Button, Icon } from '@/components';
 
 interface IColorInputFieldProps {
   value: string;

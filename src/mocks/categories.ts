@@ -1,26 +1,5 @@
 import { Category, Color, CategoryIcon } from '@/types';
-
-const COLORS: Color[] = [
-  { id: 1, hexCode: '#FF6B6B' },
-  { id: 2, hexCode: '#4ECDC4' },
-  { id: 3, hexCode: '#FFE66D' },
-  { id: 4, hexCode: '#95E1D3' },
-  { id: 5, hexCode: '#00E096' },
-  { id: 6, hexCode: '#FF8C42' },
-  { id: 7, hexCode: '#A855F7' },
-  { id: 8, hexCode: '#F472B6' },
-];
-
-const ICONS: CategoryIcon[] = [
-  { id: 1, iconName: 'shopping-cart-outline' },
-  { id: 2, iconName: 'car-outline' },
-  { id: 3, iconName: 'film-outline' },
-  { id: 4, iconName: 'heart-outline' },
-  { id: 5, iconName: 'briefcase-outline' },
-  { id: 6, iconName: 'flash-outline' },
-  { id: 7, iconName: 'pricetags-outline' },
-  { id: 8, iconName: 'restaurant-outline' },
-];
+import { CATEGORY_ICONS, COLORS } from '@/config';
 
 export const MOCK_CATEGORIES: Category[] = [
   {
@@ -30,7 +9,7 @@ export const MOCK_CATEGORIES: Category[] = [
     iconId: '1',
     userId: 1,
     type: 'expenses',
-    categoryIcon: ICONS[0],
+    categoryIcon: CATEGORY_ICONS[0],
     categoryColor: COLORS[0],
   },
   {
@@ -40,7 +19,7 @@ export const MOCK_CATEGORIES: Category[] = [
     iconId: '2',
     userId: 1,
     type: 'expenses',
-    categoryIcon: ICONS[1],
+    categoryIcon: CATEGORY_ICONS[1],
     categoryColor: COLORS[1],
   },
   {
@@ -50,7 +29,7 @@ export const MOCK_CATEGORIES: Category[] = [
     iconId: '3',
     userId: 1,
     type: 'expenses',
-    categoryIcon: ICONS[2],
+    categoryIcon: CATEGORY_ICONS[2],
     categoryColor: COLORS[2],
   },
   {
@@ -60,7 +39,7 @@ export const MOCK_CATEGORIES: Category[] = [
     iconId: '4',
     userId: 1,
     type: 'expenses',
-    categoryIcon: ICONS[3],
+    categoryIcon: CATEGORY_ICONS[3],
     categoryColor: COLORS[3],
   },
   {
@@ -70,7 +49,7 @@ export const MOCK_CATEGORIES: Category[] = [
     iconId: '5',
     userId: 1,
     type: 'income',
-    categoryIcon: ICONS[4],
+    categoryIcon: CATEGORY_ICONS[4],
     categoryColor: COLORS[4],
   },
   {
@@ -80,7 +59,7 @@ export const MOCK_CATEGORIES: Category[] = [
     iconId: '6',
     userId: 1,
     type: 'expenses',
-    categoryIcon: ICONS[5],
+    categoryIcon: CATEGORY_ICONS[5],
     categoryColor: COLORS[5],
   },
   {
@@ -90,17 +69,17 @@ export const MOCK_CATEGORIES: Category[] = [
     iconId: '7',
     userId: 1,
     type: 'expenses',
-    categoryIcon: ICONS[6],
+    categoryIcon: CATEGORY_ICONS[6],
     categoryColor: COLORS[6],
   },
   {
     id: 8,
     name: 'Ristoranti',
     colorId: '8',
-    iconId: '8',
+    iconId: '7',
     userId: 1,
     type: 'expenses',
-    categoryIcon: ICONS[7],
+    categoryIcon: CATEGORY_ICONS[7],
     categoryColor: COLORS[7],
   },
 ];

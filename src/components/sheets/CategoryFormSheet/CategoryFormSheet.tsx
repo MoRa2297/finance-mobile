@@ -5,18 +5,17 @@ import ActionSheet, {
   SheetProps,
 } from 'react-native-actions-sheet';
 
-import {
-  CategoryForm,
-  CategoryFormValues,
-} from '@/components/screens/settings/categories/CategoryForm';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { useDataStore } from '@/stores';
-import { CATEGORY_ICONS, COLORS } from '@/config';
+import { COLORS } from '@/config';
+import { CATEGORY_ICONS } from '@config/icons';
+import { CategoryForm, CategoryFormValues } from '@components/screens';
 
-export const CategoryFormSheet: FC<
-  SheetProps<'category-form-sheet'>
-> = props => {
+export const CategoryFormSheet: FC<SheetProps<'category-form-sheet'>> = ({
+  payload,
+  sheetId,
+}) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
 
   const addCategory = useDataStore(state => state.addCategory);
@@ -28,7 +27,7 @@ export const CategoryFormSheet: FC<
       const colorData = COLORS.find(c => c.hexCode === values.color);
       const iconData = CATEGORY_ICONS.find(i => i.iconName === values.icon);
 
-      if (!colorData || !iconData || !props.payload?.type) {
+      if (!colorData || !iconData || !payload?.type) {
         return;
       }
 
@@ -36,7 +35,7 @@ export const CategoryFormSheet: FC<
         name: values.name,
         colorId: String(colorData.id),
         iconId: String(iconData.id),
-        type: props.payload.type,
+        type: payload.type,
         categoryColor: { id: colorData.id, hexCode: colorData.hexCode },
         categoryIcon: { id: iconData.id, iconName: iconData.iconName },
       };
@@ -56,7 +55,7 @@ export const CategoryFormSheet: FC<
 
       actionSheetRef.current?.hide();
     },
-    [props.payload?.type, addCategory, updateCategory],
+    [payload?.type, addCategory, updateCategory],
   );
 
   const handleClose = useCallback(() => {
@@ -66,13 +65,13 @@ export const CategoryFormSheet: FC<
   return (
     <ActionSheet
       ref={actionSheetRef}
-      id={props.sheetId}
+      id={sheetId}
       closable
       gestureEnabled
       closeOnTouchBackdrop
       containerStyle={styles.container}>
       <CategoryForm
-        category={props.payload?.category || null}
+        category={payload?.category || null}
         onSubmit={handleSubmit}
         onClose={handleClose}
       />

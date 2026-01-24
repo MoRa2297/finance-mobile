@@ -108,14 +108,6 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
         />
         <Button
           size="small"
-          appearance="outline"
-          backgroundColor={theme.colors.primary}
-          textStyle={{ color: theme.colors.primary }}
-          style={styles.button}
-          onPress={onClose}
-        />
-        <Button
-          size="small"
           buttonText={t('common:save')}
           style={styles.button}
           backgroundColor={theme.colors.primary}

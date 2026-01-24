@@ -19,4 +19,6 @@ export {
 
 export { ExpensesList, ExpenseCard } from './expenses';
 
-export { SettingsHeader, CategoryListCard } from './settings';
+export { SettingsHeader, CategoryListCard, CategoryForm } from './settings';
+
+export type { CategoryFormValues } from './settings';

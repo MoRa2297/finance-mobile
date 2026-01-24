@@ -1,5 +1,5 @@
 export { SettingRow } from './SettingRow';
 export { SettingsHeader } from './SettingsHeader';
-export { CategoryListCard } from './categories';
-export * from './categories';
-export * from './bankAccounts';
+export { CategoryListCard, CategoryForm } from './categories';
+
+export type { CategoryFormValues } from './categories';
