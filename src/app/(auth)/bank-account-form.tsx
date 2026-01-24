@@ -12,10 +12,10 @@ import { COLORS } from '@/config';
 import { BankType, BankAccountType } from '@/types';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { InputIconField } from '@components/ui/InputIconField';
-import { SelectInput } from '@/components';
 import { ColorInputField } from '@components/ui/ColorInputField';
 import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
+import { SelectInput } from '@components/ui/SelectInput';
 
 export default function BankAccountFormScreen() {
   const { t } = useTranslation();

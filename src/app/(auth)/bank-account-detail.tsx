@@ -10,7 +10,7 @@ import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
-import { GenericSmallDetail } from '@/components';
+import { GenericSmallDetail } from '@components/ui/GenericSmallDetail';
 
 export default function BankAccountDetailScreen() {
   const { t } = useTranslation();

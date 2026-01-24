@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { BankAccount } from '@/types/types';
+import { BankAccount } from '@/types';
 import { useDataStore } from '@/stores';
 
 interface BankAccountListCardProps {

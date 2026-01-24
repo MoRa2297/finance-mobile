@@ -16,9 +16,10 @@ import {
 import { CardType, BankAccount } from '@/types';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { InputIconField } from '@components/ui/InputIconField';
-import { SelectInput, SelectPickerInput } from '@/components';
 import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
+import { SelectInput } from '@components/ui/SelectInput';
+import { SelectPickerInput } from '@components/ui/SelectPickerInput';
 
 export default function BankCardFormScreen() {
   const { t } = useTranslation();

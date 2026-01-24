@@ -13,10 +13,11 @@ import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccount, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
-import { EmptyData, LoadingSpinner, SpecificPrice } from '@/components';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { TopRoundedContainer } from '@components/ui/TopRoundedContainer';
 import { Alert } from '@components/ui/Alert';
+import { EmptyData, LoadingSpinner } from '@components/common';
+import { SpecificPrice } from '@components/screens/home';
 
 dayjs.extend(isBetween);
 

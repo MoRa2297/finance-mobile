@@ -2,17 +2,17 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { Dayjs } from 'dayjs';
 
-import {
-  BalanceSummary,
-  calculateBalance,
-  MonthItem,
-  MonthPopover,
-} from '@/components/screens';
 import { useDataStore, useUIStore, useAuthStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { TopRoundedContainer } from '@components/ui/TopRoundedContainer';
 import { Header } from '@components/ui/Header';
+import {
+  BalanceSummary,
+  calculateBalance,
+  MonthItem,
+  MonthPopover,
+} from '@components/screens/home';
 
 export default function HomeScreen() {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);

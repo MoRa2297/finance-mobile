@@ -11,10 +11,11 @@ import { HORIZONTAL_PADDING } from '@/config/constants';
 import { BankCard, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
 import { BankCardListCard } from '@components/screens/settings/bankCards/BankCardListCard';
-import { EmptyData, SpecificPrice } from '@/components';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { TopRoundedContainer } from '@/components/ui/TopRoundedContainer';
 import { Alert } from '@components/ui/Alert';
+import { EmptyData } from '@components/common';
+import { SpecificPrice } from '@components/screens/home';
 
 export default function BankCardsScreen() {
   const { t } = useTranslation();

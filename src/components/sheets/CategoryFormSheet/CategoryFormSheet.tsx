@@ -10,7 +10,7 @@ import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { useDataStore } from '@/stores';
 import { COLORS } from '@/config';
 import { CATEGORY_ICONS } from '@config/icons';
-import { CategoryForm, CategoryFormValues } from '@components/screens';
+import { CategoryForm, CategoryFormValues } from '@components/screens/settings';
 
 export const CategoryFormSheet: FC<SheetProps<'category-form-sheet'>> = ({
   payload,

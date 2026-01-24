@@ -12,8 +12,9 @@ import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { Transaction, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
-import { EmptyData, GenericSmallDetail } from '@/components';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { EmptyData } from '@components/common';
+import { GenericSmallDetail } from '@components/ui/GenericSmallDetail';
 
 interface TransactionSection {
   title: string;
