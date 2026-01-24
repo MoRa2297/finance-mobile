@@ -5,21 +5,16 @@ import { useRouter } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import {
-  ScreenContainer,
-  Header,
-  SpecificPrice,
-  EmptyData,
-  Alert,
-  TopRoundedContainer,
-} from '@/components/ui';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
 import { BankCard, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
-import { SwipePicker } from '@components/screens/expenses';
 import { BankCardListCard } from '@components/screens/settings/bankCards/BankCardListCard';
+import { EmptyData, SpecificPrice } from '@/components';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { TopRoundedContainer } from '@/components/ui/TopRoundedContainer';
+import { Alert } from '@components/ui/Alert';
 
 export default function BankCardsScreen() {
   const { t } = useTranslation();
@@ -104,10 +99,10 @@ export default function BankCardsScreen() {
           options,
           cancelButtonIndex,
           destructiveButtonIndex,
-          containerStyle: [
-            styles.actionSheetContainer,
-            { marginBottom: insets.bottom },
-          ],
+          // containerStyle: [
+          //   styles.actionSheetContainer,
+          //   { marginBottom: insets.bottom },
+          // ],
           textStyle: styles.actionSheetText,
         },
         selectedIndex => {
@@ -140,10 +135,10 @@ export default function BankCardsScreen() {
       {
         options,
         cancelButtonIndex,
-        containerStyle: [
-          styles.actionSheetContainer,
-          { marginBottom: insets.bottom },
-        ],
+        // containerStyle: [
+        //   styles.actionSheetContainer,
+        //   { marginBottom: insets.bottom },
+        // ],
         textStyle: styles.actionSheetText,
       },
       selectedIndex => {
@@ -194,11 +189,11 @@ export default function BankCardsScreen() {
       {/* Top Section */}
       <TopRoundedContainer height="30%" paddingTop={0}>
         <View style={styles.topBodyContent}>
-          <Header
-            title={t('screens.bankCardListScreen.headerTitle')}
-            showBackButton
-            onSettingsPress={handleAddCard}
-          />
+          {/*<Header*/}
+          {/*  title={t('screens.bankCardListScreen.headerTitle')}*/}
+          {/*  showBackButton*/}
+          {/*  onSettingsPress={handleAddCard}*/}
+          {/*/>*/}
 
           <View style={styles.subContainer}>
             {/* Month Picker */}

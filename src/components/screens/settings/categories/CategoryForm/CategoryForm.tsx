@@ -3,17 +3,15 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 
-import {
-  Button,
-  Alert,
-  InputIconField,
-  ColorInputField,
-  IconInputField,
-} from '@/components/ui';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { Category } from '@/types';
 import { useUIStore } from '@/stores';
+import { InputIconField } from '@components/ui/InputIconField';
+import { ColorInputField } from '@components/ui/ColorInputField';
+import { IconInputField } from '@components/ui/IconInputField';
+import { Button } from '@components/ui/Button';
+import { Alert } from '@components/ui/Alert';
 
 export interface CategoryFormValues {
   id?: number;

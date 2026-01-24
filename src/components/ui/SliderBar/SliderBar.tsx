@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 
 import { theme } from '@/config/theme';
 
-import { Tab } from '@/components';
 import { GLOBAL_BORDER_RADIUS } from '@config/constants';
+import { Tab } from '@components/ui/SliderBar/SliderBar.helpers';
 
 interface ISliderBarProps {
   tabs: Tab[];

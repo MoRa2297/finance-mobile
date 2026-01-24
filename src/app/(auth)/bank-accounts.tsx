@@ -6,21 +6,17 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import {
-  ScreenContainer,
-  Header,
-  SpecificPrice,
-  EmptyData,
-  Alert,
-  TopRoundedContainer,
-} from '@/components/ui';
+
 import { BankAccountListCard } from '@/components/screens/settings/bankAccounts';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
-import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
+import { HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccount, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
-import { LoadingSpinner } from '@/components';
+import { EmptyData, LoadingSpinner, SpecificPrice } from '@/components';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { TopRoundedContainer } from '@components/ui/TopRoundedContainer';
+import { Alert } from '@components/ui/Alert';
 
 dayjs.extend(isBetween);
 
@@ -123,10 +119,10 @@ export default function BankAccountsScreen() {
           options,
           cancelButtonIndex,
           destructiveButtonIndex,
-          containerStyle: [
-            styles.actionSheetContainer,
-            { marginBottom: insets.bottom },
-          ],
+          // containerStyle: [
+          //   styles.actionSheetContainer,
+          //   { marginBottom: insets.bottom },
+          // ],
           textStyle: styles.actionSheetText,
         },
         selectedIndex => {
@@ -159,10 +155,10 @@ export default function BankAccountsScreen() {
       {
         options,
         cancelButtonIndex,
-        containerStyle: [
-          styles.actionSheetContainer,
-          { marginBottom: insets.bottom },
-        ],
+        // containerStyle: [
+        //   styles.actionSheetContainer,
+        //   { marginBottom: insets.bottom },
+        // ],
         textStyle: styles.actionSheetText,
       },
       selectedIndex => {
@@ -223,11 +219,11 @@ export default function BankAccountsScreen() {
       forceNoBottomPadding>
       {/* Top Section */}
       <TopRoundedContainer height="30%" paddingTop={0}>
-        <Header
-          title={t('screens.bankAccountScreen.headerTitle')}
-          showBackButton
-          onSettingsPress={handleAddAccount}
-        />
+        {/*<Header*/}
+        {/*  title={t('screens.bankAccountScreen.headerTitle')}*/}
+        {/*  showBackButton*/}
+        {/*  onSettingsPress={handleAddAccount}*/}
+        {/*/>*/}
 
         <View style={styles.subContainer}>
           {/* Month Picker */}

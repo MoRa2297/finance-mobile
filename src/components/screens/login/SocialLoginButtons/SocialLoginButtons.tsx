@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { IconButton } from '@/components/ui';
 import { theme } from '@/config/theme';
 
 import { createSocialButtons, noop } from './SocialLoginButtons.helpers';
+import { IconButton } from '@components/ui/Button';
 
 interface ISocialLoginButtonsProps {
   onGooglePress?: () => void;

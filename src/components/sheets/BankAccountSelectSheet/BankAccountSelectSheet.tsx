@@ -10,7 +10,7 @@ import { Icon } from '@/components/ui/Icon';
 import { useDataStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { BankAccount } from '@/types/types';
+import { BankAccount } from '@/types';
 
 export const BankAccountSelectSheet: React.FC<
   SheetProps<'bank-account-select-sheet'>

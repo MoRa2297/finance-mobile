@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { SheetManager } from 'react-native-actions-sheet';
 import * as ImagePicker from 'expo-image-picker';
 
-import { Button, Alert, InputIconField } from '@/components/ui';
 import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { User } from '@/types/types';
+import { User } from '@/types';
 import { DateInputField } from '@components/ui/DateInputField';
+import { InputIconField } from '@components/ui/InputIconField';
+import { Button } from '@components/ui/Button';
+import { Alert } from '@components/ui/Alert';
 
 interface ProfileFormProps {
   user: User | null;

@@ -7,7 +7,8 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { COLORS } from '@/config';
-import { Button, Icon } from '@/components';
+import { Button } from '@components/ui/Button';
+import { Icon } from '@components/ui/Icon';
 
 interface IColorInputFieldProps {
   value: string;

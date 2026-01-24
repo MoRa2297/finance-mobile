@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text } from '@ui-kitten/components';
-
-import { ScreenContainer } from '@/components/ui';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
 
 export default function BudgetScreen() {
   return (

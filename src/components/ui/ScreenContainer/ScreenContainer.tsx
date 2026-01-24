@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   StyleSheet,
   StyleProp,
@@ -16,8 +16,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@config/constants';
 
-interface ScreenContainerProps {
-  children: React.ReactNode;
+interface IScreenContainerProps {
+  children: ReactNode;
   style?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
   horizontalPadding?: boolean;
@@ -28,7 +28,7 @@ interface ScreenContainerProps {
   dismissKeyboardOnTap?: boolean;
 }
 
-export const ScreenContainer: React.FC<ScreenContainerProps> = ({
+export const ScreenContainer: React.FC<IScreenContainerProps> = ({
   children,
   style,
   contentStyle,

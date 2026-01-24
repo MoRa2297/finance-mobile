@@ -7,7 +7,8 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { CATEGORY_ICONS } from '@config/icons';
-import { Button, Icon } from '@/components';
+import { Icon } from '@components/ui/Icon';
+import { Button } from '@components/ui/Button';
 
 interface IconInputFieldProps {
   value: string;

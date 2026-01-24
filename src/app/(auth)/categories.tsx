@@ -5,13 +5,16 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import { ScreenContainer, Header, SliderBar, Alert } from '@/components/ui';
 import { CategoryListCard } from '@/components';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { Category } from '@/types';
 import { EmptyData } from '@/components';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { SliderBar } from '@components/ui/SliderBar';
+import { Header } from '@components/ui/Header';
+import { Alert } from '@components/ui/Alert';
 
 const TABS = [
   { title: 'common:expenses', value: 'expenses' },

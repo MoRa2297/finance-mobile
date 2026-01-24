@@ -2,14 +2,13 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { ScreenContainer, Header } from '@/components/ui';
-
 import { useAuthStore } from '@/stores';
 import { theme } from '@/config/theme';
 import {
   ProfileForm,
   ProfileFormValues,
 } from '@components/screens/settings/profile/ProfileForm/ProfileForm';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -42,7 +41,7 @@ export default function ProfileScreen() {
       style={styles.container}
       horizontalPadding={false}
       forceNoBottomPadding>
-      <Header title={t('screens.profileScreen.headerTitle')} showBackButton />
+      {/*<Header title={t('screens.profileScreen.headerTitle')} showBackButton />*/}
 
       <ProfileForm
         user={user}

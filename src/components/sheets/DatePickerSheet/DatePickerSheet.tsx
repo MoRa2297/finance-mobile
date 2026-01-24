@@ -7,7 +7,7 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 import { useTranslation } from 'react-i18next';
 
-import { Button } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { Picker } from '@react-native-picker/picker';
@@ -30,7 +30,7 @@ export const DatePickerSheet: React.FC<
   const years = Array.from({ length: 100 }, (_, i) => String(currentYear - i));
 
   const handleConfirm = () => {
-    actionSheetRef.current?.hide({ day, month, year });
+    // actionSheetRef.current?.hide({ day, month, year });
   };
 
   return (

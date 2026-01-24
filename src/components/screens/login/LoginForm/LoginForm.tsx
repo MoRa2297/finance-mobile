@@ -5,7 +5,6 @@ import { Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 
-import { Button, InputField } from '@/components/ui';
 import { theme } from '@config/theme';
 import { ROUTES } from '@config/constants';
 
@@ -15,6 +14,8 @@ import {
   loginValidationSchema,
 } from './LoginForm.helpers';
 import { TLoginFormValues } from '@hooks/screens/login/useLogin';
+import { InputField } from '@/components';
+import { Button } from '@components/ui/Button';
 
 interface ILoginFormProps {
   isLoading: boolean;

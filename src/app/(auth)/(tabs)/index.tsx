@@ -2,8 +2,6 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { Dayjs } from 'dayjs';
 
-import { Header, ScreenContainer, TopRoundedContainer } from '@/components/ui';
-
 import {
   BalanceSummary,
   calculateBalance,
@@ -12,6 +10,9 @@ import {
 } from '@/components/screens';
 import { useDataStore, useUIStore, useAuthStore } from '@/stores';
 import { theme } from '@/config/theme';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { TopRoundedContainer } from '@components/ui/TopRoundedContainer';
+import { Header } from '@components/ui/Header';
 
 export default function HomeScreen() {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
@@ -64,7 +65,7 @@ export default function HomeScreen() {
             onToggle: handleToggleMoneyVisibility,
           }}
         />
-        <BalanceSummary balance={balance} moneyIsVisible={moneyIsVisible} />
+        {/*<BalanceSummary balance={balance} moneyIsVisible={moneyIsVisible} />*/}
       </TopRoundedContainer>
 
       {/* TODO: Add transactions list, charts, etc. */}

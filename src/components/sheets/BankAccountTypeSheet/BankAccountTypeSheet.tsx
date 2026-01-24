@@ -11,7 +11,7 @@ import { Icon } from '@/components/ui/Icon';
 import { useDataStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { BankAccountType } from '@/types/types';
+import { BankAccountType } from '@/types';
 
 export const BankAccountTypeSheet: React.FC<
   SheetProps<'bank-account-type-sheet'>
@@ -21,7 +21,7 @@ export const BankAccountTypeSheet: React.FC<
   const bankAccountTypes = useDataStore(state => state.bankAccountTypes);
 
   const handleSelect = (accountType: BankAccountType) => {
-    actionSheetRef.current?.hide({ accountType });
+    // actionSheetRef.current?.hide({ accountType });
   };
 
   const renderItem = ({ item }: { item: BankAccountType }) => (

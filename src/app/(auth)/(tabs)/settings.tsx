@@ -4,13 +4,13 @@ import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 
-import { ScreenContainer } from '@/components/ui';
 import { SettingsHeader, SettingRow } from '@/components/screens/settings';
 import { useAuthStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { ROUTES } from '@/config/constants';
 import { SettingsList } from '@/types';
 import { SliderBar } from '@components/ui/SliderBar';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
 
 const TABS = [
   { title: 'settingsPage:general', value: 'general' },

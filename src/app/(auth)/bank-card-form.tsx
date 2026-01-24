@@ -5,15 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import {
-  ScreenContainer,
-  Header,
-  Button,
-  Alert,
-  InputIconField,
-  SelectInput,
-  SelectPickerInput,
-} from '@/components/ui';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import {
@@ -23,6 +14,11 @@ import {
   YEARS_NUMBER,
 } from '@/config/constants';
 import { CardType, BankAccount } from '@/types';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { InputIconField } from '@components/ui/InputIconField';
+import { SelectInput, SelectPickerInput } from '@/components';
+import { Button } from '@components/ui/Button';
+import { Alert } from '@components/ui/Alert';
 
 export default function BankCardFormScreen() {
   const { t } = useTranslation();
@@ -181,15 +177,15 @@ export default function BankCardFormScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       {/* Header */}
-      <Header
-        title={
-          isEditing
-            ? t('screens.bankCardFormScreen.headerTitleEdit')
-            : t('screens.bankCardFormScreen.headerTitleNew')
-        }
-        showBackButton
-        backText={t('common.cancel')}
-      />
+      {/*<Header*/}
+      {/*  title={*/}
+      {/*    isEditing*/}
+      {/*      ? t('screens.bankCardFormScreen.headerTitleEdit')*/}
+      {/*      : t('screens.bankCardFormScreen.headerTitleNew')*/}
+      {/*  }*/}
+      {/*  showBackButton*/}
+      {/*  backText={t('common.cancel')}*/}
+      {/*/>*/}
 
       {/* Form */}
       <View style={styles.formContainer}>
@@ -264,7 +260,7 @@ export default function BankCardFormScreen() {
           {/* Submit Button */}
           <View style={styles.buttonContainer}>
             <Button
-              text={t('common.save')}
+              buttonText={t('common.save')}
               onPress={handleSubmit}
               backgroundColor={theme.colors.primary}
               style={styles.submitButton}

@@ -8,8 +8,8 @@ import {
   LoginHeader,
   SocialLoginButtons,
 } from '@components/screens/login';
-import { ScreenContainer } from '@components/ui';
 import { useLogin } from '@hooks/screens/login';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
 
 // TODO lock the scroll
 export default function LoginScreen() {
@@ -21,22 +21,22 @@ export default function LoginScreen() {
   return (
     <ScreenContainer scrollable={true}>
       <View style={styles.content}>
-        <View style={styles.mainSection}>
-          <LoginHeader />
-          <LoginForm
-            isLoading={isLoading}
-            errorMessage={errorMessage}
-            onSubmit={handleLogin}
-          />
-          <LoginDivider text={t('loginPage:or')} />
-          <SocialLoginButtons disabled />
-        </View>
+        {/*<View style={styles.mainSection}>*/}
+        {/*  <LoginHeader />*/}
+        {/*  <LoginForm*/}
+        {/*    isLoading={isLoading}*/}
+        {/*    errorMessage={errorMessage}*/}
+        {/*    onSubmit={handleLogin}*/}
+        {/*  />*/}
+        {/*  <LoginDivider text={t('loginPage:or')} />*/}
+        {/*  <SocialLoginButtons disabled />*/}
+        {/*</View>*/}
 
-        <LoginFooter
-          message={t('loginPage:noAccount')}
-          linkText={t('loginPage:signUp')}
-          linkHref={''}
-        />
+        {/*<LoginFooter*/}
+        {/*  message={t('loginPage:noAccount')}*/}
+        {/*  linkText={t('loginPage:signUp')}*/}
+        {/*  linkHref={''}*/}
+        {/*/>*/}
       </View>
     </ScreenContainer>
   );

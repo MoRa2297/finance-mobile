@@ -1,5 +1,6 @@
-import { Category, Color, CategoryIcon } from '@/types';
-import { CATEGORY_ICONS, COLORS } from '@/config';
+import { Category } from '@/types';
+import { COLORS } from '@/config';
+import { CATEGORY_ICONS } from '@config/icons';
 
 export const MOCK_CATEGORIES: Category[] = [
   {

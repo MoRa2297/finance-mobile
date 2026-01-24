@@ -10,7 +10,7 @@ import { Icon } from '@/components/ui/Icon';
 import { useDataStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { CardType } from '@/types/types';
+import { CardType } from '@/types';
 
 export const CardTypeSelectSheet: React.FC<
   SheetProps<'card-type-select-sheet'>
@@ -19,7 +19,7 @@ export const CardTypeSelectSheet: React.FC<
   const cardTypes = useDataStore(state => state.cardTypes);
 
   const handleSelect = (cardType: CardType) => {
-    actionSheetRef.current?.hide({ cardType });
+    // actionSheetRef.current?.hide({ cardType });
   };
 
   const renderItem = ({ item }: { item: CardType }) => (

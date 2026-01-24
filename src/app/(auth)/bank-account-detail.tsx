@@ -6,10 +6,11 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ScreenContainer, Header, GenericSmallDetail } from '@/components/ui';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { GenericSmallDetail } from '@/components';
 
 export default function BankAccountDetailScreen() {
   const { t } = useTranslation();
@@ -97,10 +98,10 @@ export default function BankAccountDetailScreen() {
       {
         options,
         cancelButtonIndex,
-        containerStyle: [
-          styles.actionSheetContainer,
-          { marginBottom: insets.bottom },
-        ],
+        // containerStyle: [
+        //   styles.actionSheetContainer,
+        //   { marginBottom: insets.bottom },
+        // ],
         textStyle: styles.actionSheetText,
       },
       selectedIndex => {
@@ -117,7 +118,7 @@ export default function BankAccountDetailScreen() {
   if (!bankAccount) {
     return (
       <ScreenContainer style={styles.container}>
-        <Header title={t('common.error')} showBackButton />
+        {/*<Header title={t('common.error')} showBackButton />*/}
         <View style={styles.errorContainer}>
           <Text category="s1" style={styles.errorText}>
             {t('screens.bankAccountDetailScreen.notFound')}
@@ -133,11 +134,11 @@ export default function BankAccountDetailScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       {/* Header */}
-      <Header
-        title={bankAccount.name}
-        showBackButton
-        onSettingsPress={handleSettingsPress}
-      />
+      {/*<Header*/}
+      {/*  title={bankAccount.name}*/}
+      {/*  showBackButton*/}
+      {/*  onSettingsPress={handleSettingsPress}*/}
+      {/*/>*/}
 
       {/* Content */}
       <View

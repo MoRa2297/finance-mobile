@@ -5,20 +5,17 @@ import { useTranslation } from 'react-i18next';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import {
-  ScreenContainer,
-  Header,
-  Button,
-  Alert,
-  InputIconField,
-  ColorInputField,
-  SelectInput,
-} from '@/components/ui';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { COLORS } from '@/config';
 import { BankType, BankAccountType } from '@/types';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { InputIconField } from '@components/ui/InputIconField';
+import { SelectInput } from '@/components';
+import { ColorInputField } from '@components/ui/ColorInputField';
+import { Button } from '@components/ui/Button';
+import { Alert } from '@components/ui/Alert';
 
 export default function BankAccountFormScreen() {
   const { t } = useTranslation();

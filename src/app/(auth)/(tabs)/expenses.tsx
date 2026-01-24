@@ -3,14 +3,6 @@ import { StyleSheet, View } from 'react-native';
 import { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
-import {
-  Header,
-  MonthSwipePicker,
-  ScreenContainer,
-  SliderBar,
-  Tab,
-  TopRoundedContainer,
-} from '@/components/ui';
 import { MonthItem, SpecificPrice } from '@/components/screens/home';
 import { ExpensesList } from '@/components/screens/expenses';
 import { useDataStore, useUIStore, useAuthStore } from '@/stores';
@@ -23,6 +15,11 @@ import {
 } from '@stores/data/data.selectors';
 import { SheetManager } from 'react-native-actions-sheet';
 import { router } from 'expo-router';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { TopRoundedContainer } from '@components/ui/TopRoundedContainer';
+import { Header } from '@components/ui/Header';
+import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
+import { SliderBar, Tab } from '@components/ui/SliderBar';
 
 const TABS: Tab[] = [
   { title: 'expensesPage:tabs.all', value: 'all' },

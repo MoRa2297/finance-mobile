@@ -8,7 +8,6 @@ import { Layout, Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 
-import { Icon, Button } from '@/components/ui';
 import { theme } from '@/config/theme';
 import {
   GLOBAL_BORDER_RADIUS,
@@ -18,6 +17,8 @@ import {
 } from '@/config/constants';
 import { useDataStore } from '@/stores';
 import { Transaction, BankAccount, BankCard, Category } from '@/types';
+import { Button } from '@components/ui/Button';
+import { Icon } from '@components/ui/Icon';
 
 // ============================================================
 // TYPES

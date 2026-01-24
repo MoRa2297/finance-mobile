@@ -10,7 +10,7 @@ import { Icon } from '@/components/ui/Icon';
 import { useDataStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { BankType } from '@/types/types';
+import { BankType } from '@/types';
 
 interface SectionData {
   title: string;
@@ -46,7 +46,7 @@ export const BankSelectSheet: React.FC<
   }, [bankTypes]);
 
   const handleSelect = (bank: BankType) => {
-    actionSheetRef.current?.hide({ bank });
+    // actionSheetRef.current?.hide({ bank });
   };
 
   const renderItem = ({ item }: { item: BankType }) => (

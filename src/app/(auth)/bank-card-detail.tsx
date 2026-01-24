@@ -6,18 +6,14 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import {
-  ScreenContainer,
-  Header,
-  GenericSmallDetail,
-  EmptyData,
-} from '@/components/ui';
-import { ExpenseCard, SwipePicker } from '@/components/screens/expenses';
+import { ExpenseCard } from '@/components/screens/expenses';
 import { useDataStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { Transaction, SwipePickerMonth } from '@/types';
 import { getMonths } from '@/utils/date';
+import { EmptyData, GenericSmallDetail } from '@/components';
+import { ScreenContainer } from '@components/ui/ScreenContainer';
 
 interface TransactionSection {
   title: string;
@@ -157,10 +153,10 @@ export default function BankCardDetailScreen() {
       {
         options,
         cancelButtonIndex,
-        containerStyle: [
-          styles.actionSheetContainer,
-          { marginBottom: insets.bottom },
-        ],
+        // containerStyle: [
+        //   styles.actionSheetContainer,
+        //   { marginBottom: insets.bottom },
+        // ],
         textStyle: styles.actionSheetText,
       },
       selectedIndex => {
@@ -177,7 +173,7 @@ export default function BankCardDetailScreen() {
   if (!bankCard) {
     return (
       <ScreenContainer style={styles.container}>
-        <Header title={t('common.error')} showBackButton />
+        {/*<Header title={t('common.error')} showBackButton />*/}
         <View style={styles.errorContainer}>
           <Text category="s1" style={styles.errorText}>
             {t('screens.bankCardDetailScreen.notFound')}
@@ -226,21 +222,21 @@ export default function BankCardDetailScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       {/* Header */}
-      <Header
-        title={bankCard.name}
-        showBackButton
-        onSettingsPress={handleSettingsPress}
-      />
+      {/*<Header*/}
+      {/*  title={bankCard.name}*/}
+      {/*  showBackButton*/}
+      {/*  onSettingsPress={handleSettingsPress}*/}
+      {/*/>*/}
 
       {/* Month Picker */}
       <View style={styles.pickerContainer}>
-        <SwipePicker
-          currentSelectIndex={currentSelectIndex}
-          arrSwipeData={MONTHS}
-          showSwipeBtn
-          onScreenChange={handleGetSelectedMonth}
-          containerWidth={130}
-        />
+        {/*<SwipePicker*/}
+        {/*  currentSelectIndex={currentSelectIndex}*/}
+        {/*  arrSwipeData={MONTHS}*/}
+        {/*  showSwipeBtn*/}
+        {/*  onScreenChange={handleGetSelectedMonth}*/}
+        {/*  containerWidth={130}*/}
+        {/*/>*/}
       </View>
 
       {/* Content */}

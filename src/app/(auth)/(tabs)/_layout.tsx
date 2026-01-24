@@ -1,8 +1,8 @@
 import { Slot } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { BottomNavigation } from '@/components/ui';
 import { theme } from '@/config/theme';
+import { BottomNavigation } from '@components/ui/BottomNavigation';
 
 export default function TabsLayout() {
   return (
