@@ -62,6 +62,7 @@ export default function ExpensesScreen() {
   const handleSelectMonth = useCallback((month: MonthItem) => {
     setSelectedDate(month.date);
   }, []);
+
   const handleTabChange = useCallback((value: string) => {
     setSelectedTab(value);
   }, []);

@@ -20,6 +20,9 @@ import settingsEn from './en/settingsPage.json';
 import categoriesIt from './it/categoriesPage.json';
 import categoriesEn from './en/categoriesPage.json';
 
+import bankAccountsIt from './it/bankAccountsPage.json';
+import bankAccountsEn from './en/bankAccountsPage.json';
+
 import validationEn from './en/validation.json';
 import validationIt from './it/validation.json';
 
@@ -36,6 +39,7 @@ const i18nResources = {
     expensesPage: expensesIt,
     settingsPage: settingsIt,
     categoriesPage: categoriesIt,
+    bankAccountPage: bankAccountsIt,
     validation: validationIt,
     // translation: it,
   },
@@ -46,6 +50,7 @@ const i18nResources = {
     expensesPage: expensesEn,
     settingsPage: settingsEn,
     categoriesPage: categoriesEn,
+    bankAccountPage: bankAccountsEn,
     validation: validationEn,
     // translation: en,
   },
@@ -95,6 +100,7 @@ i18next
       'expensesPage',
       'settingsPage',
       'categoriesPage',
+      'bankAccountPage',
     ],
     // TODO compatibilityJSON: 'v3',
     fallbackLng: DEFAULT_LANG,

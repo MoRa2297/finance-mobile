@@ -16,9 +16,11 @@ import { ColorInputField } from '@components/ui/ColorInputField';
 import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
+import { MonthPopover } from '@components/screens/home';
+import { Header } from '@components/ui/Header';
 
 export default function BankAccountFormScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('bankAccountPage');
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEditing = !!id;
@@ -93,22 +95,22 @@ export default function BankAccountFormScreen() {
   const handleSubmit = useCallback(() => {
     // Validation
     if (!selectedBankType) {
-      setAlertMessage(t('components.bankAccountForm.alertBankIDError'));
+      setAlertMessage(t('bankAccountPage:alertBankIDError'));
       setAlertVisible(true);
       return;
     }
     if (!name.trim()) {
-      setAlertMessage(t('components.bankAccountForm.alertNameError'));
+      setAlertMessage(t('bankAccountPage:alertNameError'));
       setAlertVisible(true);
       return;
     }
     if (!startingMoney) {
-      setAlertMessage(t('components.bankAccountForm.alertStartingMoneyError'));
+      setAlertMessage(t('bankAccountPage:alertStartingMoneyError'));
       setAlertVisible(true);
       return;
     }
     if (!selectedAccountType) {
-      setAlertMessage(t('components.bankAccountForm.alertTypeError'));
+      setAlertMessage(t('bankAccountPage:alertTypeError'));
       setAlertVisible(true);
       return;
     }
@@ -154,27 +156,34 @@ export default function BankAccountFormScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       {/* Header */}
-      {/*<Header*/}
-      {/*  title={*/}
-      {/*    isEditing*/}
-      {/*      ? t('screens.bankAccountFormScreen.headerTitleEdit')*/}
-      {/*      : t('screens.bankAccountFormScreen.headerTitleNew')*/}
-      {/*  }*/}
-      {/*  showBackButton*/}
-      {/*  backText={t('common.cancel')}*/}
-      {/*/>*/}
+      <Header
+        left={{
+          type: 'back',
+          variant: 'text',
+          text: 'Annulla',
+        }}
+        center={{
+          type: 'title',
+          title: isEditing
+            ? t('bankAccountPage:headerTitleEdit')
+            : t('bankAccountPage:headerTitleNew'),
+        }}
+        // right={{
+        //   type: 'visibility',
+        //   isVisible: moneyIsVisible,
+        //   onToggle: handleToggleMoneyVisibility,
+        // }}
+      />
 
       {/* Form */}
       <View style={styles.formContainer}>
         {/* Starting Balance Section */}
         <View style={styles.topSection}>
           <Text category="p2" style={styles.sectionLabel}>
-            {t('components.bankAccountForm.moneyBalanceTitle')}
+            {t('bankAccountPage:moneyBalanceTitle')}
           </Text>
           <InputIconField
-            placeholder={t(
-              'components.bankAccountForm.moneyBalancePlaceholder',
-            )}
+            placeholder={t('bankAccountPage:moneyBalancePlaceholder')}
             value={startingMoney}
             onChange={setStartingMoney}
             keyboardType="numeric"
@@ -192,7 +201,7 @@ export default function BankAccountFormScreen() {
           showsVerticalScrollIndicator={false}>
           {/* Bank Select */}
           <SelectInput
-            placeholder={t('components.bankAccountForm.bankSelectPlaceholder')}
+            placeholder={t('bankAccountPage:bankSelectPlaceholder')}
             value={selectedBankType?.name}
             iconName="grid-outline"
             selectedImageUrl={selectedBankType?.imageUrl}
@@ -201,7 +210,7 @@ export default function BankAccountFormScreen() {
 
           {/* Name */}
           <InputIconField
-            placeholder={t('components.bankAccountForm.namePlaceholder')}
+            placeholder={t('bankAccountPage:namePlaceholder')}
             value={name}
             onChange={setName}
             iconName="edit-outline"
@@ -209,10 +218,10 @@ export default function BankAccountFormScreen() {
 
           {/* Account Type Select */}
           <SelectInput
-            placeholder={t('components.bankAccountForm.typeSelectPlaceholder')}
+            placeholder={t('bankAccountPage:typeSelectPlaceholder')}
             value={
               selectedAccountType
-                ? t(`common.bankAccountTypes.${selectedAccountType.name}`)
+                ? t(`bankAccountPage:${selectedAccountType.name}`)
                 : undefined
             }
             iconName="grid-outline"
@@ -223,13 +232,13 @@ export default function BankAccountFormScreen() {
           <ColorInputField
             value={color}
             onChange={setColor}
-            iconName="cart-outline"
+            iconName="color-palette-outline"
           />
 
           {/* Submit Button */}
           <View style={styles.buttonContainer}>
             <Button
-              buttonText={t('common.save')}
+              buttonText={t('common:save')}
               onPress={handleSubmit}
               backgroundColor={theme.colors.primary}
               style={styles.submitButton}
@@ -241,9 +250,9 @@ export default function BankAccountFormScreen() {
       {/* Validation Alert */}
       <Alert
         visible={alertVisible}
-        title={t('components.bankAccountForm.alertTitle')}
+        title={t('bankAccountPage:alertTitle')}
         subtitle={alertMessage}
-        primaryButtonText={t('components.bankAccountForm.alertButtonText')}
+        primaryButtonText={t('bankAccountPage:alertButtonText')}
         onPrimaryPress={() => setAlertVisible(false)}
       />
     </ScreenContainer>
@@ -261,7 +270,6 @@ const styles = StyleSheet.create({
   topSection: {
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingTop: 15,
-    gap: 5,
   },
   sectionLabel: {
     color: theme.colors.textHint,

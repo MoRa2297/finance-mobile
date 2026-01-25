@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { StyleSheet, View, Pressable, Image } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,7 @@ import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccount } from '@/types';
-import { useDataStore } from '@/stores';
+import { useBankAccountCard } from '@hooks/screens/bankAccounts';
 
 interface BankAccountListCardProps {
   bankAccount: BankAccount;
@@ -20,72 +20,24 @@ export const BankAccountListCard: React.FC<BankAccountListCardProps> = ({
   onPress,
   onOptionsPress,
 }) => {
-  const { t } = useTranslation();
-  const transactions = useDataStore(state => state.transactions);
-  const bankTypes = useDataStore(state => state.bankTypes);
-
-  // Find bank type image
-  const bankTypeImage = useMemo(() => {
-    return bankTypes.find(bt => bt.id === bankAccount.bankTypeId);
-  }, [bankTypes, bankAccount.bankTypeId]);
-
-  // Calculate current balance
-  const currentBalance = useMemo(() => {
-    const accountTransactions = transactions.filter(
-      t => t.bankAccountId === bankAccount.id && t.recived,
-    );
-
-    const totIncome = accountTransactions
-      .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + parseFloat(t.money), 0);
-
-    const totSpent = accountTransactions
-      .filter(t => t.type === 'expense' || t.type === 'card_spending')
-      .reduce((sum, t) => sum + parseFloat(t.money), 0);
-
-    return bankAccount.startingBalance + totIncome - totSpent;
-  }, [bankAccount, transactions]);
+  const { t } = useTranslation('bankAccountPage');
+  const { imageUrl, currentBalance } = useBankAccountCard(bankAccount);
 
   return (
     <Pressable style={styles.container} onPress={() => onPress(bankAccount)}>
-      {/* Bank Image */}
-      <View style={styles.imageContainer}>
-        {bankTypeImage?.imageUrl ? (
-          <Image
-            source={{ uri: bankTypeImage.imageUrl }}
-            style={styles.image}
-          />
-        ) : (
-          <View style={styles.imagePlaceholder}>
-            <Icon
-              name="credit-card-outline"
-              color={theme.colors.basic100}
-              size={24}
-            />
-          </View>
-        )}
-      </View>
+      <BankImage imageUrl={imageUrl} />
 
-      {/* Content */}
       <View style={styles.contentContainer}>
-        {/* Top Row */}
         <View style={styles.topRow}>
           <Text category="h6" style={styles.title}>
             {bankAccount.name}
           </Text>
-          <Pressable onPress={() => onOptionsPress(bankAccount)} hitSlop={10}>
-            <Icon
-              name="more-horizontal-outline"
-              color={theme.colors.basic100}
-              size={28}
-            />
-          </Pressable>
+          <OptionsButton onPress={() => onOptionsPress(bankAccount)} />
         </View>
 
-        {/* Bottom Row */}
         <View style={styles.bottomRow}>
           <Text category="s1" style={styles.subtitle}>
-            {t('components.bankAccountListCard.currentBalance')}
+            {t('bankAccountPage:currentBalance')}
           </Text>
           <Text category="s1" style={styles.money}>
             € {currentBalance.toFixed(2)}
@@ -96,6 +48,44 @@ export const BankAccountListCard: React.FC<BankAccountListCardProps> = ({
   );
 };
 
+// ============ Sub-components ============
+
+interface BankImageProps {
+  imageUrl: string | null;
+}
+
+const BankImage: React.FC<BankImageProps> = ({ imageUrl }) => (
+  <View style={styles.imageContainer}>
+    {imageUrl ? (
+      <Image source={{ uri: imageUrl }} style={styles.image} />
+    ) : (
+      <View style={styles.imagePlaceholder}>
+        <Icon
+          name="credit-card-outline"
+          color={theme.colors.basic100}
+          size={24}
+        />
+      </View>
+    )}
+  </View>
+);
+
+interface OptionsButtonProps {
+  onPress: () => void;
+}
+
+const OptionsButton: React.FC<OptionsButtonProps> = ({ onPress }) => (
+  <Pressable onPress={onPress} hitSlop={10}>
+    <Icon
+      name="more-horizontal-outline"
+      color={theme.colors.basic100}
+      size={28}
+    />
+  </Pressable>
+);
+
+// ============ Styles ============
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -103,8 +93,7 @@ const styles = StyleSheet.create({
     gap: 15,
     backgroundColor: theme.colors.primaryBK,
     borderRadius: GLOBAL_BORDER_RADIUS / 2,
-    paddingHorizontal: HORIZONTAL_PADDING,
-    paddingVertical: HORIZONTAL_PADDING,
+    padding: HORIZONTAL_PADDING,
   },
   imageContainer: {
     width: 45,

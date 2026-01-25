@@ -6,7 +6,7 @@ import {
   BankType,
   BankAccountType,
   CardType,
-} from '@/types/types';
+} from '@/types';
 
 export interface DataState {
   transactions: Transaction[];

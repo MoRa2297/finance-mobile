@@ -4,22 +4,50 @@ export const MOCK_BANK_TYPES: BankType[] = [
   {
     id: 1,
     name: 'Unicredit',
-    imageUrl: 'https://logo.clearbit.com/unicredit.it',
+    imageUrl:
+      'https://ui-avatars.com/api/?name=UC&background=E50914&color=fff&size=80&bold=true',
   },
   {
     id: 2,
     name: 'Intesa Sanpaolo',
-    imageUrl: 'https://logo.clearbit.com/intesasanpaolo.com',
+    imageUrl:
+      'https://ui-avatars.com/api/?name=IS&background=006341&color=fff&size=80&bold=true',
   },
-  { id: 3, name: 'BNL', imageUrl: 'https://logo.clearbit.com/bnl.it' },
-  { id: 4, name: 'Fineco', imageUrl: 'https://logo.clearbit.com/fineco.it' },
-  { id: 5, name: 'ING', imageUrl: 'https://logo.clearbit.com/ing.com' },
-  { id: 6, name: 'N26', imageUrl: 'https://logo.clearbit.com/n26.com' },
-  { id: 7, name: 'Revolut', imageUrl: 'https://logo.clearbit.com/revolut.com' },
+  {
+    id: 3,
+    name: 'BNL',
+    imageUrl:
+      'https://ui-avatars.com/api/?name=BNL&background=00A859&color=fff&size=80&bold=true',
+  },
+  {
+    id: 4,
+    name: 'Fineco',
+    imageUrl:
+      'https://ui-avatars.com/api/?name=F&background=004B93&color=fff&size=80&bold=true',
+  },
+  {
+    id: 5,
+    name: 'ING',
+    imageUrl:
+      'https://ui-avatars.com/api/?name=ING&background=FF6600&color=fff&size=80&bold=true',
+  },
+  {
+    id: 6,
+    name: 'N26',
+    imageUrl:
+      'https://ui-avatars.com/api/?name=N26&background=36A18B&color=fff&size=80&bold=true',
+  },
+  {
+    id: 7,
+    name: 'Revolut',
+    imageUrl:
+      'https://ui-avatars.com/api/?name=R&background=0075EB&color=fff&size=80&bold=true',
+  },
   {
     id: 8,
     name: 'Mediolanum',
-    imageUrl: 'https://logo.clearbit.com/mediolanum.it',
+    imageUrl:
+      'https://ui-avatars.com/api/?name=M&background=003366&color=fff&size=80&bold=true',
   },
 ];
 

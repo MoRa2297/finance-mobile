@@ -52,6 +52,7 @@ export default function SettingsScreen() {
     console.log('Delete account');
   }, []);
 
+  // TODO create CONSTS
   // Menu configuration
   const menuList: SettingsList[] = useMemo(
     () => [
@@ -66,7 +67,7 @@ export default function SettingsScreen() {
           {
             title: t('settingsPage:menuBankAccounts'),
             iconName: 'grid-outline',
-            navigationScreen: '/(auth)/bank-accounts',
+            navigationScreen: '/(auth)/bank-accounts/bank-accounts',
           },
           {
             title: t('settingsPage:menuBankCards'),

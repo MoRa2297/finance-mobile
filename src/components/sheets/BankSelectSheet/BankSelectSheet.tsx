@@ -3,6 +3,7 @@ import { StyleSheet, View, SectionList, Image, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import ActionSheet, {
   ActionSheetRef,
+  SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
 
@@ -17,9 +18,9 @@ interface SectionData {
   data: BankType[];
 }
 
-export const BankSelectSheet: React.FC<
-  SheetProps<'bank-select-sheet'>
-> = props => {
+export const BankSelectSheet: React.FC<SheetProps<'bank-select-sheet'>> = ({
+  sheetId,
+}) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const bankTypes = useDataStore(state => state.bankTypes);
 
@@ -46,7 +47,9 @@ export const BankSelectSheet: React.FC<
   }, [bankTypes]);
 
   const handleSelect = (bank: BankType) => {
-    // actionSheetRef.current?.hide({ bank });
+    SheetManager.hide(sheetId, {
+      payload: { bank },
+    });
   };
 
   const renderItem = ({ item }: { item: BankType }) => (
@@ -74,7 +77,7 @@ export const BankSelectSheet: React.FC<
   return (
     <ActionSheet
       ref={actionSheetRef}
-      id={props.sheetId}
+      id={sheetId}
       gestureEnabled
       closable
       useBottomSafeAreaPadding
@@ -104,7 +107,9 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingTop: 10,
-    maxHeight: '70%',
+    // maxHeight: '100%',
+    borderColor: 'black',
+    borderWidth: 1,
   },
   list: {
     maxHeight: 400,
