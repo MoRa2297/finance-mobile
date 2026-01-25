@@ -3,8 +3,8 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { UIStore } from '@/stores';
-import { INITIAL_UI_STATE, UI_STORAGE_KEY } from '@/stores';
 import { i18n } from '@/i18n';
+import { INITIAL_UI_STATE, UI_STORAGE_KEY } from '@stores/ui/ui.constants';
 
 export const useUIStore = create<UIStore>()(
   persist(

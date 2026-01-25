@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import { useDataStore, useUIStore } from '@/stores';
+import { useDataStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { COLORS } from '@/config';
@@ -16,7 +16,6 @@ import { ColorInputField } from '@components/ui/ColorInputField';
 import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
-import { MonthPopover } from '@components/screens/home';
 import { Header } from '@components/ui/Header';
 
 export default function BankAccountFormScreen() {
@@ -31,7 +30,6 @@ export default function BankAccountFormScreen() {
   const bankAccountTypes = useDataStore(state => state.bankAccountTypes);
   const addBankAccount = useDataStore(state => state.addBankAccount);
   const updateBankAccount = useDataStore(state => state.updateBankAccount);
-  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
   // Find existing bank account if editing
   const existingAccount = useMemo(() => {
@@ -155,7 +153,6 @@ export default function BankAccountFormScreen() {
       style={styles.container}
       horizontalPadding={false}
       forceNoBottomPadding>
-      {/* Header */}
       <Header
         left={{
           type: 'back',
@@ -168,38 +165,29 @@ export default function BankAccountFormScreen() {
             ? t('bankAccountPage:headerTitleEdit')
             : t('bankAccountPage:headerTitleNew'),
         }}
-        // right={{
-        //   type: 'visibility',
-        //   isVisible: moneyIsVisible,
-        //   onToggle: handleToggleMoneyVisibility,
-        // }}
       />
 
-      {/* Form */}
-      <View style={styles.formContainer}>
-        {/* Starting Balance Section */}
-        <View style={styles.topSection}>
-          <Text category="p2" style={styles.sectionLabel}>
-            {t('bankAccountPage:moneyBalanceTitle')}
-          </Text>
-          <InputIconField
-            placeholder={t('bankAccountPage:moneyBalancePlaceholder')}
-            value={startingMoney}
-            onChange={setStartingMoney}
-            keyboardType="numeric"
-            borderBottom={false}
-          />
-        </View>
+      {/* Top Section - Starting Balance */}
+      <View style={styles.topSection}>
+        <Text category="p2" style={styles.sectionLabel}>
+          {t('bankAccountPage:moneyBalanceTitle')}
+        </Text>
+        <InputIconField
+          placeholder={t('bankAccountPage:moneyBalancePlaceholder')}
+          value={startingMoney}
+          onChange={setStartingMoney}
+          keyboardType="numeric"
+          borderBottom={false}
+        />
+      </View>
 
-        {/* Main Form */}
+      {/* Bottom Section - Form + Button */}
+      <View style={styles.bottomSection}>
         <ScrollView
-          style={styles.bottomSection}
-          contentContainerStyle={[
-            styles.bottomContent,
-            { paddingBottom: bottomTabHeight + 20 },
-          ]}
-          showsVerticalScrollIndicator={false}>
-          {/* Bank Select */}
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
           <SelectInput
             placeholder={t('bankAccountPage:bankSelectPlaceholder')}
             value={selectedBankType?.name}
@@ -208,7 +196,6 @@ export default function BankAccountFormScreen() {
             onPress={handleOpenBankSheet}
           />
 
-          {/* Name */}
           <InputIconField
             placeholder={t('bankAccountPage:namePlaceholder')}
             value={name}
@@ -216,38 +203,35 @@ export default function BankAccountFormScreen() {
             iconName="edit-outline"
           />
 
-          {/* Account Type Select */}
           <SelectInput
             placeholder={t('bankAccountPage:typeSelectPlaceholder')}
             value={
               selectedAccountType
-                ? t(`bankAccountPage:${selectedAccountType.name}`)
+                ? t(`bankAccountPage:types.${selectedAccountType.name}`)
                 : undefined
             }
             iconName="grid-outline"
             onPress={handleOpenAccountTypeSheet}
           />
 
-          {/* Color */}
           <ColorInputField
             value={color}
             onChange={setColor}
             iconName="color-palette-outline"
           />
-
-          {/* Submit Button */}
-          <View style={styles.buttonContainer}>
-            <Button
-              buttonText={t('common:save')}
-              onPress={handleSubmit}
-              backgroundColor={theme.colors.primary}
-              style={styles.submitButton}
-            />
-          </View>
         </ScrollView>
+
+        {/* Fixed Button at Bottom */}
+        <View style={[styles.buttonContainer]}>
+          <Button
+            buttonText={t('common:save')}
+            onPress={handleSubmit}
+            backgroundColor={theme.colors.primary}
+            style={styles.submitButton}
+          />
+        </View>
       </View>
 
-      {/* Validation Alert */}
       <Alert
         visible={alertVisible}
         title={t('bankAccountPage:alertTitle')}
@@ -264,9 +248,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.secondaryBK,
   },
-  formContainer: {
-    flex: 1,
-  },
   topSection: {
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingTop: 15,
@@ -281,16 +262,23 @@ const styles = StyleSheet.create({
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
     marginTop: 10,
   },
-  bottomContent: {
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingTop: 15,
+    paddingBottom: 20,
   },
   buttonContainer: {
-    marginTop: 40,
-    alignItems: 'center',
+    paddingHorizontal: HORIZONTAL_PADDING,
+    paddingTop: 15,
+    backgroundColor: theme.colors.primaryBK,
   },
   submitButton: {
     width: '60%',
+    alignSelf: 'center',
     borderRadius: GLOBAL_BORDER_RADIUS,
+    marginBottom: 20,
   },
 });

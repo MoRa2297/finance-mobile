@@ -107,9 +107,6 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingTop: 10,
-    // maxHeight: '100%',
-    borderColor: 'black',
-    borderWidth: 1,
   },
   list: {
     maxHeight: 400,

@@ -4,6 +4,7 @@ import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 import ActionSheet, {
   ActionSheetRef,
+  SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
 
@@ -15,18 +16,21 @@ import { BankAccountType } from '@/types';
 
 export const BankAccountTypeSheet: React.FC<
   SheetProps<'bank-account-type-sheet'>
-> = props => {
-  const { t } = useTranslation();
+> = ({ sheetId }) => {
+  const { t } = useTranslation('bankAccountPage');
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const bankAccountTypes = useDataStore(state => state.bankAccountTypes);
 
   const handleSelect = (accountType: BankAccountType) => {
-    // actionSheetRef.current?.hide({ accountType });
+    SheetManager.hide(sheetId, {
+      payload: { accountType },
+    });
   };
 
   const renderItem = ({ item }: { item: BankAccountType }) => (
     <Pressable style={styles.itemContainer} onPress={() => handleSelect(item)}>
       <View style={styles.iconContainer}>
+        {/*TODO add an icon*/}
         <Icon
           name="arrow-ios-forward-outline"
           color={theme.colors.basic100}
@@ -34,7 +38,7 @@ export const BankAccountTypeSheet: React.FC<
         />
       </View>
       <Text category="s1" style={styles.itemText}>
-        {t(`common.bankAccountTypes.${item.name}`)}
+        {t(`bankAccountPage:types.${item.name}`)}
       </Text>
     </Pressable>
   );
@@ -42,7 +46,7 @@ export const BankAccountTypeSheet: React.FC<
   return (
     <ActionSheet
       ref={actionSheetRef}
-      id={props.sheetId}
+      id={sheetId}
       gestureEnabled
       closable
       useBottomSafeAreaPadding
