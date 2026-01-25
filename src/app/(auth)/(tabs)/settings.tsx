@@ -72,7 +72,7 @@ export default function SettingsScreen() {
           {
             title: t('settingsPage:menuBankCards'),
             iconName: 'credit-card-outline',
-            navigationScreen: '/(auth)/bank-cards',
+            navigationScreen: '/(auth)/bank-cards/bank-cards',
           },
         ],
       },

@@ -16,6 +16,8 @@ import { TopRoundedContainer } from '@/components/ui/TopRoundedContainer';
 import { Alert } from '@components/ui/Alert';
 import { EmptyData } from '@components/common';
 import { SpecificPrice } from '@components/screens/home';
+import { Header } from '@components/ui/Header';
+import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
 
 export default function BankCardsScreen() {
   const { t } = useTranslation();
@@ -190,11 +192,10 @@ export default function BankCardsScreen() {
       {/* Top Section */}
       <TopRoundedContainer height="30%" paddingTop={0}>
         <View style={styles.topBodyContent}>
-          {/*<Header*/}
-          {/*  title={t('screens.bankCardListScreen.headerTitle')}*/}
-          {/*  showBackButton*/}
-          {/*  onSettingsPress={handleAddCard}*/}
-          {/*/>*/}
+          <Header
+            left={{ type: 'back', variant: 'icon' }}
+            right={{ type: 'settings', onPress: () => {} }}
+          />
 
           <View style={styles.subContainer}>
             {/* Month Picker */}
@@ -205,6 +206,11 @@ export default function BankCardsScreen() {
               {/*  showSwipeBtn*/}
               {/*  onScreenChange={handleGetSelectedMonth}*/}
               {/*  containerWidth={100}*/}
+              {/*/>*/}
+              {/*<MonthSwipePicker*/}
+              {/*  onSelectMonth={handleSelectMonth}*/}
+              {/*  containerWidth={150}*/}
+              {/*  showArrows*/}
               {/*/>*/}
             </View>
 
