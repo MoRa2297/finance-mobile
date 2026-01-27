@@ -1,0 +1,22 @@
+{
+  "headerTitle": "Carte di credito",
+  "totalLimit": "Limite spese",
+  "spentTotal": "Spese totali",
+  "actionSheetCreateCard": "Crea carta",
+  "actionSheetEditCard": "Modifica carta",
+  "loadingTitle": "Caricamento carte",
+  "emptyData": "Nessuna carta presente al momento!",
+  "deleteBankCard": "Elimina carta",
+  "alertTitle": "Attenzione",
+  "alertSubTitle": "Sicuro di voler cancellare la carta?",
+  "alertButtonYes": "Si",
+  "alertButtonNo": "No",
+  "headerTitleNew": "Nuova carta",
+  "headerTitleEdit": "Modifica carta",
+  "spentValue": "Valore speso",
+  "genericSmallDetailTitles": {
+    "startPeriod": "Inizio periodo",
+    "endPeriod": "Fine periodo",
+    "totalSpent": "Totale speso"
+  }
+}

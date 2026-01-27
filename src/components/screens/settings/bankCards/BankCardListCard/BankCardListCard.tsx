@@ -20,7 +20,7 @@ export const BankCardListCard: React.FC<BankCardListCardProps> = ({
   onPress,
   onOptionsPress,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('bankCardsPage');
   const transactions = useDataStore(state => state.transactions);
   const cardTypes = useDataStore(state => state.cardTypes);
 
@@ -85,19 +85,21 @@ export const BankCardListCard: React.FC<BankCardListCardProps> = ({
         <View style={styles.spentValueContainer}>
           <View style={styles.spentValueContainerTop}>
             <Text category="s1" style={styles.title}>
-              {t('components.bankCardListCard.spentValue')}
+              {t('bankCardsPage:spentValue')}
             </Text>
             <Text category="s2" style={styles.title}>
               € {spentValue.toFixed(2)}
             </Text>
           </View>
           <View style={styles.spentValueContainerBottom}>
-            {/*<ProgressBar*/}
-            {/*  progress={progress}*/}
-            {/*  height={15}*/}
-            {/*  backgroundColor={theme.colors.secondaryBK}*/}
-            {/*  progressColor={theme.colors.primary}*/}
-            {/*/>*/}
+            <ProgressBar
+              progress={progress}
+              size={'giant'}
+              // backgroundColor={theme.colors.secondaryBK}
+              // progressColor={theme.colors.primary}
+              status="primary"
+              style={{ backgroundColor: theme.colors.secondaryBK }}
+            />
           </View>
         </View>
       )}

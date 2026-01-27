@@ -20,7 +20,7 @@ import { Header } from '@components/ui/Header';
 import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
 
 export default function BankCardsScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['bankCardsPage', 'common']);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -90,8 +90,8 @@ export default function BankCardsScreen() {
   const handleOptionsPress = useCallback(
     (card: BankCard) => {
       const options = [
-        t('screens.bankCardListScreen.actionSheetEditCard'),
-        t('screens.bankCardListScreen.deleteBankCard'),
+        t('bankCardsPage:actionSheetEditCard'),
+        t('bankCardsPage:deleteBankCard'),
         t('common.cancel'),
       ];
       const destructiveButtonIndex = 1;
@@ -129,8 +129,8 @@ export default function BankCardsScreen() {
 
   const handleAddCard = useCallback(() => {
     const options = [
-      t('screens.bankCardListScreen.actionSheetCreateCard'),
-      t('common.cancel'),
+      t('bankCardsPage:actionSheetCreateCard'),
+      t('common:cancel'),
     ];
     const cancelButtonIndex = 1;
 
@@ -178,7 +178,7 @@ export default function BankCardsScreen() {
   );
 
   const renderEmpty = useCallback(
-    () => <EmptyData title={t('screens.bankCardListScreen.emptyData')} />,
+    () => <EmptyData title={t('bankCardsPage:emptyData')} />,
     [t],
   );
 
@@ -217,14 +217,14 @@ export default function BankCardsScreen() {
             {/* Amounts */}
             <View style={styles.amountContainer}>
               <SpecificPrice
-                title={t('screens.bankCardListScreen.totalLimit')}
+                title={t('bankCardsPage:totalLimit')}
                 amount={`${totLimit.toFixed(2)} €`}
                 amountColor={theme.colors.basic100}
                 iconName="arrow-circle-down-outline"
                 iconColor={theme.colors.basic100}
               />
               <SpecificPrice
-                title={t('screens.bankCardListScreen.spentTotal')}
+                title={t('bankCardsPage:spentTotal')}
                 amount={`${totSpent.toFixed(2)} €`}
                 amountColor={theme.colors.basic100}
                 iconName="arrow-circle-up-outline"
@@ -254,10 +254,10 @@ export default function BankCardsScreen() {
       {/* Delete Alert */}
       <Alert
         visible={alertVisible}
-        title={t('screens.bankCardListScreen.alertTitle')}
-        subtitle={t('screens.bankCardListScreen.alertSubTitle')}
-        primaryButtonText={t('screens.bankCardListScreen.alertButtonYes')}
-        secondaryButtonText={t('screens.bankCardListScreen.alertButtonNo')}
+        title={t('bankCardsPage:alertTitle')}
+        subtitle={t('bankCardsPage:alertSubTitle')}
+        primaryButtonText={t('bankCardsPage:alertButtonYes')}
+        secondaryButtonText={t('bankCardsPage:alertButtonNo')}
         onPrimaryPress={handleDeleteConfirm}
         onSecondaryPress={handleDeleteCancel}
       />
