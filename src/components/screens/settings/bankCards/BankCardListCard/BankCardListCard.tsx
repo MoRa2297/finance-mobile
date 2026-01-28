@@ -95,9 +95,7 @@ export const BankCardListCard: React.FC<BankCardListCardProps> = ({
             <ProgressBar
               progress={progress}
               size={'giant'}
-              // backgroundColor={theme.colors.secondaryBK}
-              // progressColor={theme.colors.primary}
-              status="primary"
+              status="info"
               style={{ backgroundColor: theme.colors.secondaryBK }}
             />
           </View>

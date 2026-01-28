@@ -8,6 +8,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SheetProvider } from 'react-native-actions-sheet';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { customMapping } from '@config/customMapping';
 import '@/services/sheets';
 
 export default function RootLayout() {
@@ -15,7 +16,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
         <IconRegistry icons={EvaIconsPack} />
-        <ApplicationProvider {...eva} theme={{ ...eva.dark }}>
+        <ApplicationProvider {...eva} theme={{ ...eva.dark, ...customMapping }}>
           <ActionSheetProvider useCustomActionSheet useNativeDriver={false}>
             <SheetProvider>
               <StatusBar style="light" />
