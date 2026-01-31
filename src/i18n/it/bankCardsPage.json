@@ -14,11 +14,9 @@
   "headerTitleNew": "Nuova carta",
   "headerTitleEdit": "Modifica carta",
   "spentValue": "Valore speso",
-  "genericSmallDetailTitles": {
-    "startPeriod": "Inizio periodo",
-    "endPeriod": "Fine periodo",
-    "totalSpent": "Totale speso"
-  },
+  "startPeriod": "Inizio periodo",
+  "endPeriod": "Fine periodo",
+  "totalSpent": "Totale speso",
   "cardLimitTitle": "Limite carta",
   "cardLimitPlaceholder": "Inserisci il limite della carta...",
   "namePlaceholder": "Inserisci il nome...",
@@ -33,5 +31,6 @@
   "alertColorError": "Errore, colore obbligatorio",
   "alertButtonText": "Capito",
   "alertMonthExpiryError": "Errore, mese di scadenza obbligatorio",
-  "alertYearExpiryError": "Errore, anno di scadenza obbligatorio"
+  "alertYearExpiryError": "Errore, anno di scadenza obbligatorio",
+  "emptyTransactions": "Nessuna transazione"
 }
