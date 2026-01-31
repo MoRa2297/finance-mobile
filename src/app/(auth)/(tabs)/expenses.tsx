@@ -33,7 +33,6 @@ export default function ExpensesScreen() {
 
   // State
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-
   const [selectedTab, setSelectedTab] = useState(TABS[0].value);
 
   // Stores
