@@ -18,5 +18,20 @@
     "startPeriod": "Inizio periodo",
     "endPeriod": "Fine periodo",
     "totalSpent": "Totale speso"
-  }
+  },
+  "cardLimitTitle": "Limite carta",
+  "cardLimitPlaceholder": "Inserisci il limite della carta...",
+  "namePlaceholder": "Inserisci il nome...",
+  "typeCardPlaceholder": "Tipo carta...",
+  "selectBank": "Seleziona la banca",
+  "monthExpiryPlaceholder": "Mese di chiusura",
+  "yearExpiryPlaceholder": "Anno di scadenza",
+  "alertBankAccountIdError": "Errore, conto obbligatorio",
+  "alertNameError": "Errore, nome obbligatorio",
+  "alertCardLimitError": "Errore, limite carta obbligatorio",
+  "alertTypeError": "Errore, tipo obbligatorio",
+  "alertColorError": "Errore, colore obbligatorio",
+  "alertButtonText": "Capito",
+  "alertMonthExpiryError": "Errore, mese di scadenza obbligatorio",
+  "alertYearExpiryError": "Errore, anno di scadenza obbligatorio"
 }

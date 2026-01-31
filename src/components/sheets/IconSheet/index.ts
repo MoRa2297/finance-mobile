@@ -1,1 +1,0 @@
-export { IconSheet } from './IconSheet';

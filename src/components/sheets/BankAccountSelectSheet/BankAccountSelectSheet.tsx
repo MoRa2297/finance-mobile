@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, Pressable, Image } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import ActionSheet, {
   ActionSheetRef,
+  SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
 
@@ -14,13 +15,15 @@ import { BankAccount } from '@/types';
 
 export const BankAccountSelectSheet: React.FC<
   SheetProps<'bank-account-select-sheet'>
-> = props => {
+> = ({ sheetId }) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const bankAccounts = useDataStore(state => state.bankAccounts);
   const bankTypes = useDataStore(state => state.bankTypes);
 
   const handleSelect = (bankAccount: BankAccount) => {
-    // actionSheetRef.current?.hide({ bankAccount });
+    SheetManager.hide(sheetId, {
+      payload: { bankAccount },
+    });
   };
 
   const renderItem = ({ item }: { item: BankAccount }) => {
@@ -56,7 +59,7 @@ export const BankAccountSelectSheet: React.FC<
   return (
     <ActionSheet
       ref={actionSheetRef}
-      id={props.sheetId}
+      id={sheetId}
       gestureEnabled
       closable
       useBottomSafeAreaPadding

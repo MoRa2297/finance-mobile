@@ -2,15 +2,19 @@ import { SheetDefinition, registerSheet } from 'react-native-actions-sheet';
 
 import { CardTypeSelectSheet } from '@components/sheets/CardTypeSelectSheet/CardTypeSelectSheet';
 import { BankAccountSelectSheet } from '@components/sheets/BankAccountSelectSheet/BankAccountSelectSheet';
-import { PickerSheet } from '@components/sheets/PickerSheet/PickerSheet';
-import { ColorSheet } from '@components/sheets/ColorSheet';
-import { IconSheet } from '@components/sheets/IconSheet';
-import { CategoryFormSheet } from '@components/sheets/CategoryFormSheet';
-import { BankSelectSheet } from '@components/sheets/BankSelectSheet';
-import { BankAccountTypeSheet } from '@components/sheets/BankAccountTypeSheet';
-import { DatePickerSheet } from '@components/sheets/DatePickerSheet';
-import { TransactionDetailSheet } from '@components/sheets/TransactionDetailSheet';
+import {
+  PickerItem,
+  PickerSheet,
+} from '@components/sheets/PickerSheet/PickerSheet';
+
 import { Transaction } from '@/types';
+import { ColorSheet } from '@components/sheets/ColorSheet/ColorSheet';
+import { IconSheet } from '@components/sheets/IconSheet/IconSheet';
+import { CategoryFormSheet } from '@components/sheets/CategoryFormSheet/CategoryFormSheet';
+import { BankSelectSheet } from '@components/sheets/BankSelectSheet/BankSelectSheet';
+import { BankAccountTypeSheet } from '@components/sheets/BankAccountTypeSheet/BankAccountTypeSheet';
+import { DatePickerSheet } from '@components/sheets/DatePickerSheet/DatePickerSheet';
+import { TransactionDetailSheet } from '@components/sheets/TransactionDetailSheet/TransactionDetailSheet';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -50,7 +54,7 @@ declare module 'react-native-actions-sheet' {
     }>;
     'picker-sheet': SheetDefinition<{
       payload: { data: { id: number; name?: string; value?: number }[] };
-      returnValue: { item: number };
+      returnValue: { item: PickerItem };
     }>;
     'date-picker-sheet': SheetDefinition<{
       payload: { day: string; month: string; year: string };

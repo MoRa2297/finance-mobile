@@ -20,9 +20,10 @@ import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
 import { SelectPickerInput } from '@components/ui/SelectPickerInput';
+import { Header } from '@components/ui/Header';
 
 export default function BankCardFormScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['bankCardsPage', 'common']);
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEditing = !!id;
@@ -45,10 +46,10 @@ export default function BankCardFormScreen() {
   // Form state
   const [name, setName] = useState(existingCard?.name || '');
   const [cardLimit, setCardLimit] = useState(existingCard?.cardLimit || '');
-  const [monthExpiry, setMonthExpiry] = useState(
+  const [monthExpiry, setMonthExpiry] = useState<number>(
     existingCard?.monthExpiry || MONTH_NUMBER[0].id,
   );
-  const [yearExpiry, setYearExpiry] = useState(
+  const [yearExpiry, setYearExpiry] = useState<number>(
     existingCard?.yearExpiry || YEARS_NUMBER[0].id,
   );
   const [selectedCardType, setSelectedCardType] = useState<CardType | null>(
@@ -101,8 +102,8 @@ export default function BankCardFormScreen() {
     const result = await SheetManager.show('picker-sheet', {
       payload: { data: MONTH_NUMBER },
     });
-    if (result?.item) {
-      setMonthExpiry(result.item);
+    if (result?.item?.name) {
+      setMonthExpiry(Number(result.item.name));
     }
   }, []);
 
@@ -110,30 +111,30 @@ export default function BankCardFormScreen() {
     const result = await SheetManager.show('picker-sheet', {
       payload: { data: YEARS_NUMBER },
     });
-    if (result?.item) {
-      setYearExpiry(result.item);
+    if (result?.item?.name) {
+      setYearExpiry(Number(result.item.name));
     }
   }, []);
 
   const handleSubmit = useCallback(() => {
     // Validation
     if (!selectedBankAccount) {
-      setAlertMessage(t('components.bankCardForm.alertBankAccountIdError'));
+      setAlertMessage(t('bankCardsPage:alertBankAccountIdError'));
       setAlertVisible(true);
       return;
     }
     if (!name.trim()) {
-      setAlertMessage(t('components.bankCardForm.alertNameError'));
+      setAlertMessage(t('bankCardsPage:alertNameError'));
       setAlertVisible(true);
       return;
     }
     if (!cardLimit) {
-      setAlertMessage(t('components.bankCardForm.alertCardLimitError'));
+      setAlertMessage(t('bankCardsPage:alertCardLimitError'));
       setAlertVisible(true);
       return;
     }
     if (!selectedCardType) {
-      setAlertMessage(t('components.bankCardForm.alertTypeError'));
+      setAlertMessage(t('bankCardsPage:alertTypeError'));
       setAlertVisible(true);
       return;
     }
@@ -177,26 +178,29 @@ export default function BankCardFormScreen() {
       style={styles.container}
       horizontalPadding={false}
       forceNoBottomPadding>
-      {/* Header */}
-      {/*<Header*/}
-      {/*  title={*/}
-      {/*    isEditing*/}
-      {/*      ? t('screens.bankCardFormScreen.headerTitleEdit')*/}
-      {/*      : t('screens.bankCardFormScreen.headerTitleNew')*/}
-      {/*  }*/}
-      {/*  showBackButton*/}
-      {/*  backText={t('common.cancel')}*/}
-      {/*/>*/}
+      <Header
+        left={{
+          type: 'back',
+          variant: 'text',
+          text: 'Annulla',
+        }}
+        center={{
+          type: 'title',
+          title: isEditing
+            ? t('bankCardsPage:headerTitleEdit')
+            : t('bankCardsPage:headerTitleNew'),
+        }}
+      />
 
       {/* Form */}
       <View style={styles.formContainer}>
         {/* Card Limit Section */}
         <View style={styles.topSection}>
           <Text category="p2" style={styles.sectionLabel}>
-            {t('components.bankCardForm.cardLimitTitle')}
+            {t('bankCardsPage:cardLimitTitle')}
           </Text>
           <InputIconField
-            placeholder={t('components.bankCardForm.cardLimitPlaceholder')}
+            placeholder={t('bankCardsPage:cardLimitPlaceholder')}
             value={cardLimit}
             onChange={setCardLimit}
             keyboardType="numeric"
@@ -214,7 +218,7 @@ export default function BankCardFormScreen() {
           showsVerticalScrollIndicator={false}>
           {/* Name */}
           <InputIconField
-            placeholder={t('components.bankCardForm.namePlaceholder')}
+            placeholder={t('bankCardsPage:namePlaceholder')}
             value={name}
             onChange={setName}
             iconName="edit-outline"
@@ -222,7 +226,7 @@ export default function BankCardFormScreen() {
 
           {/* Card Type Select */}
           <SelectInput
-            placeholder={t('components.bankCardForm.typeCardPlaceholder')}
+            placeholder={t('bankCardsPage:typeCardPlaceholder')}
             value={selectedCardType?.name}
             iconName="grid-outline"
             selectedImageUrl={selectedCardType?.imageUrl}
@@ -233,7 +237,7 @@ export default function BankCardFormScreen() {
 
           {/* Bank Account Select */}
           <SelectInput
-            placeholder={t('components.bankCardForm.selectBank')}
+            placeholder={t('bankCardsPage:selectBank')}
             value={selectedBankAccount?.name}
             iconName="grid-outline"
             selectedImageUrl={selectedBankImage}
@@ -244,7 +248,7 @@ export default function BankCardFormScreen() {
 
           {/* Month Expiry */}
           <SelectPickerInput
-            placeholder={t('components.bankCardForm.monthExpiryPlaceholder')}
+            placeholder={t('bankCardsPage:monthExpiryPlaceholder')}
             value={monthExpiry}
             iconName="calendar-outline"
             onPress={handleOpenMonthPicker}
@@ -252,7 +256,7 @@ export default function BankCardFormScreen() {
 
           {/* Year Expiry */}
           <SelectPickerInput
-            placeholder={t('components.bankCardForm.yearExpiryPlaceholder')}
+            placeholder={t('bankCardsPage:yearExpiryPlaceholder')}
             value={yearExpiry}
             iconName="calendar-outline"
             onPress={handleOpenYearPicker}
@@ -261,7 +265,7 @@ export default function BankCardFormScreen() {
           {/* Submit Button */}
           <View style={styles.buttonContainer}>
             <Button
-              buttonText={t('common.save')}
+              buttonText={t('common:save')}
               onPress={handleSubmit}
               backgroundColor={theme.colors.primary}
               style={styles.submitButton}
@@ -273,9 +277,9 @@ export default function BankCardFormScreen() {
       {/* Validation Alert */}
       <Alert
         visible={alertVisible}
-        title={t('components.bankCardForm.alertTitle')}
+        title={t('bankCardsPage:alertTitle')}
         subtitle={alertMessage}
-        primaryButtonText={t('components.bankCardForm.alertButtonText')}
+        primaryButtonText={t('bankCardsPage:alertButtonText')}
         onPrimaryPress={() => setAlertVisible(false)}
       />
     </ScreenContainer>

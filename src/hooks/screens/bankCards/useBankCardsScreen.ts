@@ -80,7 +80,7 @@ export const useBankCardsScreen = () => {
   const handleCardPress = useCallback(
     (card: BankCard) => {
       router.push({
-        pathname: '/(auth)/bank-card-detail',
+        pathname: '/(auth)/bank-cards/bank-card-detail',
         params: { id: card.id },
       });
     },
@@ -105,7 +105,7 @@ export const useBankCardsScreen = () => {
         selectedIndex => {
           if (selectedIndex === 0) {
             router.push({
-              pathname: '/(auth)/bank-card-form',
+              pathname: '/(auth)/bank-cards/bank-card-form',
               params: { id: card.id },
             });
           } else if (selectedIndex === 1) {
@@ -132,7 +132,7 @@ export const useBankCardsScreen = () => {
       },
       selectedIndex => {
         if (selectedIndex === 0) {
-          router.push('/(auth)/bank-card-form');
+          router.push('/(auth)/bank-cards/bank-card-form');
         }
       },
     );

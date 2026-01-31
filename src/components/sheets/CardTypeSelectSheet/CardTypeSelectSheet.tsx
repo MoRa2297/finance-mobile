@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, Pressable, Image } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import ActionSheet, {
   ActionSheetRef,
+  SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
 
@@ -14,12 +15,14 @@ import { CardType } from '@/types';
 
 export const CardTypeSelectSheet: React.FC<
   SheetProps<'card-type-select-sheet'>
-> = props => {
+> = ({ sheetId }) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const cardTypes = useDataStore(state => state.cardTypes);
 
   const handleSelect = (cardType: CardType) => {
-    // actionSheetRef.current?.hide({ cardType });
+    SheetManager.hide(sheetId, {
+      payload: { cardType },
+    });
   };
 
   const renderItem = ({ item }: { item: CardType }) => (
@@ -49,7 +52,7 @@ export const CardTypeSelectSheet: React.FC<
   return (
     <ActionSheet
       ref={actionSheetRef}
-      id={props.sheetId}
+      id={sheetId}
       gestureEnabled
       closable
       useBottomSafeAreaPadding

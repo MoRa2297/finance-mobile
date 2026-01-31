@@ -3,24 +3,30 @@ import { StyleSheet, View, FlatList, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import ActionSheet, {
   ActionSheetRef,
+  SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 
-interface PickerItem {
+export interface PickerItem {
   id: number;
   name?: string;
   value?: number;
 }
 
-export const PickerSheet: React.FC<SheetProps<'picker-sheet'>> = props => {
+export const PickerSheet: React.FC<SheetProps<'picker-sheet'>> = ({
+  sheetId,
+  payload,
+}) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
-  const data = props.payload?.data || [];
+  const data = payload?.data || [];
 
   const handleSelect = (item: PickerItem) => {
-    // actionSheetRef.current?.hide({ item: item.id });
+    SheetManager.hide(sheetId, {
+      payload: { item },
+    });
   };
 
   const renderItem = ({ item }: { item: PickerItem }) => (
@@ -34,7 +40,7 @@ export const PickerSheet: React.FC<SheetProps<'picker-sheet'>> = props => {
   return (
     <ActionSheet
       ref={actionSheetRef}
-      id={props.sheetId}
+      id={sheetId}
       gestureEnabled
       closable
       useBottomSafeAreaPadding

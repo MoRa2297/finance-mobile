@@ -22,7 +22,7 @@ interface TransactionSection {
 }
 
 export default function BankCardDetailScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['bankCardsPage', 'common']);
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
