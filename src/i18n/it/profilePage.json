@@ -1,0 +1,11 @@
+{
+  "namePlaceholder": "Nome...",
+  "surnamePlaceholder": "Cognome...",
+  "emailPlaceholder": "Email...",
+  "alertTitle": "Attenzione",
+  "alertButtonText": "Capito",
+  "alertBirthDateError": "Data obbligatoria",
+  "alertNameError": "Nome obbligatorio",
+  "alertSurnameError": "Cognome obbligatorio",
+  "birthDatePlaceholder": "Seleziona la data"
+}

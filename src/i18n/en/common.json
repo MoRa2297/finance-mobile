@@ -13,6 +13,7 @@
   "edit": "Modifica",
   "income": "Entrate",
   "expenses": "Uscite",
+  "selectDate": "Seleziona data",
   "bottomNavigator": {
     "home": "Home",
     "transaction": "Transazioni",

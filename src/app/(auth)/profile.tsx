@@ -1,52 +1,33 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useAuthStore } from '@/stores';
 import { theme } from '@/config/theme';
-import {
-  ProfileForm,
-  ProfileFormValues,
-} from '@components/screens/settings/profile/ProfileForm/ProfileForm';
+import { ProfileForm } from '@components/screens/settings/profile/ProfileForm/ProfileForm';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { Header } from '@components/ui/Header';
+import { useProfileScreen } from '@/hooks/screens/profile';
 
 export default function ProfileScreen() {
-  const { t } = useTranslation();
-  const user = useAuthStore(state => state.user);
-  const updateUser = useAuthStore(state => state.updateUser);
+  const { t } = useTranslation(['profilePage', 'common']);
 
-  const [submitError, setSubmitError] = useState<string | undefined>(undefined);
-
-  const handleSubmit = useCallback(
-    async (values: ProfileFormValues, _photoBase64?: string) => {
-      try {
-        setSubmitError(undefined);
-
-        // Update user in store
-        // updateUser({
-        //   name: values.name,
-        //   surname: values.surname,
-        //   email: values.email,
-        //   imageUrl: values.imageUrl,
-        // });
-      } catch (error: any) {
-        setSubmitError(t('messages.apiErrors.genericError'));
-      }
-    },
-    [updateUser, t],
-  );
+  const { user, submitError, isSubmitting, handleSubmit } = useProfileScreen();
 
   return (
     <ScreenContainer
       style={styles.container}
       horizontalPadding={false}
       forceNoBottomPadding>
-      {/*<Header title={t('screens.profileScreen.headerTitle')} showBackButton />*/}
+      <Header
+        left={{ type: 'back', variant: 'icon' }}
+        center={{ type: 'title', title: t('profilePage:headerTitle') }}
+      />
 
       <ProfileForm
         user={user}
         onSubmit={handleSubmit}
         submitError={submitError}
+        isSubmitting={isSubmitting}
       />
     </ScreenContainer>
   );

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { SheetManager } from 'react-native-actions-sheet';
 import * as ImagePicker from 'expo-image-picker';
 
-import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { User } from '@/types';
@@ -17,6 +16,7 @@ interface ProfileFormProps {
   user: User | null;
   onSubmit: (values: ProfileFormValues, photoBase64?: string) => void;
   submitError?: string;
+  isSubmitting?: boolean;
 }
 
 export interface ProfileFormValues {
@@ -31,9 +31,9 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   user,
   onSubmit,
   submitError,
+  isSubmitting = false,
 }) => {
-  const { t } = useTranslation();
-  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
+  const { t } = useTranslation(['profilePage', 'common']);
 
   // Form state
   const [name, setName] = useState(user?.name || '');
@@ -73,7 +73,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
-      setAlertMessage(t('components.profileForm.permissionDenied'));
+      setAlertMessage(t('profilePage:permissionDenied'));
       setAlertVisible(true);
       return;
     }
@@ -102,6 +102,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     });
 
     if (result) {
+      console.log('result: ', result);
       const newDate = `${result.day.padStart(2, '0')}-${result.month.padStart(
         2,
         '0',
@@ -111,19 +112,21 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   }, [birthDate]);
 
   const handleSubmit = useCallback(() => {
+    if (isSubmitting) return;
+
     // Validation
     if (!name.trim()) {
-      setAlertMessage(t('components.profileForm.alertNameError'));
+      setAlertMessage(t('profilePage:alertNameError'));
       setAlertVisible(true);
       return;
     }
     if (!surname.trim()) {
-      setAlertMessage(t('components.profileForm.alertSurnameError'));
+      setAlertMessage(t('profilePage:alertSurnameError'));
       setAlertVisible(true);
       return;
     }
     if (!birthDate) {
-      setAlertMessage(t('components.profileForm.alertBirthDateError'));
+      setAlertMessage(t('profilePage:alertBirthDateError'));
       setAlertVisible(true);
       return;
     }
@@ -139,7 +142,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     };
 
     onSubmit(values, photoBase64);
-  }, [name, surname, email, birthDate, photoBase64, onSubmit, t]);
+  }, [name, surname, email, birthDate, photoBase64, onSubmit, isSubmitting, t]);
 
   // Get image source
   const imageSource = photoURI
@@ -158,7 +161,10 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
         <View style={styles.formContent}>
           <View style={styles.inputsContainer}>
             {/* Profile Image */}
-            <Pressable onPress={handleImagePicker} style={styles.heroContainer}>
+            <Pressable
+              onPress={handleImagePicker}
+              style={styles.heroContainer}
+              disabled={isSubmitting}>
               <Image source={imageSource} style={styles.heroImage} />
             </Pressable>
 
@@ -166,49 +172,49 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
             <DateInputField
               value={birthDate}
               iconName="calendar-outline"
-              placeholder={t('components.profileForm.birthDatePlaceholder')}
+              placeholder={t('profilePage:birthDatePlaceholder')}
               customBackgroundColor={theme.colors.secondaryBK}
               onPress={handleOpenDatePicker}
             />
 
             {/* Name */}
             <InputIconField
-              placeholder={t('components.profileForm.namePlaceholder')}
+              placeholder={t('profilePage:namePlaceholder')}
               value={name}
               onChange={setName}
               iconName="edit-outline"
+              editable={!isSubmitting}
             />
 
             {/* Surname */}
             <InputIconField
-              placeholder={t('components.profileForm.surnamePlaceholder')}
+              placeholder={t('profilePage:surnamePlaceholder')}
               value={surname}
               onChange={setSurname}
               iconName="edit-outline"
+              editable={!isSubmitting}
             />
 
             {/* Email */}
             <InputIconField
-              placeholder={t('components.profileForm.emailPlaceholder')}
+              placeholder={t('profilePage:emailPlaceholder')}
               value={email}
               onChange={setEmail}
               iconName="email-outline"
               keyboardType="email-address"
-              // autoCapitalize="none"
+              editable={!isSubmitting}
             />
           </View>
 
           {/* Submit Button */}
-          <View
-            style={[
-              styles.buttonContainer,
-              { paddingBottom: bottomTabHeight },
-            ]}>
+          <View style={[styles.buttonContainer]}>
             <Button
-              buttonText={t('common.save')}
+              buttonText={t('common:save')}
               onPress={handleSubmit}
               backgroundColor={theme.colors.primary}
               style={styles.button}
+              isDisabled={isSubmitting}
+              isLoading={isSubmitting}
             />
           </View>
         </View>
@@ -216,9 +222,9 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
         {/* Alert */}
         <Alert
           visible={alertVisible}
-          title={t('components.profileForm.alertTitle')}
+          title={t('profilePage:alertTitle')}
           subtitle={alertMessage}
-          primaryButtonText={t('components.profileForm.alertButtonText')}
+          primaryButtonText={t('common:ok')}
           onPrimaryPress={() => setAlertVisible(false)}
         />
       </View>
@@ -260,12 +266,16 @@ const styles = StyleSheet.create({
     borderRadius: 65,
   },
   buttonContainer: {
+    paddingHorizontal: HORIZONTAL_PADDING,
+
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: theme.colors.transparent,
   },
   button: {
     width: '60%',
+    alignSelf: 'center',
     borderRadius: GLOBAL_BORDER_RADIUS,
+    marginBottom: 20,
   },
 });

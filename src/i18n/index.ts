@@ -26,6 +26,9 @@ import bankAccountsEn from './en/bankAccountsPage.json';
 import bankCardsIt from './it/bankCardsPage.json';
 import bankCardsEn from './en/bankCardsPage.json';
 
+import profilePageIt from './it/profilePage.json';
+import profilePageEn from './en/profilePage.json';
+
 import validationEn from './en/validation.json';
 import validationIt from './it/validation.json';
 
@@ -44,8 +47,8 @@ const i18nResources = {
     categoriesPage: categoriesIt,
     bankAccountPage: bankAccountsIt,
     bankCardsPage: bankCardsIt,
+    profilePage: profilePageIt,
     validation: validationIt,
-    // translation: it,
   },
   en: {
     common: commonEn,
@@ -56,8 +59,8 @@ const i18nResources = {
     categoriesPage: categoriesEn,
     bankAccountPage: bankAccountsEn,
     bankCardsPage: bankCardsEn,
+    profilePage: profilePageEn,
     validation: validationEn,
-    // translation: en,
   },
 };
 
@@ -107,6 +110,7 @@ i18next
       'categoriesPage',
       'bankAccountPage',
       'bankCardsPage',
+      'profilePage',
     ],
     // TODO compatibilityJSON: 'v3',
     fallbackLng: DEFAULT_LANG,
