@@ -20,7 +20,6 @@ export default function AuthLayout() {
       <Stack.Screen
         name="transaction"
         options={{
-          presentation: 'modal',
           animation: 'slide_from_bottom',
           gestureEnabled: true,
           gestureDirection: 'vertical',

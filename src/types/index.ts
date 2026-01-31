@@ -14,9 +14,5 @@ export type {
   SwipePickerMonth,
 } from './General';
 export type { SettingsList, SettingsListItem } from './Settings';
-export type {
-  TransactionFormTypes,
-  EditTransaction,
-  Transaction,
-} from './Transaction';
+export type { EditTransaction, Transaction } from './Transaction';
 export type { User } from './User';

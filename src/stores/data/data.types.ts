@@ -6,6 +6,7 @@ import {
   BankType,
   BankAccountType,
   CardType,
+  EditTransaction,
 } from '@/types';
 
 export interface DataState {
@@ -24,7 +25,7 @@ export interface DataActions {
   // Transactions
   setTransactions: (transactions: Transaction[]) => void;
   addTransaction: (transaction: Transaction) => void;
-  updateTransaction: (transaction: Transaction) => void;
+  updateTransaction: (transaction: EditTransaction) => void;
   deleteTransaction: (id: number) => void;
 
   // Categories
