@@ -1,0 +1,31 @@
+{
+  "income": "Entrata",
+  "expense": "Uscita",
+  "card_spending": "Spese con carta",
+  "buttonFormTypes": {
+    "income": "Entrata",
+    "expense": "Uscita",
+    "card_spending": "Spesa carta"
+  },
+  "moneyValueTypes": {
+    "income": "Valore entrata",
+    "expense": "Valore uscita",
+    "card_spending": "Spesa"
+  },
+  "moneyValuePlaceholder": "Inserisci il valore...",
+  "recivedPlaceholder": "Ricevuto",
+  "descriptionPlaceholder": "Descrizione...",
+  "selectBankPlaceholder": "Seleziona la banca...",
+  "selectCardPlaceholder": "Seleziona la carta...",
+  "selectCategoryPlaceholder": "Seleziona la categoria...",
+  "recurrentPlaceholder": "Ricorrente",
+  "repeatPlaceholder": "Ripeti",
+  "notePlaceholder": "Nota...",
+  "alertTitle": "Attenzione",
+  "alertBankIDError": "Errore, conto obbligatorio",
+  "alertCategoryIDError": "Errore, categoria obbligatoria",
+  "alertMoneyError": "Errore, cifra obbligatoria",
+  "dateError": "Errore, data obbligatoria",
+  "descriptionError": "Errore, descrizione obbligatoria",
+  "alertButtonText": "Capito"
+}

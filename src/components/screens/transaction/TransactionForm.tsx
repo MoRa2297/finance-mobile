@@ -251,10 +251,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         {/* Top Section - Money Input */}
         <View style={styles.topSection}>
           <Text category="p2" style={styles.moneyLabel}>
-            {t(`transactionPage:moneyLabel.${formType}`)}
+            {t(`transactionPage:moneyValueTypes.${formType}`)}
           </Text>
           <InputIconField
-            placeholder={t('transactionPage:moneyPlaceholder')}
+            placeholder={t('transactionPage:moneyValuePlaceholder')}
             value={money}
             onChange={setMoney}
             keyboardType="numeric"

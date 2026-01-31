@@ -66,9 +66,9 @@ export const useTransactionFormScreen = () => {
   // Handlers
   const handleOpenTypeSelector = useCallback(() => {
     const options = [
-      t('transactionPage:types.income'),
-      t('transactionPage:types.expense'),
-      t('transactionPage:types.card_spending'),
+      t('transactionPage:income'),
+      t('transactionPage:expense'),
+      t('transactionPage:card_spending'),
       t('common:cancel'),
     ];
 
@@ -170,7 +170,7 @@ export const useTransactionFormScreen = () => {
 
   // Get form type label
   const formTypeLabel = useMemo(() => {
-    return t(`transactionPage:types.${formType}`);
+    return t(`transactionPage:${formType}`);
   }, [formType, t]);
 
   return {

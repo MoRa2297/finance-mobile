@@ -1,12 +1,11 @@
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import it from './it';
-import en from './en';
-import commonEn from './en/common.json';
-import commonIt from './it/common.json';
 
-import loginEn from './en/loginPage.json';
+import commonIt from './it/common.json';
+import commonEn from './en/common.json';
+
 import loginIt from './it/loginPage.json';
+import loginEn from './en/loginPage.json';
 
 import homeIt from './it/homePage.json';
 import homeEn from './en/homePage.json';
@@ -29,6 +28,9 @@ import bankCardsEn from './en/bankCardsPage.json';
 import profilePageIt from './it/profilePage.json';
 import profilePageEn from './en/profilePage.json';
 
+import transactionIt from './it/transactionPage.json';
+import transactionEn from './en/transactionPage.json';
+
 import validationEn from './en/validation.json';
 import validationIt from './it/validation.json';
 
@@ -48,6 +50,7 @@ const i18nResources = {
     bankAccountPage: bankAccountsIt,
     bankCardsPage: bankCardsIt,
     profilePage: profilePageIt,
+    transactionPage: transactionIt,
     validation: validationIt,
   },
   en: {
@@ -60,6 +63,7 @@ const i18nResources = {
     bankAccountPage: bankAccountsEn,
     bankCardsPage: bankCardsEn,
     profilePage: profilePageEn,
+    transactionPage: transactionEn,
     validation: validationEn,
   },
 };
@@ -110,6 +114,7 @@ i18next
       'categoriesPage',
       'bankAccountPage',
       'bankCardsPage',
+      'transactionPage',
       'profilePage',
     ],
     // TODO compatibilityJSON: 'v3',
