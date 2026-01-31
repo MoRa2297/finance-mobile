@@ -72,6 +72,7 @@ export const useBankCardsScreen = () => {
   );
 
   // Handlers
+
   const handleSelectMonth = useCallback((month: SwipePickerMonth) => {
     setSelectedDate(dayjs(month.date));
   }, []);

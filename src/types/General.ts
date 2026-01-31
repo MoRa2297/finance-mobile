@@ -1,4 +1,5 @@
 import { User } from '@/stores';
+import { Dayjs } from 'dayjs';
 
 export type GenericType = {
   id: number;
@@ -25,7 +26,7 @@ export type LogInResponse = {
 
 export type SwipePickerMonth = {
   id: number;
-  date: Date;
+  date: Dayjs;
   month: string;
   year: number;
 };
