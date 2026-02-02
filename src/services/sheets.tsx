@@ -26,6 +26,7 @@ registerSheet('bank-account-select-sheet', BankAccountSelectSheet);
 registerSheet('picker-sheet', PickerSheet);
 registerSheet('date-picker-sheet', DatePickerSheet);
 registerSheet('transaction-detail-sheet', TransactionDetailSheet);
+registerSheet('select-category-sheet', SelectCategorySheet); // CATEGORY SELECTOR
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {

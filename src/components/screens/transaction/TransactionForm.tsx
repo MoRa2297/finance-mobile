@@ -267,15 +267,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         <View style={styles.bottomSection}>
           <View style={styles.inputsContainer}>
             {/* Recived Switch (not for card_spending) */}
-            {formType !== 'card_spending' && (
-              <SwitchInput
-                placeholder={t('transactionPage:recivedPlaceholder')}
-                value={recived}
-                iconName="checkmark-circle-outline"
-                onValueChange={setRecived}
-                disabled={isSubmitting}
-              />
-            )}
+            {/*{formType !== 'card_spending' && (*/}
+            <SwitchInput
+              placeholder={t('transactionPage:recivedPlaceholder')}
+              value={recived}
+              iconName="checkmark-circle-outline"
+              onValueChange={setRecived}
+              disabled={isSubmitting}
+            />
+            {/*)}*/}
 
             {/* Date */}
             <DateInputField
@@ -310,30 +310,30 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             />
 
             {/* Bank Account (not for card_spending) */}
-            {formType !== 'card_spending' && (
-              <SelectInput
-                placeholder={t('transactionPage:bankPlaceholder')}
-                value={selectedBank?.name}
-                iconName="grid-outline"
-                // selectedImageUrl={selectedBankImage}
-                selectedBorderColor={theme.colors.textHint}
-                valueBordered
-                onPress={handleOpenBankAccountSheet}
-                // isDisabled={isSubmitting}
-              />
-            )}
+            {/*{formType !== 'card_spending' && (*/}
+            <SelectInput
+              placeholder={t('transactionPage:bankPlaceholder')}
+              value={selectedBank?.name}
+              iconName="grid-outline"
+              // selectedImageUrl={selectedBankImage}
+              selectedBorderColor={theme.colors.textHint}
+              valueBordered
+              onPress={handleOpenBankAccountSheet}
+              // isDisabled={isSubmitting}
+            />
+            {/*)}*/}
 
             {/* Card (only for card_spending) */}
-            {formType === 'card_spending' && (
-              <SelectInput
-                placeholder={t('transactionPage:cardPlaceholder')}
-                value={selectedCard?.name}
-                iconName="credit-card-outline"
-                valueBordered
-                onPress={handleOpenCardSheet}
-                // isDisabled={isSubmitting}
-              />
-            )}
+            {/*{formType === 'card_spending' && (*/}
+            <SelectInput
+              placeholder={t('transactionPage:cardPlaceholder')}
+              value={selectedCard?.name}
+              iconName="credit-card-outline"
+              valueBordered
+              onPress={handleOpenCardSheet}
+              // isDisabled={isSubmitting}
+            />
+            {/*)}*/}
 
             {/* Recurrent Switch */}
             <SwitchInput

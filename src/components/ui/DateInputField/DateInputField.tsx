@@ -61,10 +61,14 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.transparent,
     borderBottomWidth: 0.7,
     borderBottomColor: theme.colors.textHint,
+    borderWidth: 1,
+    borderColor: 'red',
   },
   iconContainer: {
     width: 40,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'red',
   },
   contentContainer: {
     flex: 1,
