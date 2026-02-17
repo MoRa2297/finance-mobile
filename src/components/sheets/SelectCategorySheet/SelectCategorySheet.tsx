@@ -7,15 +7,12 @@ import ActionSheet, {
 import { Layout, List } from '@ui-kitten/components';
 
 import { theme } from '@config/theme';
-import {
-  GLOBAL_BORDER_RADIUS,
-  HORIZONTAL_PADDING,
-  SCREEN_HEIGHT,
-} from '@config/constants';
-import { Category } from '@types';
-import { useStores } from '@hooks/useStores';
+import { GLOBAL_BORDER_RADIUS, SCREEN_HEIGHT } from '@config/constants';
 
-import { CategorySelectSheetListItem } from '../CategorySelectSheetListItem/CategorySelectSheetListItem';
+import { Category } from '@/types';
+import { useDataStore } from '@/stores';
+import { selectCategories } from '@stores/data/data.selectors';
+import { CategorySelectSheetListItem } from '@components/sheets/SelectCategorySheet/CategorySelectSheetListItem';
 
 // =============================================================================
 // TYPES
@@ -47,7 +44,10 @@ const LIST_MIN_HEIGHT = SCREEN_HEIGHT / 4;
 export const SelectCategorySheet: React.FC<SelectCategorySheetProps> = ({
   payload,
 }) => {
-  const { dataStore, sessionStore } = useStores();
+  // const { dataStore, sessionStore } = useStores();
+  const categories = useDataStore(selectCategories);
+
+  // const categories = useDataStore(state => state.categories);
   const actionSheetRef = useRef<ActionSheetRef>(null);
 
   const categoryType = payload?.type;
@@ -56,29 +56,27 @@ export const SelectCategorySheet: React.FC<SelectCategorySheetProps> = ({
   // Data Fetching
   // ---------------------------------------------------------------------------
 
-  useEffect(() => {
-    const shouldFetchCategories = !dataStore.categories?.length;
-
-    if (
-      shouldFetchCategories &&
-      sessionStore.sessionToken &&
-      sessionStore.user?.id
-    ) {
-      dataStore.getCategories(sessionStore.sessionToken, sessionStore.user.id);
-    }
-  }, [dataStore, sessionStore.sessionToken, sessionStore.user?.id]);
+  // useEffect(() => {
+  //   const shouldFetchCategories = !categories?.length;
+  //
+  //   if (
+  //     shouldFetchCategories &&
+  //     sessionStore.sessionToken &&
+  //     sessionStore.user?.id
+  //   ) {
+  //     dataStore.getCategories(sessionStore.sessionToken, sessionStore.user.id);
+  //   }
+  // }, [dataStore, sessionStore.sessionToken, sessionStore.user?.id]);
 
   // ---------------------------------------------------------------------------
   // Computed Values
   // ---------------------------------------------------------------------------
 
   const filteredCategories = useMemo(() => {
-    if (!dataStore.categories || !categoryType) return [];
+    if (!categories || !categoryType) return [];
 
-    return dataStore.categories.filter(
-      category => category.type === categoryType,
-    );
-  }, [dataStore.categories, categoryType]);
+    return categories.filter(category => category.type === categoryType);
+  }, [categories, categoryType]);
 
   // ---------------------------------------------------------------------------
   // Handlers
@@ -86,7 +84,7 @@ export const SelectCategorySheet: React.FC<SelectCategorySheetProps> = ({
 
   const handleSelect = useCallback((item: Category) => {
     const result: SelectCategorySheetResult = { item };
-    actionSheetRef.current?.hide(result);
+    // actionSheetRef.current?.hide(result);
   }, []);
 
   const renderItem = useCallback(

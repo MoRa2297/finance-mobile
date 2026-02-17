@@ -209,21 +209,21 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       return;
     }
 
-    const values: EditTransaction = {
-      id: transaction?.id,
-      bankAccountId: selectedBank?.id || 0,
-      cardAccountId: selectedCard?.id || null,
-      categoryId: selectedCategory.id,
-      money,
-      recived,
-      date,
-      description: description.trim(),
-      recurrent,
-      repeat,
-      note,
-    };
-
-    onSubmit(values);
+    // const values: EditTransaction = {
+    //   id: transaction?.id,
+    //   bankAccountId: selectedBank?.id || 0,
+    //   cardAccountId: selectedCard?.id || null,
+    //   categoryId: selectedCategory.id,
+    //   money,
+    //   recived,
+    //   date,
+    //   description: description.trim(),
+    //   recurrent,
+    //   repeat,
+    //   note,
+    // };
+    //
+    // onSubmit(values);
   }, [
     isSubmitting,
     formType,

@@ -15,6 +15,7 @@ import { BankSelectSheet } from '@components/sheets/BankSelectSheet/BankSelectSh
 import { BankAccountTypeSheet } from '@components/sheets/BankAccountTypeSheet/BankAccountTypeSheet';
 import { DatePickerSheet } from '@components/sheets/DatePickerSheet/DatePickerSheet';
 import { TransactionDetailSheet } from '@components/sheets/TransactionDetailSheet/TransactionDetailSheet';
+import { SelectCategorySheet } from '@components/sheets/SelectCategorySheet/SelectCategorySheet';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -66,6 +67,9 @@ declare module 'react-native-actions-sheet' {
         transaction: Transaction;
         onEdit: (transaction: Transaction) => void;
       };
+    }>;
+    'select-category-sheet': SheetDefinition<{
+      payload: { type: 'income' | 'expenses' };
     }>;
   }
 }
