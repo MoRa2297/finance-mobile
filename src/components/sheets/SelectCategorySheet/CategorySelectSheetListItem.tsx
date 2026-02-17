@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from 'react';
 import { Category } from '@/types';
-import { Layout, ListItem } from '@ui-kitten/components';
+import { Text } from '@ui-kitten/components';
 import { Icon } from '@components/ui/Icon';
 import { theme } from '@config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@config/constants';
-import { StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 type CategorySelectSheetListItemProps = {
   item: Category;
@@ -15,62 +15,50 @@ export const CategorySelectSheetListItem: FunctionComponent<
   CategorySelectSheetListItemProps
 > = ({ item, onSelect }) => {
   return (
-    <ListItem style={styles.container} onPress={() => onSelect(item)}>
-      <Layout
-        style={[
-          styles.iconContainerIcons,
-          { backgroundColor: item?.categoryColor.hexCode },
-        ]}>
-        {/*<Icon*/}
-        {/*  name={item?.categoryIcon.iconName}*/}
-        {/*  color={theme.colors.basic100}*/}
-        {/*  size={28}*/}
-        {/*  pack="ionicons"*/}
-        {/*/>*/}
-      </Layout>
+    <Pressable style={styles.itemContainer} onPress={() => onSelect(item)}>
+      <View style={styles.imagePlaceholder}>
+        <Icon
+          name={item?.categoryIcon.iconName}
+          color={theme.colors.basic100}
+          size={24}
+        />
+      </View>
 
-      {/*<Text style={{ flex: 1 }}>{item.name}</Text>*/}
-      <Layout style={styles.iconContainer}>
-        {/*<Icon*/}
-        {/*  name={'arrow-ios-forward-outline'}*/}
-        {/*  color={theme.colors.textHint}*/}
-        {/*  size={28}*/}
-        {/*/>*/}
-      </Layout>
-    </ListItem>
+      <Text category="s1" style={styles.itemText}>
+        {item.name}
+      </Text>
+      <Icon
+        name="arrow-ios-forward-outline"
+        color={theme.colors.textHint}
+        size={24}
+      />
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: HORIZONTAL_PADDING,
-    paddingVertical: HORIZONTAL_PADDING / 2,
     backgroundColor: theme.colors.primaryBK,
+    borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
+    borderTopRightRadius: GLOBAL_BORDER_RADIUS,
+  },
+  itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    paddingHorizontal: HORIZONTAL_PADDING,
+    paddingVertical: 12,
+    gap: 12,
   },
-  header: {
-    fontSize: 17,
+  imagePlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: theme.colors.secondaryBK,
-    paddingVertical: 10,
-    color: theme.colors.textHint,
-  },
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 40 / 2,
-    resizeMode: 'contain',
-  },
-  iconContainer: {
-    flex: 0.16,
-    alignItems: 'center',
-  },
-  iconContainerIcons: {
-    width: 40,
-    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: GLOBAL_BORDER_RADIUS,
+  },
+  itemText: {
+    flex: 1,
+    color: theme.colors.basic100,
   },
 });
