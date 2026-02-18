@@ -144,9 +144,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       },
     });
 
-    // if (result?.item) {
-    //   setSelectedCategory(result.item);
-    // }
+    if (result?.item) {
+      setSelectedCategory(result?.item);
+    }
   }, [formType]);
 
   const handleOpenBankAccountSheet = useCallback(async () => {

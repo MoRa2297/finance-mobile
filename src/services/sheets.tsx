@@ -7,7 +7,7 @@ import {
   PickerSheet,
 } from '@components/sheets/PickerSheet/PickerSheet';
 
-import { Transaction } from '@/types';
+import { Category, Transaction } from '@/types';
 import { ColorSheet } from '@components/sheets/ColorSheet/ColorSheet';
 import { IconSheet } from '@components/sheets/IconSheet/IconSheet';
 import { CategoryFormSheet } from '@components/sheets/CategoryFormSheet/CategoryFormSheet';
@@ -70,6 +70,7 @@ declare module 'react-native-actions-sheet' {
     }>;
     'select-category-sheet': SheetDefinition<{
       payload: { type: 'income' | 'expenses' };
+      returnValue: { item: Category };
     }>;
   }
 }

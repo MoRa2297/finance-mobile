@@ -1,98 +1,105 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
+import React, { FC, memo, useCallback, useMemo, useRef } from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
+  SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
-import { Layout, List } from '@ui-kitten/components';
+import { Layout, List, Text } from '@ui-kitten/components';
 
 import { theme } from '@config/theme';
-import { GLOBAL_BORDER_RADIUS, SCREEN_HEIGHT } from '@config/constants';
-
+import {
+  GLOBAL_BORDER_RADIUS,
+  HORIZONTAL_PADDING,
+  SCREEN_HEIGHT,
+} from '@config/constants';
 import { Category } from '@/types';
 import { useDataStore } from '@/stores';
 import { selectCategories } from '@stores/data/data.selectors';
-import { CategorySelectSheetListItem } from '@components/sheets/SelectCategorySheet/CategorySelectSheetListItem';
+import { Icon } from '@components/ui/Icon';
 
-// =============================================================================
-// TYPES
-// =============================================================================
+export type CategoryType = 'income' | 'expenses';
 
-type CategoryType = 'income' | 'expenses';
-
-interface SelectCategorySheetPayload {
+export interface SelectCategorySheetPayload {
   type: CategoryType;
 }
 
-interface SelectCategorySheetResult {
+export interface SelectCategorySheetResult {
   item: Category;
 }
 
 type SelectCategorySheetProps = SheetProps<'select-category-sheet'>;
 
-// =============================================================================
-// CONSTANTS
-// =============================================================================
+interface ListItemProps {
+  item: Category;
+  onSelect: (item: Category) => void;
+}
 
 const LIST_MAX_HEIGHT = SCREEN_HEIGHT / 1.5;
 const LIST_MIN_HEIGHT = SCREEN_HEIGHT / 4;
+const ICON_SIZE = 24;
+const ICON_CONTAINER_SIZE = 40;
+const DEFAULT_ICON = 'folder-outline';
 
-// =============================================================================
-// COMPONENT
-// =============================================================================
+const ListItem: FC<ListItemProps> = memo(({ item, onSelect }) => {
+  const handlePress = useCallback(() => onSelect(item), [item, onSelect]);
 
-export const SelectCategorySheet: React.FC<SelectCategorySheetProps> = ({
+  const iconName = item.categoryIcon?.iconName ?? DEFAULT_ICON;
+
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.listItem,
+        pressed && styles.listItemPressed,
+      ]}
+      onPress={handlePress}
+      accessibilityRole="button"
+      accessibilityLabel={`Select ${item.name} category`}>
+      <View style={styles.iconContainer}>
+        <Icon name={iconName} color={theme.colors.basic100} size={ICON_SIZE} />
+      </View>
+
+      <Text category="s1" style={styles.label}>
+        {item.name}
+      </Text>
+
+      <Icon
+        name="arrow-ios-forward-outline"
+        color={theme.colors.textHint}
+        size={ICON_SIZE}
+      />
+    </Pressable>
+  );
+});
+
+export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
+  sheetId,
   payload,
 }) => {
-  // const { dataStore, sessionStore } = useStores();
+  const actionSheetRef = useRef<ActionSheetRef>(null);
   const categories = useDataStore(selectCategories);
 
-  // const categories = useDataStore(state => state.categories);
-  const actionSheetRef = useRef<ActionSheetRef>(null);
-
-  const categoryType = payload?.type;
-
-  // ---------------------------------------------------------------------------
-  // Data Fetching
-  // ---------------------------------------------------------------------------
-
-  // useEffect(() => {
-  //   const shouldFetchCategories = !categories?.length;
-  //
-  //   if (
-  //     shouldFetchCategories &&
-  //     sessionStore.sessionToken &&
-  //     sessionStore.user?.id
-  //   ) {
-  //     dataStore.getCategories(sessionStore.sessionToken, sessionStore.user.id);
-  //   }
-  // }, [dataStore, sessionStore.sessionToken, sessionStore.user?.id]);
-
-  // ---------------------------------------------------------------------------
-  // Computed Values
-  // ---------------------------------------------------------------------------
-
   const filteredCategories = useMemo(() => {
-    if (!categories || !categoryType) return [];
+    if (!categories?.length || !payload?.type) return [];
 
-    return categories.filter(category => category.type === categoryType);
-  }, [categories, categoryType]);
-
-  // ---------------------------------------------------------------------------
-  // Handlers
-  // ---------------------------------------------------------------------------
+    return categories.filter(category => category.type === payload.type);
+  }, [categories, payload?.type]);
 
   const handleSelect = useCallback((item: Category) => {
-    const result: SelectCategorySheetResult = { item };
-    // actionSheetRef.current?.hide(result);
+    SheetManager.hide(sheetId, {
+      payload: { item },
+    });
   }, []);
 
   const renderItem = useCallback(
     ({ item }: { item: Category }) => (
-      <CategorySelectSheetListItem
-        item={item}
-        onSelect={() => handleSelect(item)}
-      />
+      <ListItem item={item} onSelect={handleSelect} />
     ),
     [handleSelect],
   );
@@ -103,13 +110,10 @@ export const SelectCategorySheet: React.FC<SelectCategorySheetProps> = ({
   );
 
   const keyExtractor = useCallback(
-    (item: Category, index: number) => item.id?.toString() ?? String(index),
+    (item: Category, index: number) =>
+      item.id?.toString() ?? `category-${index}`,
     [],
   );
-
-  // ---------------------------------------------------------------------------
-  // Render
-  // ---------------------------------------------------------------------------
 
   return (
     <ActionSheet
@@ -138,11 +142,8 @@ export const SelectCategorySheet: React.FC<SelectCategorySheetProps> = ({
   );
 };
 
-// =============================================================================
-// STYLES
-// =============================================================================
-
 const styles = StyleSheet.create({
+  // Sheet styles
   sheetContainer: {
     backgroundColor: theme.colors.primaryBK,
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
@@ -164,4 +165,32 @@ const styles = StyleSheet.create({
     height: 0,
     backgroundColor: theme.colors.primaryBK,
   } as ViewStyle,
+
+  // List item styles
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: HORIZONTAL_PADDING,
+    paddingVertical: 12,
+    gap: 12,
+  } as ViewStyle,
+
+  listItemPressed: {
+    backgroundColor: theme.colors.secondaryBK,
+    opacity: 0.8,
+  } as ViewStyle,
+
+  iconContainer: {
+    width: ICON_CONTAINER_SIZE,
+    height: ICON_CONTAINER_SIZE,
+    borderRadius: ICON_CONTAINER_SIZE / 2,
+    backgroundColor: theme.colors.secondaryBK,
+    alignItems: 'center',
+    justifyContent: 'center',
+  } as ViewStyle,
+
+  label: {
+    flex: 1,
+    color: theme.colors.basic100,
+  } as TextStyle,
 });
