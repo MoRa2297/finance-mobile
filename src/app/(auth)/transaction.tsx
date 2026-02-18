@@ -71,9 +71,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.secondaryBK,
-    borderWidth: 1,
-    borderColor: 'red',
-    // paddingTop: 0,
   },
   typeSelectorButton: {
     paddingHorizontal: 20,

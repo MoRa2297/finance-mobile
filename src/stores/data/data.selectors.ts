@@ -5,13 +5,22 @@ import {
   Category,
   BankType,
   BankAccountType,
+  BankCard,
+  CardType,
 } from '@/types';
 import dayjs, { Dayjs } from 'dayjs';
 
 // ============ Base Selectors ============
 export const selectTransactions = (state: DataStore) => state.transactions;
 export const selectBankAccounts = (state: DataStore) => state.bankAccounts;
+export const selectCategories = (state: DataStore) => state.categories;
+export const selectBankCards = (state: DataStore) => state.bankCards;
+export const selectCardTypes = (state: DataStore) => state.cardTypes;
+export const selectBankTypes = (state: DataStore) => state.bankTypes;
+export const selectBankAccountTypes = (state: DataStore) =>
+  state.bankAccountTypes;
 export const selectIsLoading = (state: DataStore) => state.isLoading;
+export const selectError = (state: DataStore) => state.error;
 
 // ============ Transaction Filters ============
 export const filterTransactionsByMonth = (
@@ -77,8 +86,6 @@ export const filterTransactions = (
 };
 
 // ============ Category Selectors ============
-export const selectCategories = (state: DataStore) => state.categories;
-
 export const selectCategoriesByType = (
   categories: Category[],
   type: 'income' | 'expenses',
@@ -93,8 +100,6 @@ export const selectExpenseCategories = (state: DataStore) =>
   state.categories.filter(cat => cat.type === 'expenses');
 
 // ============ Bank Account Selectors ============
-export const selectBankTypes = (state: DataStore) => state.bankTypes;
-
 export const findBankTypeById = (
   bankTypes: BankType[],
   bankTypeId: number,
@@ -122,9 +127,6 @@ export const calculateAccountBalance = (
 };
 
 // ============ Bank Account Detail Selectors ============
-export const selectBankAccountTypes = (state: DataStore) =>
-  state.bankAccountTypes;
-
 export const findBankAccountById = (
   bankAccounts: BankAccount[],
   id: number,
@@ -191,4 +193,57 @@ export const calculateAccountStats = (
     countSpent: expenseTransactions.length,
     totalTransfers: incomeTransactions.length + expenseTransactions.length,
   };
+};
+
+// ============ Bank Card Selectors ============
+export const selectCardsByBankAccount = (
+  bankCards: BankCard[],
+  bankAccountId: number,
+): BankCard[] => {
+  return bankCards.filter(card => card.bankAccountId === bankAccountId);
+};
+
+export const selectCardsByBankAccounts = (
+  bankCards: BankCard[],
+  bankAccountIds: number[],
+): BankCard[] => {
+  const accountIdSet = new Set(bankAccountIds);
+  return bankCards.filter(card => accountIdSet.has(card.bankAccountId));
+};
+
+export const findBankCardById = (
+  bankCards: BankCard[],
+  id: number,
+): BankCard | undefined => {
+  return bankCards.find(card => card.id === id);
+};
+
+export const findCardTypeById = (
+  cardTypes: CardType[],
+  id: number,
+): CardType | undefined => {
+  return cardTypes.find(ct => ct.id === id);
+};
+
+// ============ Card Helpers ============
+export const formatCardExpiry = (month: number, year: number): string => {
+  const monthStr = month.toString().padStart(2, '0');
+  const yearStr = year.toString().slice(-2);
+  return `${monthStr}/${yearStr}`;
+};
+
+export const isCardExpired = (month: number, year: number): boolean => {
+  const now = dayjs();
+  const expiryDate = dayjs()
+    .year(year)
+    .month(month - 1)
+    .endOf('month');
+  return now.isAfter(expiryDate);
+};
+
+export const getCardTypeName = (
+  cardTypes: CardType[],
+  cardTypeId: number,
+): string | undefined => {
+  return cardTypes.find(ct => ct.id === cardTypeId)?.name;
 };

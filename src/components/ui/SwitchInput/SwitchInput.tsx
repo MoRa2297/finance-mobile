@@ -63,8 +63,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.transparent,
     borderBottomColor: theme.colors.textHint,
     borderBottomWidth: 0.7,
-    borderWidth: 1,
-    borderColor: 'red',
   },
   disabled: {
     opacity: 0.5,
@@ -72,8 +70,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 40,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'red',
   },
   placeholder: {
     flex: 1,

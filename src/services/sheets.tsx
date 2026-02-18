@@ -16,6 +16,11 @@ import { BankAccountTypeSheet } from '@components/sheets/BankAccountTypeSheet/Ba
 import { DatePickerSheet } from '@components/sheets/DatePickerSheet/DatePickerSheet';
 import { TransactionDetailSheet } from '@components/sheets/TransactionDetailSheet/TransactionDetailSheet';
 import { SelectCategorySheet } from '@components/sheets/SelectCategorySheet/SelectCategorySheet';
+import {
+  SelectCardSheet,
+  SelectCardSheetPayload,
+  SelectCardSheetResult,
+} from '@components/sheets/SelectCardSheet/SelectCardSheet';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -27,7 +32,8 @@ registerSheet('bank-account-select-sheet', BankAccountSelectSheet);
 registerSheet('picker-sheet', PickerSheet);
 registerSheet('date-picker-sheet', DatePickerSheet);
 registerSheet('transaction-detail-sheet', TransactionDetailSheet);
-registerSheet('select-category-sheet', SelectCategorySheet); // CATEGORY SELECTOR
+registerSheet('select-category-sheet', SelectCategorySheet);
+registerSheet('select-card-sheet', SelectCardSheet);
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {
@@ -71,6 +77,10 @@ declare module 'react-native-actions-sheet' {
     'select-category-sheet': SheetDefinition<{
       payload: { type: 'income' | 'expenses' };
       returnValue: { item: Category };
+    }>;
+    'select-card-sheet': SheetDefinition<{
+      payload: SelectCardSheetPayload;
+      returnValue: SelectCardSheetResult;
     }>;
   }
 }

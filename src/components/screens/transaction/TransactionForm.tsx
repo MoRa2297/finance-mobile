@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +35,48 @@ interface TransactionFormProps {
   isSubmitting?: boolean;
 }
 
+interface FormState {
+  money: string;
+  description: string;
+  note: string;
+  date: string;
+  recived: boolean;
+  recurrent: boolean;
+  repeat: boolean;
+}
+
+interface SelectionState {
+  bankAccount: BankAccount | null;
+  bankImageUrl: string | null;
+  category: Category | null;
+  card: BankCard | null;
+}
+
+const DATE_FORMAT = 'DD-MM-YYYY';
+
+const getInitialFormState = (transaction: Transaction | null): FormState => ({
+  money: transaction?.money || '',
+  description: transaction?.description || '',
+  note: transaction?.note || '',
+  date: transaction?.date
+    ? dayjs(transaction.date).format(DATE_FORMAT)
+    : dayjs().format(DATE_FORMAT),
+  recived: transaction?.recived || false,
+  recurrent: transaction?.recurrent || false,
+  repeat: transaction?.repeat || false,
+});
+
+const getInitialSelectionState = (): SelectionState => ({
+  bankAccount: null,
+  bankImageUrl: null,
+  category: null,
+  card: null,
+});
+
+const getCategoryType = (formType: TransactionType): 'income' | 'expenses' => {
+  return formType === 'income' ? 'income' : 'expenses';
+};
+
 export const TransactionForm: React.FC<TransactionFormProps> = ({
   formType,
   transaction,
@@ -45,79 +87,110 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { t } = useTranslation(['transactionPage', 'common']);
   const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
-  // Store data
   const bankAccounts = useDataStore(state => state.bankAccounts);
   const bankCards = useDataStore(state => state.bankCards);
   const bankTypes = useDataStore(state => state.bankTypes);
   const categories = useDataStore(state => state.categories);
 
-  // Form state
-  const [money, setMoney] = useState(transaction?.money || '');
-  const [description, setDescription] = useState(
-    transaction?.description || '',
+  const [formState, setFormState] = useState<FormState>(() =>
+    getInitialFormState(transaction),
   );
-  const [note, setNote] = useState(transaction?.note || '');
-  const [date, setDate] = useState(
-    transaction?.date
-      ? dayjs(transaction.date).format('DD-MM-YYYY')
-      : dayjs().format('DD-MM-YYYY'),
-  );
-  const [recived, setRecived] = useState(transaction?.recived || false);
-  const [recurrent, setRecurrent] = useState(transaction?.recurrent || false);
-  const [repeat, setRepeat] = useState(transaction?.repeat || false);
 
-  // Selection state
-  const [selectedBank, setSelectedBank] = useState<BankAccount | null>(null);
-  const [selectedBankImage, setSelectedBankImage] = useState<string | null>(
-    null,
+  const [selection, setSelection] = useState<SelectionState>(
+    getInitialSelectionState,
   );
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null,
-  );
-  const [selectedCard, setSelectedCard] = useState<BankCard | null>(null);
 
-  // Alert state
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
-  // Initialize selections from transaction
-  useEffect(() => {
-    if (transaction) {
-      // Bank account
-      const bankAccount = bankAccounts.find(
-        ba => ba.id === transaction.bankAccountId,
-      );
-      if (bankAccount) {
-        setSelectedBank(bankAccount);
-        const bankType = bankTypes.find(bt => bt.id === bankAccount.bankTypeId);
-        setSelectedBankImage(bankType?.imageUrl || null);
-      }
+  const isCardSpending = formType === 'card_spending';
 
-      // Category
-      const category = categories.find(c => c.id === transaction.categoryId);
-      if (category) {
-        setSelectedCategory(category);
-      }
-
-      // Card
-      const card = bankCards.find(c => c.id === transaction.cardId);
-      if (card) {
-        setSelectedCard(card);
-      }
+  // Get bank account IDs for card selection
+  // - For card_spending: use all accounts (user selects card first)
+  // - For other types: use selected bank account only
+  const bankAccountIdsForCards = useMemo(() => {
+    if (isCardSpending) {
+      return bankAccounts.map(ba => ba.id);
     }
-  }, [transaction, bankAccounts, bankTypes, categories, bankCards]);
+    return selection.bankAccount ? [selection.bankAccount.id] : [];
+  }, [isCardSpending, bankAccounts, selection.bankAccount]);
+
+  const hasSelectedBankForCard =
+    isCardSpending || selection.bankAccount !== null;
+
+  const updateFormField = useCallback(
+    <K extends keyof FormState>(field: K, value: FormState[K]) => {
+      setFormState(prev => ({ ...prev, [field]: value }));
+    },
+    [],
+  );
+
+  const updateSelection = useCallback(
+    <K extends keyof SelectionState>(field: K, value: SelectionState[K]) => {
+      setSelection(prev => ({ ...prev, [field]: value }));
+    },
+    [],
+  );
+
+  const showAlert = useCallback((message: string) => {
+    setAlertMessage(message);
+    setAlertVisible(true);
+  }, []);
+
+  const hideAlert = useCallback(() => {
+    setAlertVisible(false);
+  }, []);
+
+  useEffect(() => {
+    if (!transaction) return;
+
+    // Reset form state
+    setFormState(getInitialFormState(transaction));
+
+    // Bank account
+    const bankAccount = bankAccounts.find(
+      ba => ba.id === transaction.bankAccountId,
+    );
+
+    if (bankAccount) {
+      const bankType = bankTypes.find(bt => bt.id === bankAccount.bankTypeId);
+
+      setSelection(prev => ({
+        ...prev,
+        bankAccount,
+        bankImageUrl: bankType?.imageUrl || null,
+      }));
+    }
+
+    // Category
+    const category = categories.find(c => c.id === transaction.categoryId);
+    if (category) {
+      updateSelection('category', category);
+    }
+
+    // Card
+    const card = bankCards.find(c => c.id === transaction.cardId);
+    if (card) {
+      updateSelection('card', card);
+    }
+  }, [
+    transaction,
+    bankAccounts,
+    bankTypes,
+    categories,
+    bankCards,
+    updateSelection,
+  ]);
 
   // Show submit error
   useEffect(() => {
     if (submitError) {
-      setAlertMessage(submitError);
-      setAlertVisible(true);
+      showAlert(submitError);
     }
-  }, [submitError]);
+  }, [submitError, showAlert]);
 
-  // Handlers
   const handleOpenDatePicker = useCallback(async () => {
-    const prevDate = dayjs(date, 'DD-MM-YYYY');
+    const prevDate = dayjs(formState.date, DATE_FORMAT);
 
     const result = await SheetManager.show('date-picker-sheet', {
       payload: {
@@ -132,114 +205,154 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         .year(parseInt(result.year, 10))
         .month(parseInt(result.month, 10) - 1)
         .date(parseInt(result.day, 10))
-        .format('DD-MM-YYYY');
-      setDate(newDate);
+        .format(DATE_FORMAT);
+
+      updateFormField('date', newDate);
     }
-  }, [date]);
+  }, [formState.date, updateFormField]);
 
   const handleOpenCategorySheet = useCallback(async () => {
+    const categoryType = getCategoryType(formType);
+
     const result = await SheetManager.show('select-category-sheet', {
-      payload: {
-        type: formType === 'income' ? 'income' : 'expenses',
-      },
+      payload: { type: categoryType },
     });
 
     if (result?.item) {
-      setSelectedCategory(result?.item);
+      updateSelection('category', result.item);
     }
-  }, [formType]);
+  }, [formType, updateSelection]);
 
   const handleOpenBankAccountSheet = useCallback(async () => {
     const result = await SheetManager.show('bank-account-select-sheet');
 
     if (result?.bankAccount) {
       const bankAccount = result.bankAccount;
-      setSelectedBank(bankAccount);
-
       const bankType = bankTypes.find(bt => bt.id === bankAccount.bankTypeId);
-      setSelectedBankImage(bankType?.imageUrl || null);
+
+      setSelection(prev => ({
+        ...prev,
+        bankAccount,
+        bankImageUrl: bankType?.imageUrl || null,
+        // Reset card when bank account changes (card might not belong to new account)
+        card: null,
+      }));
     }
   }, [bankTypes]);
 
   const handleOpenCardSheet = useCallback(async () => {
-    const result = await SheetManager.show('card-select-sheet');
+    // Don't open if no bank accounts available for card selection
+    if (bankAccountIdsForCards.length === 0) {
+      showAlert(t('transactionPage:errors.selectBankFirst'));
+      return;
+    }
 
-    // if (result?.card) {
-    //   setSelectedCard(result.card);
-    // }
-  }, []);
+    const result = await SheetManager.show('select-card-sheet', {
+      payload: { bankAccountIds: bankAccountIdsForCards },
+    });
+
+    if (result?.item) {
+      updateSelection('card', result.item);
+
+      // For card_spending: auto-select the bank account of the selected card
+      if (isCardSpending) {
+        const cardBankAccount = bankAccounts.find(
+          ba => ba.id === result.item.bankAccountId,
+        );
+
+        if (cardBankAccount) {
+          const bankType = bankTypes.find(
+            bt => bt.id === cardBankAccount.bankTypeId,
+          );
+
+          setSelection(prev => ({
+            ...prev,
+            bankAccount: cardBankAccount,
+            bankImageUrl: bankType?.imageUrl || null,
+            card: result.item,
+          }));
+        }
+      }
+    }
+  }, [
+    bankAccountIdsForCards,
+    bankAccounts,
+    bankTypes,
+    isCardSpending,
+    showAlert,
+    updateSelection,
+    t,
+  ]);
+
+  const validateForm = useCallback((): boolean => {
+    // Bank account required (except for card_spending where it's auto-selected)
+    if (!isCardSpending && !selection.bankAccount) {
+      showAlert(t('transactionPage:errors.bankRequired'));
+      return false;
+    }
+
+    // Card required for card_spending
+    if (isCardSpending && !selection.card) {
+      showAlert(t('transactionPage:errors.cardRequired'));
+      return false;
+    }
+
+    // Category required
+    if (!selection.category) {
+      showAlert(t('transactionPage:errors.categoryRequired'));
+      return false;
+    }
+
+    // Money required
+    if (!formState.money || formState.money === '0') {
+      showAlert(t('transactionPage:errors.moneyRequired'));
+      return false;
+    }
+
+    // Date required
+    if (!formState.date) {
+      showAlert(t('transactionPage:errors.dateRequired'));
+      return false;
+    }
+
+    // Description required
+    if (!formState.description.trim()) {
+      showAlert(t('transactionPage:errors.descriptionRequired'));
+      return false;
+    }
+
+    return true;
+  }, [formState, selection, isCardSpending, showAlert, t]);
 
   const handleSubmit = useCallback(() => {
     if (isSubmitting) return;
 
-    // Validation
-    if (formType !== 'card_spending' && !selectedBank) {
-      setAlertMessage(t('transactionPage:errors.bankRequired'));
-      setAlertVisible(true);
-      return;
-    }
-
-    if (formType === 'card_spending' && !selectedCard) {
-      setAlertMessage(t('transactionPage:errors.cardRequired'));
-      setAlertVisible(true);
-      return;
-    }
-
-    if (!selectedCategory) {
-      setAlertMessage(t('transactionPage:errors.categoryRequired'));
-      setAlertVisible(true);
-      return;
-    }
-
-    if (!money || money === '0') {
-      setAlertMessage(t('transactionPage:errors.moneyRequired'));
-      setAlertVisible(true);
-      return;
-    }
-
-    if (!date) {
-      setAlertMessage(t('transactionPage:errors.dateRequired'));
-      setAlertVisible(true);
-      return;
-    }
-
-    if (!description.trim()) {
-      setAlertMessage(t('transactionPage:errors.descriptionRequired'));
-      setAlertVisible(true);
-      return;
-    }
+    if (!validateForm()) return;
 
     // const values: EditTransaction = {
     //   id: transaction?.id,
-    //   bankAccountId: selectedBank?.id || 0,
-    //   cardAccountId: selectedCard?.id || null,
-    //   categoryId: selectedCategory.id,
-    //   money,
-    //   recived,
-    //   date,
-    //   description: description.trim(),
-    //   recurrent,
-    //   repeat,
-    //   note,
+    //   bankAccountId: selection.bankAccount!.id,
+    //   cardId: selection.card?.id || null,
+    //   categoryId: selection.category!.id,
+    //   money: formState.money,
+    //   recived: formState.recived,
+    //   date: formState.date,
+    //   description: formState.description.trim(),
+    //   recurrent: formState.recurrent,
+    //   repeat: formState.repeat,
+    //   note: formState.note,
+    //   type: formType,
     // };
     //
     // onSubmit(values);
   }, [
     isSubmitting,
+    validateForm,
+    formState,
+    selection,
     formType,
-    selectedBank,
-    selectedCard,
-    selectedCategory,
-    money,
-    date,
-    description,
-    recived,
-    recurrent,
-    repeat,
-    note,
     transaction?.id,
     onSubmit,
-    t,
   ]);
 
   return (
@@ -255,8 +368,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           </Text>
           <InputIconField
             placeholder={t('transactionPage:moneyValuePlaceholder')}
-            value={money}
-            onChange={setMoney}
+            value={formState.money}
+            onChange={value => updateFormField('money', value)}
             keyboardType="numeric"
             borderBottom={false}
             editable={!isSubmitting}
@@ -266,31 +379,30 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         {/* Bottom Section - Form Fields */}
         <View style={styles.bottomSection}>
           <View style={styles.inputsContainer}>
-            {/* Recived Switch (not for card_spending) */}
-            {/*{formType !== 'card_spending' && (*/}
-            <SwitchInput
-              placeholder={t('transactionPage:recivedPlaceholder')}
-              value={recived}
-              iconName="checkmark-circle-outline"
-              onValueChange={setRecived}
-              disabled={isSubmitting}
-            />
-            {/*)}*/}
+            {/* Received Switch */}
+            {!isCardSpending && (
+              <SwitchInput
+                placeholder={t('transactionPage:recivedPlaceholder')}
+                value={formState.recived}
+                iconName="checkmark-circle-outline"
+                onValueChange={value => updateFormField('recived', value)}
+                disabled={isSubmitting}
+              />
+            )}
 
             {/* Date */}
             <DateInputField
-              value={date}
+              value={formState.date}
               iconName="calendar-outline"
               placeholder={t('transactionPage:datePlaceholder')}
               onPress={handleOpenDatePicker}
-              // isDisabled={isSubmitting}
             />
 
             {/* Description */}
             <InputIconField
               placeholder={t('transactionPage:descriptionPlaceholder')}
-              value={description}
-              onChange={setDescription}
+              value={formState.description}
+              onChange={value => updateFormField('description', value)}
               iconName="edit-outline"
               editable={!isSubmitting}
             />
@@ -298,66 +410,60 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {/* Category */}
             <SelectInput
               placeholder={t('transactionPage:categoryPlaceholder')}
-              value={selectedCategory?.name}
+              value={selection.category?.name}
               iconName="bookmark-outline"
-              // selectedCategoryIconName={
-              //   selectedCategory?.categoryIcon?.iconName
-              // }
-              selectedBorderColor={selectedCategory?.categoryColor?.hexCode}
+              selectedBorderColor={selection.category?.categoryColor?.hexCode}
               valueBordered
               onPress={handleOpenCategorySheet}
-              // isDisabled={isSubmitting}
             />
 
-            {/* Bank Account (not for card_spending) */}
-            {/*{formType !== 'card_spending' && (*/}
-            <SelectInput
-              placeholder={t('transactionPage:bankPlaceholder')}
-              value={selectedBank?.name}
-              iconName="grid-outline"
-              // selectedImageUrl={selectedBankImage}
-              selectedBorderColor={theme.colors.textHint}
-              valueBordered
-              onPress={handleOpenBankAccountSheet}
-              // isDisabled={isSubmitting}
-            />
-            {/*)}*/}
+            {/* Bank Account (not for card_spending - auto-selected from card) */}
+            {!isCardSpending && (
+              <SelectInput
+                placeholder={t('transactionPage:bankPlaceholder')}
+                value={selection.bankAccount?.name}
+                iconName="grid-outline"
+                selectedBorderColor={theme.colors.textHint}
+                valueBordered
+                onPress={handleOpenBankAccountSheet}
+              />
+            )}
 
-            {/* Card (only for card_spending) */}
-            {/*{formType === 'card_spending' && (*/}
-            <SelectInput
-              placeholder={t('transactionPage:cardPlaceholder')}
-              value={selectedCard?.name}
-              iconName="credit-card-outline"
-              valueBordered
-              onPress={handleOpenCardSheet}
-              // isDisabled={isSubmitting}
-            />
-            {/*)}*/}
+            {/* Card Selection */}
+            {(isCardSpending || selection.bankAccount) && (
+              <SelectInput
+                placeholder={t('transactionPage:cardPlaceholder')}
+                value={selection.card?.name}
+                iconName="credit-card-outline"
+                selectedBorderColor={theme.colors.textHint}
+                valueBordered
+                onPress={handleOpenCardSheet}
+              />
+            )}
 
             {/* Recurrent Switch */}
             <SwitchInput
               placeholder={t('transactionPage:recurrentPlaceholder')}
-              value={recurrent}
+              value={formState.recurrent}
               iconName="sync-outline"
-              onValueChange={setRecurrent}
+              onValueChange={value => updateFormField('recurrent', value)}
               disabled={isSubmitting}
             />
 
             {/* Repeat Switch */}
             <SwitchInput
               placeholder={t('transactionPage:repeatPlaceholder')}
-              value={repeat}
+              value={formState.repeat}
               iconName="repeat-outline"
-              onValueChange={setRepeat}
+              onValueChange={value => updateFormField('repeat', value)}
               disabled={isSubmitting}
             />
 
             {/* Note */}
             <InputIconField
               placeholder={t('transactionPage:notePlaceholder')}
-              value={note}
-              onChange={setNote}
+              value={formState.note}
+              onChange={value => updateFormField('note', value)}
               iconName="edit-outline"
               editable={!isSubmitting}
             />
@@ -387,7 +493,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         title={t('transactionPage:alertTitle')}
         subtitle={alertMessage}
         primaryButtonText={t('common:ok')}
-        onPrimaryPress={() => setAlertVisible(false)}
+        onPrimaryPress={hideAlert}
       />
     </ScrollView>
   );
@@ -431,5 +537,6 @@ const styles = StyleSheet.create({
   button: {
     width: '60%',
     borderRadius: GLOBAL_BORDER_RADIUS,
+    marginBottom: 20,
   },
 });

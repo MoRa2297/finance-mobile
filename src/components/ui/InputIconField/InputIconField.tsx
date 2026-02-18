@@ -59,8 +59,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 60,
     backgroundColor: theme.colors.transparent,
-    borderWidth: 1,
-    borderColor: 'red',
   },
   borderBottom: {
     borderBottomWidth: 0.7,
@@ -69,8 +67,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 40,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'red',
   },
   input: {
     flex: 1,
