@@ -1,4 +1,3 @@
-import { DataStore } from '@/stores';
 import {
   Transaction,
   BankAccount,
@@ -9,6 +8,7 @@ import {
   CardType,
 } from '@/types';
 import dayjs, { Dayjs } from 'dayjs';
+import { DataStore } from '@stores/data/data.types';
 
 // ============ Base Selectors ============
 export const selectTransactions = (state: DataStore) => state.transactions;

@@ -29,8 +29,8 @@ export default function AuthLayout() {
       {/* Stack screens da Settings - slide da destra */}
       <Stack.Screen name="profile" />
       <Stack.Screen name="categories" />
-      <Stack.Screen name="bank-accounts" />
-      <Stack.Screen name="bank-cards" />
+      {/*<Stack.Screen name="bank-accounts" />*/}
+      {/*<Stack.Screen name="bank-cards" />*/}
     </Stack>
   );
 }

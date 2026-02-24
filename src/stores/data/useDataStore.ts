@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
-import { DataStore } from './data.types';
 import {
   INITIAL_DATA_STATE,
   MOCK_DATA_STATE,
   EMPTY_DATA_STATE,
 } from './data.constants';
+import { DataStore } from '@stores/data/data.types';
 
 export const useDataStore = create<DataStore>(set => ({
   ...INITIAL_DATA_STATE,

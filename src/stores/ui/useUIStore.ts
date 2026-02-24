@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import { UIStore } from '@/stores';
+import { UIStore } from '@stores/ui/ui.types';
 import { i18n } from '@/i18n';
 import { INITIAL_UI_STATE, UI_STORAGE_KEY } from '@stores/ui/ui.constants';
 
@@ -24,13 +24,9 @@ export const useUIStore = create<UIStore>()(
       },
 
       setIsLoading: isLoading => set({ isLoading }),
-
       setIsLoggedIn: isLoggedIn => set({ isLoggedIn }),
-
       setIsConnected: isConnected => set({ isConnected }),
-
       setSelectedBottomTab: tab => set({ selectedBottomTab: tab }),
-
       setBottomTabHeight: height => set({ bottomTabHeight: height }),
 
       setMoneyIsVisible: () => {
@@ -38,20 +34,15 @@ export const useUIStore = create<UIStore>()(
         set({ moneyIsVisible: !current });
       },
 
-      // Alias for consistency
       toggleMoneyVisibility: () => {
         const current = get().moneyIsVisible;
         set({ moneyIsVisible: !current });
       },
 
       setIsLoggingIn: isLoggingIn => set({ isLoggingIn }),
-
       setIsSigningUp: isSigningUp => set({ isSigningUp }),
-
       setIsSignedUp: isSignedUp => set({ isSignedUp }),
-
       setSignUpError: error => set({ signUpError: error }),
-
       setPrevScreen: screen => set({ prevScreen: screen }),
 
       init: async () => {

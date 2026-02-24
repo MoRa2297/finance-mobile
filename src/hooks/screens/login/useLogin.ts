@@ -1,8 +1,7 @@
-import { useState, useCallback } from 'react';
-
+import { useCallback } from 'react';
+import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/stores';
 
-import { getAuthErrorMessage, isAuthError } from './helpers';
 export type TLoginFormValues = {
   email: string;
   password: string;
@@ -10,46 +9,33 @@ export type TLoginFormValues = {
 
 export interface UseLoginReturn {
   isLoading: boolean;
-  errorMessage: string;
+  errorMessage: string | null;
   handleLogin: (values: TLoginFormValues) => Promise<void>;
   clearError: () => void;
 }
 
 export const useLogin = (): UseLoginReturn => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-
+  const router = useRouter();
   const login = useAuthStore(state => state.login);
-
-  const clearError = useCallback(() => {
-    setErrorMessage('');
-  }, []);
+  const isLoading = useAuthStore(state => state.isLoading);
+  const error = useAuthStore(state => state.error);
+  const clearError = useAuthStore(state => state.clearError);
 
   const handleLogin = useCallback(
     async (values: TLoginFormValues) => {
       try {
-        setIsLoading(true);
-        clearError();
-
         await login(values.email, values.password);
-        // TODO complete it
-        // router.replace('');
+        router.replace('/(auth)/(tabs)');
       } catch (error) {
-        const message = isAuthError(error)
-          ? getAuthErrorMessage(error)
-          : getAuthErrorMessage({ error: 'UNKNOWN' });
-
-        setErrorMessage(message);
-      } finally {
-        setIsLoading(false);
+        // Errore già gestito nello store — state.error aggiornato automaticamente
       }
     },
-    [login, clearError],
+    [login, router],
   );
 
   return {
     isLoading,
-    errorMessage,
+    errorMessage: error,
     handleLogin,
     clearError,
   };

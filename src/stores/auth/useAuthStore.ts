@@ -2,123 +2,94 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import type { AuthState, User } from '@/stores';
-import { AUTH_STORAGE_KEY, AUTH_INITIAL_STATE } from '@/stores';
+import { authService } from '@/services';
 
-type SetState = (partial: Partial<AuthState>) => void;
-type GetState = () => AuthState;
+import type { AuthState, RegisterPayload, User } from './auth.types';
+import { AUTH_INITIAL_STATE, AUTH_STORAGE_KEY } from './auth.constants';
 
-/**
- * Performs user login.
- */
-const login =
-  (set: SetState) =>
-  async (email: string, password: string): Promise<void> => {
-    set({ isLoading: true, error: null });
-
-    try {
-      const user = await mockLogin(email, password);
-
-      set({
-        user,
-        isAuthenticated: true,
-        isLoading: false,
-        error: null,
-      });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'login error';
-      set({ isLoading: false, error: message });
-      throw error;
-    }
-  };
-
-/**
- * Performs user logout.
- */
-const logout = (set: SetState) => (): void => {
-  set(AUTH_INITIAL_STATE);
-};
-
-/**
- * Sets user manually.
- */
-const setUser =
-  (set: SetState) =>
-  (user: User): void => {
-    set({ user, isAuthenticated: true, error: null });
-  };
-
-/**
- * Updates current user partially.
- */
-const updateUser =
-  (set: SetState, get: GetState) =>
-  (updates: Partial<User>): void => {
-    const currentUser = get().user;
-    if (currentUser) {
-      set({
-        user: { ...currentUser, ...updates },
-      });
-    }
-  };
-
-/**
- * Clears current error.
- */
-const clearError = (set: SetState) => (): void => {
-  set({ error: null });
-};
-
-/**
- * Resets store to initial state.
- */
-const reset = (set: SetState) => (): void => {
-  set(AUTH_INITIAL_STATE);
-};
-
-/**
- * Authentication store.
- * Automatically persists to AsyncStorage.
- */
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
+      // ─── State ───────────────────────────────────────────────────────────
       ...AUTH_INITIAL_STATE,
 
-      // Actions
-      login: login(set),
-      logout: logout(set),
-      setUser: setUser(set),
-      updateUser: updateUser(set, get), // <-- Aggiungi questa
-      clearError: clearError(set),
-      reset: reset(set),
+      // ─── Actions ─────────────────────────────────────────────────────────
+
+      login: async (email: string, password: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const { accessToken, user } = await authService.login(
+            email,
+            password,
+          );
+          const { token: _, ...cleanUser } = user;
+
+          set({
+            user: cleanUser,
+            token: accessToken,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : 'Login failed';
+          set({ isLoading: false, error: message });
+          throw error;
+        }
+      },
+
+      register: async (payload: RegisterPayload) => {
+        set({ isLoading: true, error: null });
+        try {
+          const { accessToken, user } = await authService.register(payload);
+          const { token: _, ...cleanUser } = user;
+
+          set({
+            user: cleanUser,
+            token: accessToken,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : 'Login failed';
+          set({ isLoading: false, error: message });
+          throw error;
+        }
+      },
+
+      logout: () => {
+        set(AUTH_INITIAL_STATE);
+      },
+
+      setUser: (user: User) => {
+        set({ user, isAuthenticated: true, error: null });
+      },
+
+      updateUser: (updates: Partial<User>) => {
+        const currentUser = get().user;
+        if (currentUser) set({ user: { ...currentUser, ...updates } });
+      },
+
+      clearError: () => {
+        set({ error: null });
+      },
+
+      reset: () => {
+        set(AUTH_INITIAL_STATE);
+      },
     }),
     {
       name: AUTH_STORAGE_KEY,
       storage: createJSONStorage(() => AsyncStorage),
+      partialize: state => {
+        console.log('AUTH_STORAGE_KEY: ', state);
+        return {
+          user: state.user,
+          token: state.token,
+          isAuthenticated: state.isAuthenticated,
+        };
+      },
     },
   ),
 );
-
-/**
- * Mock login for development.
- * TODO: Remove when API is ready.
- */
-async function mockLogin(email: string, _password: string): Promise<User> {
-  await new Promise(resolve => setTimeout(resolve, 500));
-
-  return {
-    id: 1,
-    email,
-    password: '',
-    name: 'Test',
-    surname: 'User',
-    birthDate: new Date('1990-01-01'),
-    sex: 'M',
-    imageUrl: '',
-    acceptedTerms: true,
-    token: 'mock-jwt-token',
-    updateDate: new Date(),
-    createdDate: new Date(),
-  };
-}

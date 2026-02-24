@@ -105,9 +105,7 @@ export const LoginForm: FC<ILoginFormProps> = ({
 
             {/* Submit Button */}
             <Button
-              // TODO use the correct function
-              // onPress={() => handleSubmit()}
-              onPress={() => router.replace(ROUTES.HOME)}
+              onPress={() => handleSubmit()}
               style={styles.submitButton}
               buttonText={t('loginPage:form.signIn')}
               textStyle={styles.submitButtonText}
