@@ -7,9 +7,7 @@ import ActionSheet, {
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
-import { useDataStore } from '@/stores';
-import { COLORS } from '@/config';
-import { CATEGORY_ICONS } from '@config/icons';
+import { useCategoryStore, useLookupStore, lookupSelectors } from '@/stores';
 import { CategoryForm, CategoryFormValues } from '@components/screens/settings';
 
 export const CategoryFormSheet: FC<SheetProps<'category-form-sheet'>> = ({
@@ -18,44 +16,41 @@ export const CategoryFormSheet: FC<SheetProps<'category-form-sheet'>> = ({
 }) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
 
-  const addCategory = useDataStore(state => state.addCategory);
-  const updateCategory = useDataStore(state => state.updateCategory);
+  // Store
+  const createCategory = useCategoryStore(state => state.createCategory);
+  const updateCategory = useCategoryStore(state => state.updateCategory);
+  const colors = useLookupStore(lookupSelectors.colors);
+  const categoryIcons = useLookupStore(lookupSelectors.categoryIcons);
 
   const handleSubmit = useCallback(
-    (values: CategoryFormValues) => {
-      // Find color and icon IDs
-      const colorData = COLORS.find(c => c.hexCode === values.color);
-      const iconData = CATEGORY_ICONS.find(i => i.iconName === values.icon);
+    async (values: CategoryFormValues) => {
+      const colorData = colors.find(c => c.hexCode === values.color);
+      const iconData = categoryIcons.find(i => i.iconName === values.icon);
 
-      if (!colorData || !iconData || !payload?.type) {
-        return;
+      if (!colorData || !iconData || !payload?.type) return;
+
+      try {
+        if (values.id) {
+          await updateCategory(values.id, {
+            name: values.name,
+            colorId: colorData.id,
+            iconId: iconData.id,
+            type: payload.type,
+          });
+        } else {
+          await createCategory({
+            name: values.name,
+            colorId: colorData.id,
+            iconId: iconData.id,
+            type: payload.type,
+          });
+        }
+        actionSheetRef.current?.hide();
+      } catch (error) {
+        // Errore gestito nello store
       }
-
-      const categoryData = {
-        name: values.name,
-        colorId: String(colorData.id),
-        iconId: String(iconData.id),
-        type: payload.type,
-        categoryColor: { id: colorData.id, hexCode: colorData.hexCode },
-        categoryIcon: { id: iconData.id, iconName: iconData.iconName },
-      };
-
-      if (values.id) {
-        // Update existing
-        updateCategory(values.id, categoryData);
-      } else {
-        // Create new
-        const newCategory = {
-          id: Date.now(), // Temporary ID for mock
-          userId: 1,
-          ...categoryData,
-        };
-        addCategory(newCategory);
-      }
-
-      actionSheetRef.current?.hide();
     },
-    [payload?.type, addCategory, updateCategory],
+    [payload?.type, colors, categoryIcons, createCategory, updateCategory],
   );
 
   const handleClose = useCallback(() => {
@@ -72,6 +67,8 @@ export const CategoryFormSheet: FC<SheetProps<'category-form-sheet'>> = ({
       containerStyle={styles.container}>
       <CategoryForm
         category={payload?.category || null}
+        colors={colors}
+        categoryIcons={categoryIcons}
         onSubmit={handleSubmit}
         onClose={handleClose}
       />

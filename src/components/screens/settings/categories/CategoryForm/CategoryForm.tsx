@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { Category } from '@/types';
+import { Category, Color, CategoryIcon } from '@/types';
 import { useUIStore } from '@/stores';
 import { InputIconField } from '@components/ui/InputIconField';
 import { ColorInputField } from '@components/ui/ColorInputField';
@@ -22,33 +22,36 @@ export interface CategoryFormValues {
 
 interface ICategoryFormProps {
   category: Category | null;
+  colors: Color[];
+  categoryIcons: CategoryIcon[];
   onSubmit: (values: CategoryFormValues) => void;
   onClose: () => void;
 }
 
 export const CategoryForm: FC<ICategoryFormProps> = ({
   category,
+  colors,
+  categoryIcons,
   onSubmit,
   onClose,
 }) => {
   const { t } = useTranslation(['categoriesPage', 'common']);
   const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
-  // Form state
   const [name, setName] = useState(category?.name || '');
   const [color, setColor] = useState(
-    category?.categoryColor?.hexCode || '#5d4c86',
+    category?.categoryColor?.hexCode || colors[0]?.hexCode || '#5d4c86',
   );
   const [icon, setIcon] = useState(
-    category?.categoryIcon?.iconName || 'cart-outline',
+    category?.categoryIcon?.iconName ||
+      categoryIcons[0]?.iconName ||
+      'cart-outline',
   );
 
-  // Alert state
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
   const handleSubmit = useCallback(() => {
-    // Validation
     if (!name.trim()) {
       setAlertMessage(t('categoriesPage:categoryForm.alertNameError'));
       setAlertVisible(true);
@@ -65,14 +68,12 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Title */}
       <Text category="h4" style={styles.title}>
         {category
           ? t('categoriesPage:categoryForm.editCategory')
           : t('categoriesPage:categoryForm.newCategory')}
       </Text>
 
-      {/* Form Fields */}
       <View style={styles.form}>
         <InputIconField
           placeholder={t('categoriesPage:categoryForm.namePlaceholder')}
@@ -85,6 +86,7 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
           value={color}
           onChange={setColor}
           iconName="color-palette-outline"
+          colors={colors}
         />
 
         <IconInputField
@@ -92,10 +94,10 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
           onChange={setIcon}
           selectedColor={color}
           iconName="image-outline"
+          categoryIcons={categoryIcons}
         />
       </View>
 
-      {/* Buttons */}
       <View style={[styles.buttonContainer, { marginBottom: bottomTabHeight }]}>
         <Button
           size="small"
@@ -113,7 +115,6 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
         />
       </View>
 
-      {/* Validation Alert */}
       <Alert
         visible={alertVisible}
         title={t('categoriesPage:categoryForm.alertTitle')}

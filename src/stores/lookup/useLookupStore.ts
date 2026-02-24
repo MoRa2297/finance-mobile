@@ -27,6 +27,12 @@ export const useLookupStore = create<LookupState>()(
             lookupService.getCardTypes(),
           ]);
 
+          console.log('colors: ', colors);
+          console.log('categoryIcons: ', categoryIcons);
+          console.log('bankTypes: ', bankTypes);
+          console.log('bankAccountTypes: ', bankAccountTypes);
+          console.log('cardTypes: ', cardTypes);
+
           set({
             colors,
             categoryIcons,

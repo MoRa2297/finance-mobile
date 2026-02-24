@@ -6,7 +6,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
-import { CATEGORY_ICONS } from '@config/icons';
+import { CategoryIcon } from '@/types';
 import { Icon } from '@components/ui/Icon';
 import { Button } from '@components/ui/Button';
 
@@ -14,6 +14,7 @@ interface IconInputFieldProps {
   value: string;
   onChange: (icon: string) => void;
   selectedColor: string;
+  categoryIcons: CategoryIcon[];
   iconName?: string;
 }
 
@@ -21,30 +22,13 @@ export const IconInputField: React.FC<IconInputFieldProps> = ({
   value,
   onChange,
   selectedColor,
+  categoryIcons,
   iconName,
 }) => {
   const { t } = useTranslation('common');
 
-  // Get first 3 icons for quick selection
-  const quickIcons = CATEGORY_ICONS.slice(0, 3);
+  const quickIcons = categoryIcons.slice(0, 3);
 
-  const handleOpenSheet = useCallback(async () => {
-    const result = await SheetManager.show('icon-sheet', {
-      payload: { selected: value, selectedColor },
-    });
-    if (result?.icon) {
-      onChange(result.icon);
-    }
-  }, [value, selectedColor, onChange]);
-
-  const handleSelectIcon = useCallback(
-    (icon: string) => {
-      onChange(icon);
-    },
-    [onChange],
-  );
-
-  // Determine which icons to show (include selected if not in quick icons)
   const displayIcons = quickIcons.map((ic, index) => {
     if (index === 0 && !quickIcons.find(qi => qi.iconName === value)) {
       return { ...ic, iconName: value, isSelected: true };
@@ -52,9 +36,20 @@ export const IconInputField: React.FC<IconInputFieldProps> = ({
     return { ...ic, isSelected: ic.iconName === value };
   });
 
+  const handleOpenSheet = useCallback(async () => {
+    const result = await SheetManager.show('icon-sheet', {
+      payload: { selected: value, selectedColor, categoryIcons },
+    });
+    if (result?.icon) onChange(result.icon);
+  }, [value, selectedColor, onChange, categoryIcons]);
+
+  const handleSelectIcon = useCallback(
+    (icon: string) => onChange(icon),
+    [onChange],
+  );
+
   return (
     <View style={styles.container}>
-      {/* Top row */}
       <View style={styles.topRow}>
         {iconName && (
           <View style={styles.iconContainer}>
@@ -64,7 +59,6 @@ export const IconInputField: React.FC<IconInputFieldProps> = ({
         <Text style={styles.label}>{t('common:iconInputField.title')}</Text>
       </View>
 
-      {/* Bottom row */}
       <View style={styles.bottomRow}>
         {displayIcons.map((icon, index) => (
           <Pressable

@@ -7,7 +7,7 @@ import {
   PickerSheet,
 } from '@components/sheets/PickerSheet/PickerSheet';
 
-import { Category, Transaction } from '@/types';
+import { Category, CategoryIcon, Color, Transaction } from '@/types';
 import { ColorSheet } from '@components/sheets/ColorSheet/ColorSheet';
 import { IconSheet } from '@components/sheets/IconSheet/IconSheet';
 import { CategoryFormSheet } from '@components/sheets/CategoryFormSheet/CategoryFormSheet';
@@ -38,11 +38,15 @@ registerSheet('select-card-sheet', SelectCardSheet);
 declare module 'react-native-actions-sheet' {
   interface Sheets {
     'color-sheet': SheetDefinition<{
-      payload: { selected: string };
+      payload: { selected: string; colors: Color[] };
       returnValue: { color: string };
     }>;
     'icon-sheet': SheetDefinition<{
-      payload: { selected: string; selectedColor: string };
+      payload: {
+        selected: string;
+        selectedColor: string;
+        categoryIcons: CategoryIcon[];
+      };
       returnValue: { icon: string };
     }>;
     'category-form-sheet': SheetDefinition<{

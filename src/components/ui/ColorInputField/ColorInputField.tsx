@@ -6,43 +6,27 @@ import { SheetManager } from 'react-native-actions-sheet';
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
-import { COLORS } from '@/config';
+import { Color } from '@/types';
 import { Button } from '@components/ui/Button';
 import { Icon } from '@components/ui/Icon';
 
 interface IColorInputFieldProps {
   value: string;
   onChange: (color: string) => void;
+  colors: Color[];
   iconName?: string;
 }
 
 export const ColorInputField: FC<IColorInputFieldProps> = ({
   value,
   onChange,
+  colors,
   iconName,
 }) => {
   const { t } = useTranslation('common');
 
-  // Get first 3 colors for quick selection
-  const quickColors = COLORS.slice(0, 3);
+  const quickColors = colors.slice(0, 3);
 
-  const handleOpenSheet = useCallback(async () => {
-    const result = await SheetManager.show('color-sheet', {
-      payload: { selected: value },
-    });
-    if (result?.color) {
-      onChange(result.color);
-    }
-  }, [value, onChange]);
-
-  const handleSelectColor = useCallback(
-    (color: string) => {
-      onChange(color);
-    },
-    [onChange],
-  );
-
-  // Determine which colors to show (include selected if not in quick colors)
   const displayColors = quickColors.map((c, index) => {
     if (index === 0 && !quickColors.find(qc => qc.hexCode === value)) {
       return { ...c, hexCode: value, isSelected: true };
@@ -50,9 +34,20 @@ export const ColorInputField: FC<IColorInputFieldProps> = ({
     return { ...c, isSelected: c.hexCode === value };
   });
 
+  const handleOpenSheet = useCallback(async () => {
+    const result = await SheetManager.show('color-sheet', {
+      payload: { selected: value, colors },
+    });
+    if (result?.color) onChange(result.color);
+  }, [value, onChange, colors]);
+
+  const handleSelectColor = useCallback(
+    (color: string) => onChange(color),
+    [onChange],
+  );
+
   return (
     <View style={styles.container}>
-      {/* Top row */}
       <View style={styles.topRow}>
         {iconName && (
           <View style={styles.iconContainer}>
@@ -62,7 +57,6 @@ export const ColorInputField: FC<IColorInputFieldProps> = ({
         <Text style={styles.label}>{t('common:colorInputField.title')}</Text>
       </View>
 
-      {/* Bottom row */}
       <View style={styles.bottomRow}>
         {displayColors.map((color, index) => (
           <Pressable

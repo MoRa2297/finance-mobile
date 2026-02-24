@@ -1,14 +1,18 @@
 import { Redirect } from 'expo-router';
-import { useAuthStore } from '@/stores';
+import { useAuthStore, useLookupStore } from '@/stores';
 import { ROUTES } from '@/config/constants';
+import { useEffect } from 'react';
 
 export default function Index() {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-  const user = useAuthStore(state => state.user);
+  const colors = useLookupStore(state => state.colors);
+  const fetchAll = useLookupStore(state => state.fetchAll);
 
-  console.log('=== AUTH DEBUG ===');
-  console.log('isAuthenticated:', isAuthenticated);
-  console.log('user:', user);
+  useEffect(() => {
+    if (isAuthenticated && colors.length === 0) {
+      fetchAll();
+    }
+  }, [isAuthenticated, colors.length, fetchAll]);
 
   if (isAuthenticated) {
     return <Redirect href={ROUTES.HOME} />;

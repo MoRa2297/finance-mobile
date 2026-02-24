@@ -3,17 +3,14 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { authService } from '@/services';
-
+import { useLookupStore } from '@/stores/lookup/useLookupStore';
 import type { AuthState, RegisterPayload, User } from './auth.types';
 import { AUTH_INITIAL_STATE, AUTH_STORAGE_KEY } from './auth.constants';
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
-      // ─── State ───────────────────────────────────────────────────────────
       ...AUTH_INITIAL_STATE,
-
-      // ─── Actions ─────────────────────────────────────────────────────────
 
       login: async (email: string, password: string) => {
         set({ isLoading: true, error: null });
@@ -30,6 +27,9 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: true,
             isLoading: false,
           });
+
+          // Carica lookup in background — non blocca il login
+          // useLookupStore.getState().fetchAll();
         } catch (error) {
           const message =
             error instanceof Error ? error.message : 'Login failed';
@@ -50,15 +50,20 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: true,
             isLoading: false,
           });
+
+          // Carica lookup in background — non blocca il register
+          // useLookupStore.getState().fetchAll();
         } catch (error) {
           const message =
-            error instanceof Error ? error.message : 'Login failed';
+            error instanceof Error ? error.message : 'Register failed';
           set({ isLoading: false, error: message });
           throw error;
         }
       },
 
       logout: () => {
+        // Reset anche il lookup store al logout
+        useLookupStore.getState().reset();
         set(AUTH_INITIAL_STATE);
       },
 
@@ -82,14 +87,11 @@ export const useAuthStore = create<AuthState>()(
     {
       name: AUTH_STORAGE_KEY,
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: state => {
-        console.log('AUTH_STORAGE_KEY: ', state);
-        return {
-          user: state.user,
-          token: state.token,
-          isAuthenticated: state.isAuthenticated,
-        };
-      },
+      partialize: state => ({
+        user: state.user,
+        token: state.token,
+        isAuthenticated: state.isAuthenticated,
+      }),
     },
   ),
 );

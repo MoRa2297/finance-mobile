@@ -9,7 +9,6 @@ import ActionSheet, {
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { Icon } from '@components/ui/Icon';
-import { CATEGORY_ICONS } from '@config/icons';
 
 export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
   sheetId,
@@ -19,13 +18,12 @@ export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
   const { width } = useWindowDimensions();
   const selected = payload?.selected;
   const selectedColor = payload?.selectedColor;
+  const categoryIcons = payload?.categoryIcons ?? [];
 
   const itemSize = (width - HORIZONTAL_PADDING * 2 - 50) / 6;
 
   const handlePressIcon = (icon: string) => {
-    SheetManager.hide(sheetId, {
-      payload: { icon },
-    });
+    SheetManager.hide(sheetId, { payload: { icon } });
   };
 
   return (
@@ -39,7 +37,7 @@ export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
       containerStyle={styles.container}>
       <View style={styles.content}>
         <View style={styles.grid}>
-          {CATEGORY_ICONS.map(icon => (
+          {categoryIcons.map(icon => (
             <Pressable
               key={icon.id}
               style={[

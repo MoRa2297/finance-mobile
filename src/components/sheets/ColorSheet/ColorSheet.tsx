@@ -7,7 +7,6 @@ import ActionSheet, {
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { COLORS } from '@/config';
 
 export const ColorSheet: FC<SheetProps<'color-sheet'>> = ({
   payload,
@@ -15,13 +14,12 @@ export const ColorSheet: FC<SheetProps<'color-sheet'>> = ({
 }) => {
   const { width } = useWindowDimensions();
   const selected = payload?.selected;
+  const colors = payload?.colors ?? [];
 
   const itemSize = (width - HORIZONTAL_PADDING * 2 - 50) / 6;
 
   const handlePressColor = (color: string) => {
-    SheetManager.hide(sheetId, {
-      payload: { color },
-    });
+    SheetManager.hide(sheetId, { payload: { color } });
   };
 
   return (
@@ -34,7 +32,7 @@ export const ColorSheet: FC<SheetProps<'color-sheet'>> = ({
       containerStyle={styles.container}>
       <View style={styles.content}>
         <View style={styles.grid}>
-          {COLORS.map(color => (
+          {colors.map(color => (
             <Pressable
               key={color.id}
               style={[
