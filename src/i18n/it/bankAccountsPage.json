@@ -22,11 +22,13 @@
     "deleteBankAccount": "Elimina conto"
   },
   "types": {
-    "checking": "Conto bancario",
-    "money": "Soldi",
-    "savings": "Risparmio",
-    "investment": "Investimenti",
-    "other": "Altro"
+    "checking": "Conto Corrente",
+    "savings": "Conto Risparmio",
+    "deposit": "Conto Deposito",
+    "investment": "Conto Investimento",
+    "business": "Conto Aziendale",
+    "youth": "Conto Giovani",
+    "online": "Conto Online"
   },
   "moneyBalanceTitle": "Bilancio corrente",
   "moneyBalancePlaceholder": "Inserisci il bilancio corrente...",
@@ -40,5 +42,7 @@
   "alertColorError": "Errore, colore obbligatorio",
   "alertButtonText": "Capito",
   "headerTitleNew": "Nuovo conto",
-  "headerTitleEdit": "Modifica conto"
+  "headerTitleEdit": "Modifica conto",
+  "selectBank": "Seleziona banca",
+  "noBankFound": "Nessuna banca trovata"
 }

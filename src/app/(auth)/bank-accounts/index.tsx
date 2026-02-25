@@ -45,23 +45,15 @@ export default function BankAccountsScreen() {
     [handleAccountPress, handleOptionsPress],
   );
 
-  const renderEmpty = useCallback(
-    () => <EmptyData title={t('bankAccountPage:emptyData')} />,
-    [t],
-  );
+  const renderEmpty = useCallback(() => {
+    if (isLoading) return null;
+    return <EmptyData title={t('bankAccountPage:emptyData')} />;
+  }, [isLoading, t]);
 
   const keyExtractor = useCallback(
     (item: BankAccount) => item.id.toString(),
     [],
   );
-
-  if (isLoading) {
-    return (
-      <ScreenContainer style={styles.container}>
-        <LoadingSpinner />
-      </ScreenContainer>
-    );
-  }
 
   return (
     <ScreenContainer
@@ -103,17 +95,21 @@ export default function BankAccountsScreen() {
       </TopRoundedContainer>
 
       <View style={[styles.listContainer, { paddingBottom: bottomTabHeight }]}>
-        <FlatList
-          data={bankAccounts}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          ListEmptyComponent={renderEmpty}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={[
-            styles.listContent,
-            bankAccounts.length === 0 && styles.listContentEmpty,
-          ]}
-        />
+        {isLoading ? (
+          <LoadingSpinner color={theme.colors.primary} />
+        ) : (
+          <FlatList
+            data={bankAccounts}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            ListEmptyComponent={renderEmpty}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.listContent,
+              bankAccounts.length === 0 && styles.listContentEmpty,
+            ]}
+          />
+        )}
       </View>
 
       <Alert
@@ -155,6 +151,7 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     paddingHorizontal: HORIZONTAL_PADDING,
     gap: 15,
+    paddingBottom: 30,
   },
   listContentEmpty: {
     flex: 1,

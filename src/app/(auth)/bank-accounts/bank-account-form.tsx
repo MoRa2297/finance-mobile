@@ -1,15 +1,10 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { SheetManager } from 'react-native-actions-sheet';
 
-import { useDataStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { COLORS } from '@/config';
-import { BankType, BankAccountType } from '@/types';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { InputIconField } from '@components/ui/InputIconField';
 import { ColorInputField } from '@components/ui/ColorInputField';
@@ -17,136 +12,35 @@ import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
 import { Header } from '@components/ui/Header';
+import { useBankAccountForm } from '@/hooks/screens/bankAccounts/useBankAccountForm';
 
 export default function BankAccountFormScreen() {
-  const { t } = useTranslation('bankAccountPage');
-  const router = useRouter();
-  const { id } = useLocalSearchParams<{ id?: string }>();
-  const isEditing = !!id;
-
-  // Stores
-  const bankAccounts = useDataStore(state => state.bankAccounts);
-  const bankTypes = useDataStore(state => state.bankTypes);
-  const bankAccountTypes = useDataStore(state => state.bankAccountTypes);
-  const addBankAccount = useDataStore(state => state.addBankAccount);
-  const updateBankAccount = useDataStore(state => state.updateBankAccount);
-
-  // Find existing bank account if editing
-  const existingAccount = useMemo(() => {
-    if (!id) return null;
-    return bankAccounts.find(ba => ba.id === Number(id));
-  }, [bankAccounts, id]);
-
-  // Form state
-  const [name, setName] = useState(existingAccount?.name || '');
-  const [startingMoney, setStartingMoney] = useState(
-    existingAccount?.startingBalance?.toString() || '',
-  );
-  const [color, setColor] = useState(() => {
-    if (existingAccount?.colorId) {
-      const foundColor = COLORS.find(c => c.id === existingAccount.colorId);
-      return foundColor?.hexCode || '#5d4c86';
-    }
-    return '#5d4c86';
-  });
-  const [selectedBankType, setSelectedBankType] = useState<BankType | null>(
-    () => {
-      if (existingAccount?.bankTypeId) {
-        return (
-          bankTypes.find(bt => bt.id === existingAccount.bankTypeId) || null
-        );
-      }
-      return null;
-    },
-  );
-  const [selectedAccountType, setSelectedAccountType] =
-    useState<BankAccountType | null>(() => {
-      if (existingAccount?.bankAccountTypeId) {
-        return (
-          bankAccountTypes.find(
-            bat => bat.id === existingAccount.bankAccountTypeId,
-          ) || null
-        );
-      }
-      return null;
-    });
-
-  // Alert state
+  const { t } = useTranslation(['bankAccountPage', 'common']);
   const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
 
-  // Handlers
-  const handleOpenBankSheet = useCallback(async () => {
-    const result = await SheetManager.show('bank-select-sheet');
-    if (result?.bank) {
-      setSelectedBankType(result.bank);
-    }
-  }, []);
-
-  const handleOpenAccountTypeSheet = useCallback(async () => {
-    const result = await SheetManager.show('bank-account-type-sheet');
-    if (result?.accountType) {
-      setSelectedAccountType(result.accountType);
-    }
-  }, []);
-
-  const handleSubmit = useCallback(() => {
-    // Validation
-    if (!selectedBankType) {
-      setAlertMessage(t('bankAccountPage:alertBankIDError'));
-      setAlertVisible(true);
-      return;
-    }
-    if (!name.trim()) {
-      setAlertMessage(t('bankAccountPage:alertNameError'));
-      setAlertVisible(true);
-      return;
-    }
-    if (!startingMoney) {
-      setAlertMessage(t('bankAccountPage:alertStartingMoneyError'));
-      setAlertVisible(true);
-      return;
-    }
-    if (!selectedAccountType) {
-      setAlertMessage(t('bankAccountPage:alertTypeError'));
-      setAlertVisible(true);
-      return;
-    }
-
-    const colorData = COLORS.find(c => c.hexCode === color);
-
-    const accountData = {
-      name: name.trim(),
-      startingBalance: parseFloat(startingMoney),
-      colorId: colorData?.id || 1,
-      bankTypeId: selectedBankType.id,
-      bankAccountTypeId: selectedAccountType.id,
-      userId: 1,
-    };
-
-    if (isEditing && existingAccount) {
-      updateBankAccount(existingAccount.id, accountData);
-    } else {
-      addBankAccount({
-        id: Date.now(),
-        ...accountData,
-      });
-    }
-
-    router.back();
-  }, [
-    name,
-    startingMoney,
-    color,
-    selectedBankType,
-    selectedAccountType,
+  const {
+    formik,
     isEditing,
-    existingAccount,
-    addBankAccount,
-    updateBankAccount,
-    router,
-    t,
-  ]);
+    colors,
+    firstError,
+    handleOpenBankSheet,
+    handleOpenAccountTypeSheet,
+  } = useBankAccountForm();
+
+  const handleSubmit = async () => {
+    const errors = await formik.validateForm();
+    if (Object.keys(errors).length > 0) {
+      formik.setTouched({
+        name: true,
+        startingBalance: true,
+        bankType: true,
+        accountType: true,
+      });
+      setAlertVisible(true);
+      return;
+    }
+    formik.handleSubmit();
+  };
 
   return (
     <ScreenContainer
@@ -154,11 +48,7 @@ export default function BankAccountFormScreen() {
       horizontalPadding={false}
       forceNoBottomPadding>
       <Header
-        left={{
-          type: 'back',
-          variant: 'text',
-          text: 'Annulla',
-        }}
+        left={{ type: 'back', variant: 'text', text: t('common:cancel') }}
         center={{
           type: 'title',
           title: isEditing
@@ -167,21 +57,19 @@ export default function BankAccountFormScreen() {
         }}
       />
 
-      {/* Top Section - Starting Balance */}
       <View style={styles.topSection}>
         <Text category="p2" style={styles.sectionLabel}>
           {t('bankAccountPage:moneyBalanceTitle')}
         </Text>
         <InputIconField
           placeholder={t('bankAccountPage:moneyBalancePlaceholder')}
-          value={startingMoney}
-          onChange={setStartingMoney}
+          value={formik.values.startingBalance}
+          onChange={v => formik.setFieldValue('startingBalance', v)}
           keyboardType="numeric"
           borderBottom={false}
         />
       </View>
 
-      {/* Bottom Section - Form + Button */}
       <View style={styles.bottomSection}>
         <ScrollView
           style={styles.scrollView}
@@ -190,24 +78,24 @@ export default function BankAccountFormScreen() {
           keyboardShouldPersistTaps="handled">
           <SelectInput
             placeholder={t('bankAccountPage:bankSelectPlaceholder')}
-            value={selectedBankType?.name}
+            value={formik.values.bankType?.name}
             iconName="grid-outline"
-            selectedImageUrl={selectedBankType?.imageUrl}
+            selectedFallbackText={formik.values.bankType?.name}
             onPress={handleOpenBankSheet}
           />
 
           <InputIconField
             placeholder={t('bankAccountPage:namePlaceholder')}
-            value={name}
-            onChange={setName}
+            value={formik.values.name}
+            onChange={v => formik.setFieldValue('name', v)}
             iconName="edit-outline"
           />
 
           <SelectInput
             placeholder={t('bankAccountPage:typeSelectPlaceholder')}
             value={
-              selectedAccountType
-                ? t(`bankAccountPage:types.${selectedAccountType.name}`)
+              formik.values.accountType
+                ? t(`bankAccountPage:types.${formik.values.accountType.name}`)
                 : undefined
             }
             iconName="grid-outline"
@@ -215,19 +103,20 @@ export default function BankAccountFormScreen() {
           />
 
           <ColorInputField
-            value={color}
-            onChange={setColor}
+            value={formik.values.color}
+            onChange={v => formik.setFieldValue('color', v)}
             iconName="color-palette-outline"
+            colors={colors}
           />
         </ScrollView>
 
-        {/* Fixed Button at Bottom */}
-        <View style={[styles.buttonContainer]}>
+        <View style={styles.buttonContainer}>
           <Button
             buttonText={t('common:save')}
             onPress={handleSubmit}
             backgroundColor={theme.colors.primary}
             style={styles.submitButton}
+            isLoading={formik.isSubmitting}
           />
         </View>
       </View>
@@ -235,7 +124,7 @@ export default function BankAccountFormScreen() {
       <Alert
         visible={alertVisible}
         title={t('bankAccountPage:alertTitle')}
-        subtitle={alertMessage}
+        subtitle={firstError ?? ''}
         primaryButtonText={t('bankAccountPage:alertButtonText')}
         onPrimaryPress={() => setAlertVisible(false)}
       />

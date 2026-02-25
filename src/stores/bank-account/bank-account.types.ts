@@ -3,6 +3,7 @@ import { BankAccount, EditBankAccount } from '@/types';
 export interface BankAccountState {
   bankAccounts: BankAccount[];
   isLoading: boolean;
+  isMutating: boolean;
   error: string | null;
 
   fetchBankAccounts: () => Promise<void>;

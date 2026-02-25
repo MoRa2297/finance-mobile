@@ -24,7 +24,7 @@ export default function BankAccountDetailScreen() {
         <Header left={{ type: 'back', variant: 'icon' }} />
         <View style={styles.errorContainer}>
           <Text category="s1" style={styles.errorText}>
-            {t('screens.bankAccountDetailScreen.notFound')}
+            {t('bankAccountPage:emptyData')}
           </Text>
         </View>
       </ScreenContainer>
@@ -53,6 +53,7 @@ export default function BankAccountDetailScreen() {
             <GenericSmallDetail
               title={t('bankAccountPage:bankName')}
               imageUrl={bankType?.imageUrl}
+              fallbackText={bankType?.name}
               value={bankType?.name}
             />
           </DetailRow>
@@ -87,7 +88,7 @@ export default function BankAccountDetailScreen() {
 
           <DetailRow>
             <GenericSmallDetail
-              title={t('bankAccountPage:totalTransfers')}
+              title={t('bankAccountPage:totalTransfer')}
               iconName="repeat-outline"
               value={stats.totalTransfers}
             />
@@ -98,7 +99,7 @@ export default function BankAccountDetailScreen() {
   );
 }
 
-// ============ Sub-components ============
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 interface BalanceSectionProps {
   label: string;
@@ -124,7 +125,7 @@ const DetailRow: React.FC<DetailRowProps> = ({ children }) => (
   <View style={styles.rowContainer}>{children}</View>
 );
 
-// ============ Styles ============
+// ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: {

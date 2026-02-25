@@ -15,6 +15,7 @@
   "income": "Entrate",
   "expenses": "Uscite",
   "selectDate": "Seleziona data",
+  "search": "Cerca...",
   "bottomNavigator": {
     "home": "Home",
     "transaction": "Transazioni",

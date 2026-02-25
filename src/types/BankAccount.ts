@@ -1,3 +1,5 @@
+import { Color } from './General';
+
 export type BankAccount = {
   id: number;
   name: string;
@@ -6,13 +8,15 @@ export type BankAccount = {
   colorId: number;
   bankTypeId: number;
   bankAccountTypeId: number;
+  bankType: BankType | null;
+  bankAccountType: BankAccountType | null;
+  color: Color | null;
 };
 
 export type EditBankAccount = {
   id?: number;
   name: string;
   startingBalance: number;
-  userId: number | string;
   colorId: number | string;
   bankTypeId: number | string;
   bankAccountTypeId: number;

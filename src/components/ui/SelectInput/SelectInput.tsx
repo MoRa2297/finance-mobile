@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Pressable, Image } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 
 import { Icon } from '@/components/ui/Icon';
+import { EntityImage } from '@components/ui/EntityImage';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 
@@ -12,6 +13,7 @@ interface SelectInputProps {
   iconName?: string;
   iconNameRight?: string;
   selectedImageUrl?: string;
+  selectedFallbackText?: string;
   selectedBorderColor?: string;
   valueBordered?: boolean;
   onPress: () => void;
@@ -23,10 +25,13 @@ export const SelectInput: React.FC<SelectInputProps> = ({
   iconName,
   iconNameRight = 'arrow-ios-forward-outline',
   selectedImageUrl,
+  selectedFallbackText,
   selectedBorderColor,
   valueBordered = false,
   onPress,
 }) => {
+  const showImage = selectedImageUrl || selectedFallbackText;
+
   return (
     <Pressable style={styles.container} onPress={onPress}>
       {/* Left Icon */}
@@ -40,7 +45,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
       <View style={styles.contentContainer}>
         {value ? (
           <View style={styles.valueContainer}>
-            {selectedImageUrl && (
+            {showImage && (
               <View
                 style={[
                   styles.imageContainer,
@@ -49,9 +54,11 @@ export const SelectInput: React.FC<SelectInputProps> = ({
                     borderWidth: 1,
                   },
                 ]}>
-                <Image
-                  source={{ uri: selectedImageUrl }}
-                  style={styles.image}
+                <EntityImage
+                  imageUrl={selectedImageUrl}
+                  fallbackText={selectedFallbackText}
+                  size={30}
+                  borderRadius={15}
                 />
               </View>
             )}
@@ -100,12 +107,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderRadius: 20,
     overflow: 'hidden',
-  },
-  image: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    resizeMode: 'contain',
   },
   value: {
     color: theme.colors.basic100,

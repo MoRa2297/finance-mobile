@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, Pressable, Image } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 
-import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccount } from '@/types';
 import { useBankAccountCard } from '@hooks/screens/bankAccounts';
+import { EntityImage } from '@components/ui/EntityImage';
+import { OptionsButton } from '@components/ui/OptionsButton';
 
 interface BankAccountListCardProps {
   bankAccount: BankAccount;
@@ -25,7 +26,9 @@ export const BankAccountListCard: React.FC<BankAccountListCardProps> = ({
 
   return (
     <Pressable style={styles.container} onPress={() => onPress(bankAccount)}>
-      <BankImage imageUrl={imageUrl} />
+      <View style={styles.imageContainer}>
+        <EntityImage imageUrl={imageUrl} />
+      </View>
 
       <View style={styles.contentContainer}>
         <View style={styles.topRow}>
@@ -48,44 +51,6 @@ export const BankAccountListCard: React.FC<BankAccountListCardProps> = ({
   );
 };
 
-// ============ Sub-components ============
-
-interface BankImageProps {
-  imageUrl: string | null;
-}
-
-const BankImage: React.FC<BankImageProps> = ({ imageUrl }) => (
-  <View style={styles.imageContainer}>
-    {imageUrl ? (
-      <Image source={{ uri: imageUrl }} style={styles.image} />
-    ) : (
-      <View style={styles.imagePlaceholder}>
-        <Icon
-          name="credit-card-outline"
-          color={theme.colors.basic100}
-          size={24}
-        />
-      </View>
-    )}
-  </View>
-);
-
-interface OptionsButtonProps {
-  onPress: () => void;
-}
-
-const OptionsButton: React.FC<OptionsButtonProps> = ({ onPress }) => (
-  <Pressable onPress={onPress} hitSlop={10}>
-    <Icon
-      name="more-horizontal-outline"
-      color={theme.colors.basic100}
-      size={28}
-    />
-  </Pressable>
-);
-
-// ============ Styles ============
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -98,20 +63,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 45,
     height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    resizeMode: 'contain',
-  },
-  imagePlaceholder: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: theme.colors.secondaryBK,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -18,6 +18,8 @@ const TABS = [
   { title: 'settingsPage:profile', value: 'profile' },
 ];
 
+// TODO FIX and IMPROVE
+
 export default function SettingsScreen() {
   const { t } = useTranslation('settingsPage');
   const router = useRouter();
@@ -67,12 +69,12 @@ export default function SettingsScreen() {
           {
             title: t('settingsPage:menuBankAccounts'),
             iconName: 'grid-outline',
-            navigationScreen: '/(auth)/bank-accounts/bank-accounts',
+            navigationScreen: '/(auth)/bank-accounts',
           },
           {
             title: t('settingsPage:menuBankCards'),
             iconName: 'credit-card-outline',
-            navigationScreen: '/(auth)/bank-cards/bank-cards',
+            navigationScreen: '/(auth)/bank-cards',
           },
         ],
       },

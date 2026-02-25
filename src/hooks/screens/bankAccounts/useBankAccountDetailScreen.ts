@@ -4,17 +4,7 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { useDataStore } from '@/stores';
-import {
-  selectTransactions,
-  selectBankAccounts,
-  selectBankTypes,
-  selectBankAccountTypes,
-  findBankAccountById,
-  findBankTypeById,
-  findBankAccountTypeById,
-  calculateAccountStats,
-} from '@/stores/data/data.selectors';
+import { useBankAccountStore, bankAccountSelectors } from '@/stores';
 import { theme } from '@/config/theme';
 
 export const useBankAccountDetailScreen = () => {
@@ -24,41 +14,31 @@ export const useBankAccountDetailScreen = () => {
   const insets = useSafeAreaInsets();
   const { showActionSheetWithOptions } = useActionSheet();
 
-  // Store data
-  const bankAccounts = useDataStore(selectBankAccounts);
-  const bankTypes = useDataStore(selectBankTypes);
-  const bankAccountTypes = useDataStore(selectBankAccountTypes);
-  const transactions = useDataStore(selectTransactions);
+  // Store
+  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
 
-  // Derived data
+  // Derived
   const bankAccount = useMemo(
-    () => findBankAccountById(bankAccounts, Number(id)),
+    () => bankAccounts.find(ba => ba.id === Number(id)) ?? null,
     [bankAccounts, id],
   );
 
-  const bankType = useMemo(
-    () =>
-      bankAccount ? findBankTypeById(bankTypes, bankAccount.bankTypeId) : null,
-    [bankAccount, bankTypes],
-  );
-
+  const bankType = useMemo(() => bankAccount?.bankType ?? null, [bankAccount]);
   const bankAccountType = useMemo(
-    () =>
-      bankAccount
-        ? findBankAccountTypeById(
-            bankAccountTypes,
-            bankAccount.bankAccountTypeId,
-          )
-        : null,
-    [bankAccount, bankAccountTypes],
+    () => bankAccount?.bankAccountType ?? null,
+    [bankAccount],
   );
 
   const stats = useMemo(
-    () => calculateAccountStats(bankAccount, transactions),
-    [bankAccount, transactions],
+    () => ({
+      currentBalance: bankAccount?.startingBalance ?? 0,
+      countSpent: '0',
+      countIncome: '0',
+      totalTransfers: '0',
+    }),
+    [bankAccount],
   );
 
-  // Action sheet styles
   const actionSheetStyles = useMemo(
     () => ({
       containerStyle: {
@@ -77,7 +57,6 @@ export const useBankAccountDetailScreen = () => {
     [insets.bottom],
   );
 
-  // Handlers
   const handleSettingsPress = useCallback(() => {
     const options = [t('common:edit'), t('common:cancel')];
 
@@ -98,7 +77,6 @@ export const useBankAccountDetailScreen = () => {
     );
   }, [t, showActionSheetWithOptions, actionSheetStyles, router, bankAccount]);
 
-  // Formatted values
   const formattedValues = useMemo(
     () => ({
       currentBalance: `€ ${stats.currentBalance.toFixed(2)}`,
@@ -111,16 +89,11 @@ export const useBankAccountDetailScreen = () => {
   );
 
   return {
-    // Data
     bankAccount,
     bankType,
     stats,
     formattedValues,
-
-    // Handlers
     handleSettingsPress,
-
-    // State
     isNotFound: !bankAccount,
   };
 };

@@ -1,18 +1,10 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useTranslation } from 'react-i18next';
 import { Dayjs } from 'dayjs';
 
-import { useDataStore } from '@/stores';
-import {
-  selectTransactions,
-  selectBankAccounts,
-  selectIsLoading,
-  filterTransactionsByMonth,
-  calculateTotals,
-  calculateResidue,
-} from '@/stores/data/data.selectors';
+import { useBankAccountStore, bankAccountSelectors } from '@/stores';
 import { BankAccount, SwipePickerMonth } from '@/types';
 import { MonthItem } from '@components/screens/home';
 import { theme } from '@config/theme';
@@ -24,11 +16,15 @@ export const useBankAccountsScreen = () => {
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
 
-  // Store data - using selectors
-  const transactions = useDataStore(selectTransactions);
-  const bankAccounts = useDataStore(selectBankAccounts);
-  const isLoading = useDataStore(selectIsLoading);
-  const deleteBankAccount = useDataStore(state => state.deleteBankAccount);
+  // Store
+  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
+  const isLoading = useBankAccountStore(bankAccountSelectors.isLoading);
+  const fetchBankAccounts = useBankAccountStore(
+    state => state.fetchBankAccounts,
+  );
+  const deleteBankAccount = useBankAccountStore(
+    state => state.deleteBankAccount,
+  );
 
   // Local state
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
@@ -37,20 +33,17 @@ export const useBankAccountsScreen = () => {
     null,
   );
 
-  // Derived data
-  const filteredTransactions = useMemo(
-    () => filterTransactionsByMonth(transactions, selectedDate),
-    [transactions, selectedDate],
-  );
+  // Fetch al mount
+  useEffect(() => {
+    fetchBankAccounts();
+  }, [fetchBankAccounts]);
 
-  const { expense: totSpent } = useMemo(
-    () => calculateTotals(filteredTransactions),
-    [filteredTransactions],
-  );
-
+  // TODO: calcoli totali da reimplementare quando le transaction sono collegate
+  const totSpent = 0;
   const totResidue = useMemo(
-    () => calculateResidue(filteredTransactions, bankAccounts),
-    [filteredTransactions, bankAccounts],
+    () =>
+      bankAccounts.reduce((acc, account) => acc + account.startingBalance, 0),
+    [bankAccounts],
   );
 
   // Action sheet styles
@@ -71,8 +64,6 @@ export const useBankAccountsScreen = () => {
     }),
     [insets.bottom],
   );
-
-  // Handlers
 
   const handleSelectMonth = useCallback((month: MonthItem) => {
     setSelectedDate(month.date);
@@ -116,7 +107,7 @@ export const useBankAccountsScreen = () => {
         },
       );
     },
-    [t, showActionSheetWithOptions, router],
+    [t, showActionSheetWithOptions, router, actionSheetStyles],
   );
 
   const handleAddAccount = useCallback(() => {
@@ -133,16 +124,15 @@ export const useBankAccountsScreen = () => {
       },
       selectedIndex => {
         if (selectedIndex === 0) {
-          // TODO use conf var
           router.push('/(auth)/bank-accounts/bank-account-form');
         }
       },
     );
-  }, [t, showActionSheetWithOptions, router]);
+  }, [t, showActionSheetWithOptions, router, actionSheetStyles]);
 
-  const handleDeleteConfirm = useCallback(() => {
+  const handleDeleteConfirm = useCallback(async () => {
     if (accountToDelete) {
-      deleteBankAccount(accountToDelete.id);
+      await deleteBankAccount(accountToDelete.id);
       setAccountToDelete(null);
       setAlertVisible(false);
     }
@@ -154,16 +144,11 @@ export const useBankAccountsScreen = () => {
   }, []);
 
   return {
-    // Data
     bankAccounts,
     isLoading,
     totSpent,
     totResidue,
-
-    // Alert state
     alertVisible,
-
-    // Handlers
     handleSelectMonth,
     handleAccountPress,
     handleOptionsPress,

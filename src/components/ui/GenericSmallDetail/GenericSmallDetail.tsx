@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 
 import { Icon } from '@/components/ui/Icon';
+import { EntityImage } from '@components/ui/EntityImage';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 
@@ -12,6 +13,7 @@ interface GenericSmallDetailProps {
   valueColor?: string;
   iconName?: string;
   imageUrl?: string;
+  fallbackText?: string;
 }
 
 export const GenericSmallDetail: React.FC<GenericSmallDetailProps> = ({
@@ -20,13 +22,21 @@ export const GenericSmallDetail: React.FC<GenericSmallDetailProps> = ({
   valueColor = theme.colors.basic100,
   iconName,
   imageUrl,
+  fallbackText,
 }) => {
+  const showEntityImage = imageUrl || fallbackText;
+
   return (
     <View style={styles.container}>
       {/* Icon or Image */}
       <View style={styles.iconContainer}>
-        {imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={styles.image} />
+        {showEntityImage ? (
+          <EntityImage
+            imageUrl={imageUrl}
+            fallbackText={fallbackText}
+            size={40}
+            borderRadius={GLOBAL_BORDER_RADIUS / 2}
+          />
         ) : iconName ? (
           <Icon name={iconName} color={theme.colors.basic100} size={24} />
         ) : null}
@@ -61,12 +71,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondaryBK,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    resizeMode: 'contain',
+    overflow: 'hidden',
   },
   textContainer: {
     flex: 1,
