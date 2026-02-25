@@ -10,7 +10,7 @@ import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { SliderBar } from '@components/ui/SliderBar';
 import { Header } from '@components/ui/Header';
 import { Alert } from '@components/ui/Alert';
-import { EmptyData } from '@components/common';
+import { EmptyData, LoadingSpinner } from '@components/common';
 import { CategoryListCard } from '@components/screens/settings';
 import { useCategoriesScreen } from '@/hooks/screens/categories';
 
@@ -21,6 +21,7 @@ export default function CategoriesScreen() {
   const {
     tabs,
     filteredCategories,
+    isLoading,
     alertVisible,
     handleTabChange,
     handleCategoryPress,
@@ -41,10 +42,10 @@ export default function CategoriesScreen() {
     [handleCategoryPress, handleOptionsPress],
   );
 
-  const renderEmpty = useCallback(
-    () => <EmptyData title={t('categoriesPage:emptyData')} />,
-    [t],
-  );
+  const renderEmpty = useCallback(() => {
+    if (isLoading) return null;
+    return <EmptyData title={t('categoriesPage:emptyData')} />;
+  }, [isLoading, t]);
 
   const keyExtractor = useCallback((item: Category) => item.id.toString(), []);
 
@@ -63,17 +64,21 @@ export default function CategoriesScreen() {
       </View>
 
       <View style={[styles.listContainer, { paddingBottom: bottomTabHeight }]}>
-        <FlatList
-          data={filteredCategories}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          ListEmptyComponent={renderEmpty}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={[
-            styles.listContent,
-            filteredCategories.length === 0 && styles.listContentEmpty,
-          ]}
-        />
+        {isLoading ? (
+          <LoadingSpinner color={theme.colors.primary} />
+        ) : (
+          <FlatList
+            data={filteredCategories}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            ListEmptyComponent={renderEmpty}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.listContent,
+              filteredCategories.length === 0 && styles.listContentEmpty,
+            ]}
+          />
+        )}
       </View>
 
       <Alert
@@ -108,6 +113,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingTop: 15,
+    paddingBottom: 30,
   },
   listContentEmpty: {
     flex: 1,

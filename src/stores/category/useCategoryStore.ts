@@ -20,49 +20,49 @@ export const useCategoryStore = create<CategoryState>()((set, get) => ({
   },
 
   createCategory: async (payload: EditCategory) => {
-    set({ isLoading: true, error: null });
+    set({ isMutating: true, error: null });
     try {
       const category = await categoryService.createCategory(payload);
       set(state => ({
         categories: [...state.categories, category],
-        isLoading: false,
+        isMutating: false,
       }));
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Failed to create category';
-      set({ isLoading: false, error: message });
+      set({ isMutating: false, error: message });
       throw error;
     }
   },
 
   updateCategory: async (id: number, payload: EditCategory) => {
-    set({ isLoading: true, error: null });
+    set({ isMutating: true, error: null });
     try {
       const updated = await categoryService.updateCategory(id, payload);
       set(state => ({
         categories: state.categories.map(c => (c.id === id ? updated : c)),
-        isLoading: false,
+        isMutating: false,
       }));
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Failed to update category';
-      set({ isLoading: false, error: message });
+      set({ isMutating: false, error: message });
       throw error;
     }
   },
 
   deleteCategory: async (id: number) => {
-    set({ isLoading: true, error: null });
+    set({ isMutating: true, error: null });
     try {
       await categoryService.deleteCategory(id);
       set(state => ({
         categories: state.categories.filter(c => c.id !== id),
-        isLoading: false,
+        isMutating: false,
       }));
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Failed to delete category';
-      set({ isLoading: false, error: message });
+      set({ isMutating: false, error: message });
       throw error;
     }
   },

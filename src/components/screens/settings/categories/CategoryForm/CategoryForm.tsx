@@ -24,7 +24,7 @@ interface ICategoryFormProps {
   category: Category | null;
   colors: Color[];
   categoryIcons: CategoryIcon[];
-  onSubmit: (values: CategoryFormValues) => void;
+  onSubmit: (values: CategoryFormValues) => Promise<void>;
   onClose: () => void;
 }
 
@@ -38,6 +38,7 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
   const { t } = useTranslation(['categoriesPage', 'common']);
   const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [name, setName] = useState(category?.name || '');
   const [color, setColor] = useState(
     category?.categoryColor?.hexCode || colors[0]?.hexCode || '#5d4c86',
@@ -51,19 +52,21 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (!name.trim()) {
       setAlertMessage(t('categoriesPage:categoryForm.alertNameError'));
       setAlertVisible(true);
       return;
     }
 
-    onSubmit({
+    setIsSubmitting(true);
+    await onSubmit({
       id: category?.id,
       name: name.trim(),
       color,
       icon,
     });
+    setIsSubmitting(false);
   }, [name, color, icon, category?.id, onSubmit, t]);
 
   return (
@@ -112,6 +115,7 @@ export const CategoryForm: FC<ICategoryFormProps> = ({
           style={styles.button}
           backgroundColor={theme.colors.primary}
           onPress={handleSubmit}
+          isLoading={isSubmitting}
         />
       </View>
 

@@ -1,4 +1,4 @@
-import { Color } from '@types';
+import { Color } from './General';
 
 export type Category = {
   id: number;
@@ -6,7 +6,7 @@ export type Category = {
   colorId: string;
   iconId: string;
   userId: number;
-  type: 'income' | 'expenses';
+  type: 'income' | 'expense';
   categoryIcon: CategoryIcon;
   categoryColor: Color;
   updateDate?: Date;
@@ -18,8 +18,8 @@ export type EditCategory = {
   name: string;
   colorId: number | string;
   iconId: number | string;
-  type: 'income' | 'expenses';
-  userId: number;
+  type: 'income' | 'expense';
+  // userId: number;
   updateDate?: Date;
   createdDate?: Date;
 };

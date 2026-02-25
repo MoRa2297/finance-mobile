@@ -50,7 +50,7 @@ declare module 'react-native-actions-sheet' {
       returnValue: { icon: string };
     }>;
     'category-form-sheet': SheetDefinition<{
-      payload: { category: any | null; type: 'income' | 'expenses' };
+      payload: { category: any | null; type: 'income' | 'expense' };
     }>;
     'bank-select-sheet': SheetDefinition<{
       returnValue: { bank: any };
@@ -79,7 +79,7 @@ declare module 'react-native-actions-sheet' {
       };
     }>;
     'select-category-sheet': SheetDefinition<{
-      payload: { type: 'income' | 'expenses' };
+      payload: { type: 'income' | 'expense' };
       returnValue: { item: Category };
     }>;
     'select-card-sheet': SheetDefinition<{

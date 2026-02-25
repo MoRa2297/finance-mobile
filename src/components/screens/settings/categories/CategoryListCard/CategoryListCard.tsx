@@ -18,31 +18,22 @@ export const CategoryListCard: FC<ICategoryListCardProps> = ({
   onPress,
   onOptionsPress,
 }) => {
+  const backgroundColor =
+    category.categoryColor?.hexCode ?? theme.colors.textHint;
+  const iconName = category.categoryIcon?.iconName ?? 'cube-outline';
+
   return (
     <Pressable style={styles.container} onPress={() => onPress(category)}>
-      {/* Icon */}
-      <View
-        style={[
-          styles.iconContainer,
-          { backgroundColor: category.categoryColor.hexCode },
-        ]}>
-        <Icon
-          // TODO fix icon
-          // name={category.categoryIcon.iconName}
-          name={'cube-outline'}
-          color={theme.colors.basic100}
-          size={28}
-        />
+      <View style={[styles.iconContainer, { backgroundColor }]}>
+        <Icon name={iconName} color={theme.colors.basic100} size={28} />
       </View>
 
-      {/* Title */}
       <View style={styles.contentContainer}>
         <Text category="h6" style={styles.title}>
           {category.name}
         </Text>
       </View>
 
-      {/* Options Button */}
       <Pressable
         style={styles.optionsButton}
         onPress={() => onOptionsPress(category)}

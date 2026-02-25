@@ -8,10 +8,10 @@ import { useCategoryStore, categorySelectors } from '@/stores';
 import { Category } from '@/types';
 import { theme } from '@/config/theme';
 
-type CategoryType = 'income' | 'expenses';
+type CategoryType = 'income' | 'expense';
 
 const TABS = [
-  { title: 'common:expenses', value: 'expenses' },
+  { title: 'common:expenses', value: 'expense' },
   { title: 'common:income', value: 'income' },
 ];
 
@@ -27,7 +27,7 @@ export const useCategoriesScreen = () => {
   const deleteCategory = useCategoryStore(state => state.deleteCategory);
 
   // Local state
-  const [selectedTab, setSelectedTab] = useState<CategoryType>('expenses');
+  const [selectedTab, setSelectedTab] = useState<CategoryType>('expense');
   const [alertVisible, setAlertVisible] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
     null,

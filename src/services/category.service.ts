@@ -1,5 +1,6 @@
 import apiClient from './api-client';
 import { Category, EditCategory } from '@/types';
+import { useAuthStore } from '@/stores';
 
 const categoryService = {
   getCategories: async (): Promise<Category[]> => {
@@ -13,8 +14,13 @@ const categoryService = {
   },
 
   createCategory: async (payload: EditCategory): Promise<Category> => {
-    const { data } = await apiClient.post<Category>('/categories', payload);
-    return data;
+    try {
+      const response = await apiClient.post<Category>('/categories', payload);
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 
   updateCategory: async (

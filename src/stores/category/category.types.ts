@@ -3,6 +3,7 @@ import { Category, EditCategory } from '@/types';
 export interface CategoryState {
   categories: Category[];
   isLoading: boolean;
+  isMutating: boolean;
   error: string | null;
 
   fetchCategories: () => Promise<void>;
