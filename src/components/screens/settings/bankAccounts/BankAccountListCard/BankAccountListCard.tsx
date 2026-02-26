@@ -22,13 +22,17 @@ export const BankAccountListCard: React.FC<BankAccountListCardProps> = ({
   onOptionsPress,
 }) => {
   const { t } = useTranslation('bankAccountPage');
-  const { imageUrl, currentBalance } = useBankAccountCard(bankAccount);
+  const { imageUrl, currentBalance, bankType } =
+    useBankAccountCard(bankAccount);
 
   return (
     <Pressable style={styles.container} onPress={() => onPress(bankAccount)}>
-      <View style={styles.imageContainer}>
-        <EntityImage imageUrl={imageUrl} />
-      </View>
+      <EntityImage
+        imageUrl={imageUrl}
+        fallbackText={bankAccount.bankType?.name}
+        size={45}
+        borderRadius={GLOBAL_BORDER_RADIUS / 2}
+      />
 
       <View style={styles.contentContainer}>
         <View style={styles.topRow}>

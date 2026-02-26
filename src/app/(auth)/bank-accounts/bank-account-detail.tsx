@@ -15,8 +15,14 @@ export default function BankAccountDetailScreen() {
   const { t } = useTranslation('bankAccountPage');
   const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
-  const { bankType, stats, formattedValues, handleSettingsPress, isNotFound } =
-    useBankAccountDetailScreen();
+  const {
+    bankType,
+    stats,
+    formattedValues,
+    handleSettingsPress,
+    isNotFound,
+    bankAccount,
+  } = useBankAccountDetailScreen();
 
   if (isNotFound) {
     return (
@@ -43,22 +49,26 @@ export default function BankAccountDetailScreen() {
 
       <View
         style={[styles.contentContainer, { paddingBottom: bottomTabHeight }]}>
-        <BalanceSection
-          label={t('bankAccountPage:currentBalance')}
-          amount={formattedValues.currentBalance}
-        />
+        <View style={styles.balanceSection}>
+          <Text category="p2" style={styles.balanceLabel}>
+            {t('bankAccountPage:currentBalance')}
+          </Text>
+          <Text category="h4" style={styles.balanceAmount}>
+            {formattedValues.currentBalance}
+          </Text>
+        </View>
 
         <View style={styles.detailsSection}>
-          <DetailRow>
+          <View style={styles.rowContainer}>
             <GenericSmallDetail
               title={t('bankAccountPage:bankName')}
               imageUrl={bankType?.imageUrl}
               fallbackText={bankType?.name}
-              value={bankType?.name}
+              value={bankAccount?.name}
             />
-          </DetailRow>
+          </View>
 
-          <DetailRow>
+          <View style={styles.rowContainer}>
             <GenericSmallDetail
               title={t('bankAccountPage:accountType')}
               iconName="grid-outline"
@@ -69,9 +79,9 @@ export default function BankAccountDetailScreen() {
               iconName="award-outline"
               value={formattedValues.startingBalance}
             />
-          </DetailRow>
+          </View>
 
-          <DetailRow>
+          <View style={styles.rowContainer}>
             <GenericSmallDetail
               title={t('bankAccountPage:spentQuantity')}
               iconName="trending-down-outline"
@@ -84,46 +94,20 @@ export default function BankAccountDetailScreen() {
               value={stats.countIncome}
               valueColor={theme.colors.green}
             />
-          </DetailRow>
+          </View>
 
-          <DetailRow>
+          <View style={styles.rowContainer}>
             <GenericSmallDetail
               title={t('bankAccountPage:totalTransfer')}
               iconName="repeat-outline"
               value={stats.totalTransfers}
             />
-          </DetailRow>
+          </View>
         </View>
       </View>
     </ScreenContainer>
   );
 }
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-interface BalanceSectionProps {
-  label: string;
-  amount: string;
-}
-
-const BalanceSection: React.FC<BalanceSectionProps> = ({ label, amount }) => (
-  <View style={styles.balanceSection}>
-    <Text category="p2" style={styles.balanceLabel}>
-      {label}
-    </Text>
-    <Text category="h4" style={styles.balanceAmount}>
-      {amount}
-    </Text>
-  </View>
-);
-
-interface DetailRowProps {
-  children: React.ReactNode;
-}
-
-const DetailRow: React.FC<DetailRowProps> = ({ children }) => (
-  <View style={styles.rowContainer}>{children}</View>
-);
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 

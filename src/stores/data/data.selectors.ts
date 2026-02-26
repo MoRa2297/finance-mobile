@@ -97,7 +97,7 @@ export const selectIncomeCategories = (state: DataStore) =>
   state.categories.filter(cat => cat.type === 'income');
 
 export const selectExpenseCategories = (state: DataStore) =>
-  state.categories.filter(cat => cat.type === 'expenses');
+  state.categories.filter(cat => cat.type === 'expense');
 
 // ============ Bank Account Selectors ============
 export const findBankTypeById = (
