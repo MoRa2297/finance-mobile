@@ -5,7 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import dayjs, { Dayjs } from 'dayjs';
 
-import { useDataStore } from '@/stores';
+import {
+  useCardStore,
+  cardSelectors,
+  useBankAccountStore,
+  bankAccountSelectors,
+} from '@/stores';
 import { Transaction, SwipePickerMonth } from '@/types';
 import { theme } from '@config/theme';
 
@@ -21,17 +26,11 @@ export const useBankCardDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { showActionSheetWithOptions } = useActionSheet();
 
-  // Store data
-  const bankCards = useDataStore(state => state.bankCards);
-  const cardTypes = useDataStore(state => state.cardTypes);
-  const transactions = useDataStore(state => state.transactions);
-  const categories = useDataStore(state => state.categories);
-  const bankAccounts = useDataStore(state => state.bankAccounts);
+  const cards = useCardStore(cardSelectors.cards);
+  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
 
-  // Local state
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
-  // Action sheet styles
   const actionSheetStyles = useMemo(
     () => ({
       containerStyle: {
@@ -50,86 +49,27 @@ export const useBankCardDetailScreen = () => {
     [insets.bottom],
   );
 
-  // Find bank card
-  const bankCard = useMemo(() => {
-    return bankCards.find(bc => bc.id === Number(id));
-  }, [bankCards, id]);
+  const bankCard = useMemo(
+    () => cards.find(c => c.id === Number(id)) ?? null,
+    [cards, id],
+  );
 
-  // Find card type
-  const cardType = useMemo(() => {
-    if (!bankCard) return null;
-    return cardTypes.find(ct => ct.id === bankCard.cardTypeId);
-  }, [bankCard, cardTypes]);
+  const cardType = useMemo(() => bankCard?.cardType ?? null, [bankCard]);
 
-  // Calculate date range
   const dateRange = useMemo(() => {
     if (!selectedDate) return { start: '', end: '' };
-
-    const startOfMonth = selectedDate.startOf('month');
-    const endOfMonth = selectedDate.endOf('month');
-
     return {
-      start: startOfMonth.format('DD-MM-YYYY'),
-      end: endOfMonth.format('DD-MM-YYYY'),
+      start: selectedDate.startOf('month').format('DD-MM-YYYY'),
+      end: selectedDate.endOf('month').format('DD-MM-YYYY'),
     };
   }, [selectedDate]);
 
-  // Filter and group transactions
-  const { sections, totalSpent } = useMemo(() => {
-    if (!bankCard) return { sections: [], totalSpent: 0 };
+  // TODO: reimplementare con transaction store
+  const sections: TransactionSection[] = [];
+  const totalSpent = 0;
+  const categories: any[] = [];
+  const bankCards = cards;
 
-    let cardTransactions = transactions.filter(
-      t => t.cardId === bankCard.id && t.type === 'card_spending',
-    );
-
-    // Filter by month if selected
-    if (selectedDate) {
-      const selectedMonth = selectedDate.month();
-      const selectedYear = selectedDate.year();
-
-      cardTransactions = cardTransactions.filter(transaction => {
-        const transactionDate = dayjs(transaction.date);
-        return (
-          transactionDate.month() === selectedMonth &&
-          transactionDate.year() === selectedYear
-        );
-      });
-    }
-
-    // Calculate total spent
-    const total = cardTransactions
-      .filter(t => t.recived)
-      .reduce((sum, t) => sum + parseFloat(t.money), 0);
-
-    // Group by date
-    const grouped = cardTransactions.reduce<Record<string, Transaction[]>>(
-      (acc, transaction) => {
-        const dateKey = dayjs(transaction.date).format('DD-MM-YYYY');
-
-        if (!acc[dateKey]) {
-          acc[dateKey] = [];
-        }
-        acc[dateKey].push(transaction);
-        return acc;
-      },
-      {},
-    );
-
-    const sectionData: TransactionSection[] = Object.keys(grouped)
-      .sort((a, b) => {
-        const dateA = dayjs(a, 'DD-MM-YYYY');
-        const dateB = dayjs(b, 'DD-MM-YYYY');
-        return dateB.valueOf() - dateA.valueOf();
-      })
-      .map(date => ({
-        title: date,
-        data: grouped[date],
-      }));
-
-    return { sections: sectionData, totalSpent: total };
-  }, [bankCard, transactions, selectedDate]);
-
-  // Handlers
   const handleSelectMonth = useCallback((month: SwipePickerMonth) => {
     setSelectedDate(dayjs(month.date));
   }, []);
@@ -144,15 +84,15 @@ export const useBankCardDetailScreen = () => {
         ...actionSheetStyles,
       },
       selectedIndex => {
-        if (selectedIndex === 0) {
+        if (selectedIndex === 0 && bankCard) {
           router.push({
             pathname: '/(auth)/bank-cards/bank-card-form',
-            params: { id: bankCard?.id },
+            params: { id: bankCard.id },
           });
         }
       },
     );
-  }, [showActionSheetWithOptions, actionSheetStyles, router, bankCard?.id, t]);
+  }, [showActionSheetWithOptions, actionSheetStyles, router, bankCard, t]);
 
   const handleTransactionPress = useCallback(
     (transaction: Transaction) => {
@@ -165,7 +105,6 @@ export const useBankCardDetailScreen = () => {
   );
 
   return {
-    // Data
     bankCard,
     cardType,
     dateRange,
@@ -174,8 +113,6 @@ export const useBankCardDetailScreen = () => {
     categories,
     bankAccounts,
     bankCards,
-
-    // Handlers
     handleSelectMonth,
     handleSettingsPress,
     handleTransactionPress,

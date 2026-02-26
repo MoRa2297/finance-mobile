@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, View, SectionList, Image } from 'react-native';
+import { StyleSheet, View, SectionList } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +11,7 @@ import { ExpenseCard } from '@/components/screens/expenses';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { EmptyData } from '@components/common';
 import { GenericSmallDetail } from '@components/ui/GenericSmallDetail';
+import { EntityImage } from '@components/ui/EntityImage';
 import { Header } from '@components/ui/Header';
 import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
 import { useBankCardDetailScreen } from '@/hooks/screens/bankCards';
@@ -103,22 +104,20 @@ export default function BankCardDetailScreen() {
         />
       </View>
 
-      {/* Content */}
       <View
         style={[styles.contentContainer, { marginBottom: bottomTabHeight }]}>
-        {/* Card Type Image */}
-        {cardType?.imageUrl && (
-          <View style={styles.cardImageContainer}>
-            <Image
-              source={{ uri: cardType.imageUrl }}
-              style={styles.cardImage}
-            />
-          </View>
-        )}
+        {/* Card Image */}
+        <View style={styles.cardImageContainer}>
+          <EntityImage
+            imageUrl={cardType?.imageUrl}
+            fallbackText={cardType?.name}
+            size={70}
+            borderRadius={35}
+          />
+        </View>
 
         {/* Details */}
         <View style={styles.detailsContainer}>
-          {/* Date Range */}
           <View style={styles.rowContainer}>
             <GenericSmallDetail
               title={t('bankCardsPage:startPeriod')}
@@ -132,7 +131,6 @@ export default function BankCardDetailScreen() {
             />
           </View>
 
-          {/* Total Spent */}
           <View style={styles.singleRowContainer}>
             <GenericSmallDetail
               title={t('bankCardsPage:totalSpent')}
@@ -141,7 +139,6 @@ export default function BankCardDetailScreen() {
             />
           </View>
 
-          {/* Transactions List */}
           <SectionList
             sections={sections}
             keyExtractor={item => item.id.toString()}
@@ -187,17 +184,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 20,
-  },
-  cardImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    resizeMode: 'cover',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.06)',
   },
   detailsContainer: {
     flex: 1,
     paddingHorizontal: HORIZONTAL_PADDING,
     gap: 15,
+    paddingTop: 15,
   },
   rowContainer: {
     flexDirection: 'row',

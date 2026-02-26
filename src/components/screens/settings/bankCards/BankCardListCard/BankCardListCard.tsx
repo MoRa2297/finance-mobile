@@ -22,7 +22,7 @@ export const BankCardListCard: React.FC<BankCardListCardProps> = ({
 }) => {
   const { t } = useTranslation('bankCardsPage');
 
-  // TODO: calcolare con transazioni reali
+  // TODO: calcolate real transaction
   const spentValue = 0;
 
   const progress = useMemo(() => {
@@ -33,136 +33,127 @@ export const BankCardListCard: React.FC<BankCardListCardProps> = ({
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.listItem, pressed && styles.pressed]}
       onPress={() => onPress(bankCard)}>
-      {/* Top accent line */}
-      <View style={styles.topAccent} />
-
-      <View style={styles.inner}>
-        {/* Header */}
-        <View style={styles.headerRow}>
+      <View style={styles.container}>
+        {/* Left image */}
+        <View style={styles.iconLeftContainer}>
           <EntityImage
             imageUrl={bankCard.cardType?.imageUrl}
             fallbackText={bankCard.cardType?.name}
-            size={42}
+            size={44}
             borderRadius={GLOBAL_BORDER_RADIUS / 2}
           />
-
-          <View style={styles.nameContainer}>
-            <Text category="s1" style={styles.name} numberOfLines={1}>
-              {bankCard.name}
-            </Text>
-            <Text category="c1" style={styles.expiry}>
-              {t('bankCardsPage:expiry')} {expiryLabel}
-            </Text>
-          </View>
-
-          <OptionsButton onPress={() => onOptionsPress(bankCard)} />
         </View>
 
-        {/* Divider */}
-        <View style={styles.divider} />
-
-        {/* Limit row */}
-        <View style={styles.limitRow}>
-          <Text category="c1" style={styles.limitLabel}>
-            {t('bankCardsPage:limit')}
-          </Text>
-          <Text category="s1" style={styles.limitAmount}>
-            € {bankCard.cardLimit.toFixed(2)}
-          </Text>
-        </View>
-
-        {/* Progress bar — solo se ci sono spese */}
-        {spentValue > 0 && (
-          <View style={styles.progressContainer}>
-            <View style={styles.progressLabels}>
-              <Text category="c1" style={styles.limitLabel}>
-                {t('bankCardsPage:spentValue')}
+        {/* Content */}
+        <View style={styles.contentContainer}>
+          <View style={styles.contentTop}>
+            <View style={styles.nameContainer}>
+              <Text category="s1" style={styles.title}>
+                {bankCard.name}
               </Text>
-              <Text category="c1" style={styles.limitLabel}>
-                € {spentValue.toFixed(2)}
+              <Text category="c1" style={styles.subtitle}>
+                {t('bankCardsPage:expiry')} {expiryLabel}
               </Text>
             </View>
-            <ProgressBar
-              progress={progress}
-              size="giant"
-              status="info"
-              style={styles.progressBar}
-            />
+            <OptionsButton onPress={() => onOptionsPress(bankCard)} size={28} />
           </View>
-        )}
+
+          {/* Limit */}
+          <View style={styles.limitRow}>
+            <Text category="c1" style={styles.limitLabel}>
+              {t('bankCardsPage:limit')}
+            </Text>
+            <Text category="c1" style={styles.limitValue}>
+              € {bankCard.cardLimit.toFixed(2)}
+            </Text>
+          </View>
+        </View>
       </View>
+
+      {/* Spent Value Section */}
+      {spentValue > 0 && (
+        <View style={styles.spentValueContainer}>
+          <View style={styles.spentValueContainerTop}>
+            <Text category="c1" style={styles.subtitle}>
+              {t('bankCardsPage:spentValue')}
+            </Text>
+            <Text category="c1" style={styles.subtitle}>
+              € {spentValue.toFixed(2)}
+            </Text>
+          </View>
+          <ProgressBar
+            progress={progress}
+            size="giant"
+            status="info"
+            style={{ backgroundColor: theme.colors.secondaryBK }}
+          />
+        </View>
+      )}
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  listItem: {
+    paddingHorizontal: HORIZONTAL_PADDING,
+    gap: 12,
+    borderRadius: GLOBAL_BORDER_RADIUS / 2,
+    paddingVertical: HORIZONTAL_PADDING,
     backgroundColor: theme.colors.primaryBK,
-    borderRadius: GLOBAL_BORDER_RADIUS,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
   },
   pressed: {
     opacity: 0.85,
-    transform: [{ scale: 0.99 }],
   },
-  topAccent: {
-    height: 3,
-    width: '100%',
-    backgroundColor: theme.colors.primary,
-  },
-  inner: {
-    paddingHorizontal: HORIZONTAL_PADDING,
-    paddingVertical: 14,
-    gap: 12,
-  },
-  headerRow: {
+  container: {
     flexDirection: 'row',
-    alignItems: 'center',
     gap: 12,
+    alignItems: 'center',
+  },
+  iconLeftContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  contentContainer: {
+    flex: 1,
+    gap: 6,
+  },
+  contentTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
   nameContainer: {
     flex: 1,
-    gap: 3,
+    gap: 2,
   },
-  name: {
+  title: {
     color: theme.colors.basic100,
-    fontWeight: '700',
-    fontSize: 15,
+    fontWeight: '600',
   },
-  expiry: {
+  subtitle: {
     color: theme.colors.textHint,
     fontSize: 11,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: 'rgba(255,255,255,0.06)',
   },
   limitRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
   },
   limitLabel: {
     color: theme.colors.textHint,
-    fontSize: 12,
+    fontSize: 11,
   },
-  limitAmount: {
+  limitValue: {
     color: theme.colors.basic100,
-    fontWeight: '700',
-    fontSize: 15,
+    fontWeight: '600',
+    fontSize: 11,
   },
-  progressContainer: {
+  spentValueContainer: {
     gap: 6,
   },
-  progressLabels: {
+  spentValueContainerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  progressBar: {
-    backgroundColor: theme.colors.secondaryBK,
   },
 });
