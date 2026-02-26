@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { BankAccountListCard } from '@/components/screens/settings/bankAccounts';
 import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
-import { HORIZONTAL_PADDING } from '@/config/constants';
+import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccount } from '@/types';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { TopRoundedContainer } from '@components/ui/TopRoundedContainer';
@@ -96,7 +96,10 @@ export default function BankAccountsScreen() {
 
       <View style={[styles.listContainer, { paddingBottom: bottomTabHeight }]}>
         {isLoading ? (
-          <LoadingSpinner color={theme.colors.primary} />
+          <LoadingSpinner
+            color={theme.colors.primary}
+            backgroundColor={theme.colors.secondaryBK}
+          />
         ) : (
           <FlatList
             data={bankAccounts}
@@ -146,12 +149,14 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     backgroundColor: theme.colors.secondaryBK,
+    marginTop: -GLOBAL_BORDER_RADIUS,
   },
   listContent: {
-    paddingTop: 25,
+    paddingTop: GLOBAL_BORDER_RADIUS + 15,
     paddingHorizontal: HORIZONTAL_PADDING,
     gap: 15,
     paddingBottom: 30,
+    flex: 1,
   },
   listContentEmpty: {
     flex: 1,

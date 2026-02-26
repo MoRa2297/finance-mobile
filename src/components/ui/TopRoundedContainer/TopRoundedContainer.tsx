@@ -38,5 +38,12 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     width: '100%',
     justifyContent: 'space-evenly',
+    zIndex: 2,
+    elevation: 8,
+    // iOS shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
 });
