@@ -1,12 +1,12 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import dayjs, { Dayjs } from 'dayjs';
 
-import { useDataStore } from '@/stores';
-import { BankCard, SwipePickerMonth } from '@/types';
+import { useCardStore, cardSelectors } from '@/stores';
+import { BankCard } from '@/types';
 import { theme } from '@config/theme';
 
 export const useBankCardsScreen = () => {
@@ -15,44 +15,30 @@ export const useBankCardsScreen = () => {
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
 
-  // Store data
-  const bankCards = useDataStore(state => state.bankCards);
-  const transactions = useDataStore(state => state.transactions);
-  const deleteBankCard = useDataStore(state => state.deleteBankCard);
+  // Store
+  const bankCards = useCardStore(cardSelectors.cards);
+  const isLoading = useCardStore(cardSelectors.isLoading);
+  const fetchCards = useCardStore(state => state.fetchCards);
+  const deleteCard = useCardStore(state => state.deleteCard);
 
   // Local state
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [alertVisible, setAlertVisible] = useState(false);
   const [cardToDelete, setCardToDelete] = useState<BankCard | null>(null);
 
-  // Calculate total limit
-  const totLimit = useMemo(() => {
-    return bankCards.reduce((sum, card) => sum + parseFloat(card.cardLimit), 0);
-  }, [bankCards]);
+  // Fetch on mount
+  useEffect(() => {
+    fetchCards();
+  }, [fetchCards]);
 
-  // Calculate total spent (filtered by month if selected)
-  const totSpent = useMemo(() => {
-    let filteredTransactions = transactions;
+  const totLimit = useMemo(
+    () => bankCards.reduce((sum, card) => sum + card.cardLimit, 0),
+    [bankCards],
+  );
 
-    if (selectedDate) {
-      const selectedMonth = selectedDate.month();
-      const selectedYear = selectedDate.year();
+  // TODO: calcolare con transazioni reali
+  const totSpent = 0;
 
-      filteredTransactions = transactions.filter(transaction => {
-        const transactionDate = dayjs(transaction.date);
-        return (
-          transactionDate.month() === selectedMonth &&
-          transactionDate.year() === selectedYear
-        );
-      });
-    }
-
-    return filteredTransactions
-      .filter(t => t.type === 'card_spending' && t.recived)
-      .reduce((sum, t) => sum + parseFloat(t.money), 0);
-  }, [transactions, selectedDate]);
-
-  // Action sheet styles
   const actionSheetStyles = useMemo(
     () => ({
       containerStyle: {
@@ -71,9 +57,7 @@ export const useBankCardsScreen = () => {
     [insets.bottom],
   );
 
-  // Handlers
-
-  const handleSelectMonth = useCallback((month: SwipePickerMonth) => {
+  const handleSelectMonth = useCallback((month: any) => {
     setSelectedDate(dayjs(month.date));
   }, []);
 
@@ -138,13 +122,13 @@ export const useBankCardsScreen = () => {
     );
   }, [t, showActionSheetWithOptions, actionSheetStyles, router]);
 
-  const handleDeleteConfirm = useCallback(() => {
+  const handleDeleteConfirm = useCallback(async () => {
     if (cardToDelete) {
-      deleteBankCard(cardToDelete.id);
+      await deleteCard(cardToDelete.id);
       setCardToDelete(null);
       setAlertVisible(false);
     }
-  }, [cardToDelete, deleteBankCard]);
+  }, [cardToDelete, deleteCard]);
 
   const handleDeleteCancel = useCallback(() => {
     setCardToDelete(null);
@@ -152,15 +136,11 @@ export const useBankCardsScreen = () => {
   }, []);
 
   return {
-    // Data
     bankCards,
+    isLoading,
     totLimit,
     totSpent,
-
-    // Alert state
     alertVisible,
-
-    // Handlers
     handleSelectMonth,
     handleCardPress,
     handleOptionsPress,

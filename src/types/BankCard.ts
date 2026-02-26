@@ -1,22 +1,25 @@
+import { BankAccount } from './BankAccount';
+
 export type BankCard = {
   id: number;
-  bankAccountId: number;
   name: string;
-  cardTypeId: number;
-  cardLimit: string;
-  monthExpiry: number;
-  yearExpiry: number;
-};
-
-export type EditBankCard = {
-  id?: number;
-  bankAccountId: number | string;
-  name: string;
-  cardTypeId: number;
-  cardLimit: number | string;
+  cardLimit: number;
   monthExpiry: number;
   yearExpiry: number;
   userId: number;
+  bankAccountId: number | null;
+  cardTypeId: number | null;
+  cardType: CardType | null;
+  bankAccount: BankAccount | null;
+};
+
+export type EditBankCard = {
+  name: string;
+  cardLimit: number;
+  monthExpiry: number;
+  yearExpiry: number;
+  bankAccountId?: number;
+  cardTypeId?: number;
 };
 
 export type CardType = {

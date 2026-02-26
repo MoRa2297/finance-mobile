@@ -6,6 +6,7 @@ import { authService } from '@/services';
 import { useLookupStore } from '@/stores/lookup/useLookupStore';
 import type { AuthState, RegisterPayload, User } from './auth.types';
 import { AUTH_INITIAL_STATE, AUTH_STORAGE_KEY } from './auth.constants';
+import { useBankAccountStore, useCardStore } from '@/stores';
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -62,8 +63,9 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        // Reset anche il lookup store al logout
         useLookupStore.getState().reset();
+        useBankAccountStore.getState().reset();
+        useCardStore.getState().reset();
         set(AUTH_INITIAL_STATE);
       },
 

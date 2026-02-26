@@ -10,7 +10,7 @@ import { BankCardListCard } from '@components/screens/settings/bankCards/BankCar
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { TopRoundedContainer } from '@/components/ui/TopRoundedContainer';
 import { Alert } from '@components/ui/Alert';
-import { EmptyData } from '@components/common';
+import { EmptyData, LoadingSpinner } from '@components/common';
 import { SpecificPrice } from '@components/screens/home';
 import { Header } from '@components/ui/Header';
 import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
@@ -23,6 +23,7 @@ export default function BankCardsScreen() {
   const {
     bankCards,
     totLimit,
+    isLoading,
     totSpent,
     alertVisible,
     handleSelectMonth,
@@ -44,12 +45,13 @@ export default function BankCardsScreen() {
     [handleCardPress, handleOptionsPress],
   );
 
-  const renderEmpty = useCallback(
-    () => <EmptyData title={t('bankCardsPage:emptyData')} />,
-    [t],
-  );
-
   const keyExtractor = useCallback((item: BankCard) => item.id.toString(), []);
+
+  // Aggiorna renderEmpty
+  const renderEmpty = useCallback(() => {
+    if (isLoading) return null;
+    return <EmptyData title={t('bankCardsPage:emptyData')} />;
+  }, [isLoading, t]);
 
   return (
     <ScreenContainer
@@ -91,18 +93,25 @@ export default function BankCardsScreen() {
       </TopRoundedContainer>
 
       <View style={styles.listContainer}>
-        <FlatList
-          data={bankCards}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          ListEmptyComponent={renderEmpty}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={[
-            styles.listContent,
-            { paddingBottom: bottomTabHeight * 2 },
-            bankCards.length === 0 && styles.listContentEmpty,
-          ]}
-        />
+        {isLoading ? (
+          <LoadingSpinner
+            color={theme.colors.primary}
+            backgroundColor={theme.colors.secondaryBK}
+          />
+        ) : (
+          <FlatList
+            data={bankCards}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            ListEmptyComponent={renderEmpty}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.listContent,
+              { paddingBottom: bottomTabHeight * 2 },
+              bankCards.length === 0 && styles.listContentEmpty,
+            ]}
+          />
+        )}
       </View>
 
       <Alert

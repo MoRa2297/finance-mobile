@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, View, Pressable, Image } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { ProgressBar, Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 
-import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankCard } from '@/types';
-import { useDataStore } from '@/stores';
+import { EntityImage } from '@components/ui/EntityImage';
+import { OptionsButton } from '@components/ui/OptionsButton';
 
 interface BankCardListCardProps {
   bankCard: BankCard;
@@ -21,146 +21,148 @@ export const BankCardListCard: React.FC<BankCardListCardProps> = ({
   onOptionsPress,
 }) => {
   const { t } = useTranslation('bankCardsPage');
-  const transactions = useDataStore(state => state.transactions);
-  const cardTypes = useDataStore(state => state.cardTypes);
 
-  // Find card type
-  const cardType = useMemo(() => {
-    return cardTypes.find(ct => ct.id === bankCard.cardTypeId);
-  }, [cardTypes, bankCard.cardTypeId]);
+  // TODO: calcolare con transazioni reali
+  const spentValue = 0;
 
-  // Calculate spent value for this card
-  const spentValue = useMemo(() => {
-    return transactions
-      .filter(
-        t =>
-          t.cardId === bankCard.id && t.type === 'card_spending' && t.recived,
-      )
-      .reduce((sum, t) => sum + parseFloat(t.money), 0);
-  }, [transactions, bankCard.id]);
+  const progress = useMemo(() => {
+    return bankCard.cardLimit > 0 ? spentValue / bankCard.cardLimit : 0;
+  }, [spentValue, bankCard.cardLimit]);
 
-  // Calculate progress
-  const cardLimit = parseFloat(bankCard.cardLimit);
-  const progress = cardLimit > 0 ? spentValue / cardLimit : 0;
+  const expiryLabel = `${String(bankCard.monthExpiry).padStart(2, '0')}/${bankCard.yearExpiry}`;
 
   return (
-    <Pressable style={styles.listItem} onPress={() => onPress(bankCard)}>
-      {/* Top Row */}
-      <View style={styles.container}>
-        {/* Card Image */}
-        <View style={styles.accessoryLeftContainer}>
-          <View style={styles.iconLeftContainer}>
-            {cardType?.imageUrl ? (
-              <Image source={{ uri: cardType.imageUrl }} style={styles.image} />
-            ) : (
-              <Icon
-                name="credit-card-outline"
-                color={theme.colors.basic100}
-                size={24}
-              />
-            )}
-          </View>
-        </View>
+    <Pressable
+      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      onPress={() => onPress(bankCard)}>
+      {/* Top accent line */}
+      <View style={styles.topAccent} />
 
-        {/* Content */}
-        <View style={styles.contentContainer}>
-          <View style={styles.contentTop}>
-            <Text category="h6" style={styles.title}>
+      <View style={styles.inner}>
+        {/* Header */}
+        <View style={styles.headerRow}>
+          <EntityImage
+            imageUrl={bankCard.cardType?.imageUrl}
+            fallbackText={bankCard.cardType?.name}
+            size={42}
+            borderRadius={GLOBAL_BORDER_RADIUS / 2}
+          />
+
+          <View style={styles.nameContainer}>
+            <Text category="s1" style={styles.name} numberOfLines={1}>
               {bankCard.name}
             </Text>
-
-            <Pressable onPress={() => onOptionsPress(bankCard)} hitSlop={10}>
-              <Icon
-                name="more-horizontal-outline"
-                color={theme.colors.basic100}
-                size={32}
-              />
-            </Pressable>
+            <Text category="c1" style={styles.expiry}>
+              {t('bankCardsPage:expiry')} {expiryLabel}
+            </Text>
           </View>
+
+          <OptionsButton onPress={() => onOptionsPress(bankCard)} />
         </View>
-      </View>
 
-      {/* Spent Value Section */}
-      {spentValue > 0 && (
-        <View style={styles.spentValueContainer}>
-          <View style={styles.spentValueContainerTop}>
-            <Text category="s1" style={styles.title}>
-              {t('bankCardsPage:spentValue')}
-            </Text>
-            <Text category="s2" style={styles.title}>
-              € {spentValue.toFixed(2)}
-            </Text>
-          </View>
-          <View style={styles.spentValueContainerBottom}>
+        {/* Divider */}
+        <View style={styles.divider} />
+
+        {/* Limit row */}
+        <View style={styles.limitRow}>
+          <Text category="c1" style={styles.limitLabel}>
+            {t('bankCardsPage:limit')}
+          </Text>
+          <Text category="s1" style={styles.limitAmount}>
+            € {bankCard.cardLimit.toFixed(2)}
+          </Text>
+        </View>
+
+        {/* Progress bar — solo se ci sono spese */}
+        {spentValue > 0 && (
+          <View style={styles.progressContainer}>
+            <View style={styles.progressLabels}>
+              <Text category="c1" style={styles.limitLabel}>
+                {t('bankCardsPage:spentValue')}
+              </Text>
+              <Text category="c1" style={styles.limitLabel}>
+                € {spentValue.toFixed(2)}
+              </Text>
+            </View>
             <ProgressBar
               progress={progress}
-              size={'giant'}
+              size="giant"
               status="info"
-              style={{ backgroundColor: theme.colors.secondaryBK }}
+              style={styles.progressBar}
             />
           </View>
-        </View>
-      )}
+        )}
+      </View>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  listItem: {
-    paddingHorizontal: HORIZONTAL_PADDING * 2,
-    gap: 15,
-    borderRadius: GLOBAL_BORDER_RADIUS / 2,
-    paddingVertical: HORIZONTAL_PADDING * 1.5,
-    backgroundColor: theme.colors.primaryBK,
-  },
   container: {
-    flexDirection: 'row',
-    gap: 15,
-    backgroundColor: theme.colors.transparent,
-  },
-  accessoryLeftContainer: {
-    backgroundColor: theme.colors.transparent,
-  },
-  iconLeftContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 40,
-    height: 40,
+    backgroundColor: theme.colors.primaryBK,
     borderRadius: GLOBAL_BORDER_RADIUS,
-    backgroundColor: theme.colors.transparent,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
   },
-  contentContainer: {
-    flexDirection: 'column',
-    flex: 1,
-    backgroundColor: theme.colors.transparent,
+  pressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.99 }],
   },
-  contentTop: {
+  topAccent: {
+    height: 3,
+    width: '100%',
+    backgroundColor: theme.colors.primary,
+  },
+  inner: {
+    paddingHorizontal: HORIZONTAL_PADDING,
+    paddingVertical: 14,
+    gap: 12,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  nameContainer: {
     flex: 1,
+    gap: 3,
+  },
+  name: {
+    color: theme.colors.basic100,
+    fontWeight: '700',
+    fontSize: 15,
+  },
+  expiry: {
+    color: theme.colors.textHint,
+    fontSize: 11,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+  },
+  limitRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: theme.colors.transparent,
     alignItems: 'center',
   },
-  title: {
+  limitLabel: {
+    color: theme.colors.textHint,
+    fontSize: 12,
+  },
+  limitAmount: {
     color: theme.colors.basic100,
+    fontWeight: '700',
+    fontSize: 15,
   },
-  spentValueContainer: {
-    width: '100%',
-    gap: 10,
-    backgroundColor: theme.colors.transparent,
+  progressContainer: {
+    gap: 6,
   },
-  spentValueContainerTop: {
+  progressLabels: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: theme.colors.transparent,
   },
-  spentValueContainerBottom: {
-    backgroundColor: theme.colors.transparent,
-  },
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    resizeMode: 'cover',
+  progressBar: {
+    backgroundColor: theme.colors.secondaryBK,
   },
 });
