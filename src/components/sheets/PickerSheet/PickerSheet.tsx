@@ -1,5 +1,11 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View, FlatList, Pressable } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Pressable,
+  useWindowDimensions,
+} from 'react-native';
 import { Text } from '@ui-kitten/components';
 import ActionSheet, {
   ActionSheetRef,
@@ -21,16 +27,17 @@ export const PickerSheet: React.FC<SheetProps<'picker-sheet'>> = ({
   payload,
 }) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
+  const { height } = useWindowDimensions();
   const data = payload?.data || [];
 
   const handleSelect = (item: PickerItem) => {
-    SheetManager.hide(sheetId, {
-      payload: { item },
-    });
+    SheetManager.hide(sheetId, { payload: { item } });
   };
 
   const renderItem = ({ item }: { item: PickerItem }) => (
-    <Pressable style={styles.itemContainer} onPress={() => handleSelect(item)}>
+    <Pressable
+      style={({ pressed }) => [styles.itemContainer, pressed && styles.pressed]}
+      onPress={() => handleSelect(item)}>
       <Text category="s1" style={styles.itemText}>
         {item.name || item.value || item.id}
       </Text>
@@ -46,7 +53,7 @@ export const PickerSheet: React.FC<SheetProps<'picker-sheet'>> = ({
       useBottomSafeAreaPadding
       closeOnTouchBackdrop
       containerStyle={styles.container}>
-      <View style={styles.content}>
+      <View style={{ minHeight: height * 0.2, maxHeight: height * 0.45 }}>
         <FlatList
           data={data}
           keyExtractor={item => item.id.toString()}
@@ -67,7 +74,15 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingTop: 10,
-    maxHeight: 300,
+  },
+  handle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.textHint,
+    alignSelf: 'center',
+    marginBottom: 10,
+    opacity: 0.4,
   },
   listContent: {
     paddingBottom: 20,
@@ -77,7 +92,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     alignItems: 'center',
     borderBottomWidth: 0.5,
-    borderBottomColor: theme.colors.textHint,
+    borderBottomColor: 'rgba(255,255,255,0.06)',
+  },
+  pressed: {
+    backgroundColor: theme.colors.secondaryBK,
   },
   itemText: {
     color: theme.colors.basic100,

@@ -73,52 +73,54 @@ export default function BankCardFormScreen() {
           />
         </View>
 
-        <ScrollView
-          style={styles.bottomSection}
-          contentContainerStyle={styles.bottomContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled">
-          <InputIconField
-            placeholder={t('bankCardsPage:namePlaceholder')}
-            value={formik.values.name}
-            onChange={v => formik.setFieldValue('name', v)}
-            iconName="edit-outline"
-          />
+        <View style={styles.bottomSection}>
+          <ScrollView
+            contentContainerStyle={styles.bottomContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled">
+            <InputIconField
+              placeholder={t('bankCardsPage:namePlaceholder')}
+              value={formik.values.name}
+              onChange={v => formik.setFieldValue('name', v)}
+              iconName="edit-outline"
+            />
 
-          <SelectInput
-            placeholder={t('bankCardsPage:typeCardPlaceholder')}
-            value={formik.values.cardType?.name}
-            iconName="grid-outline"
-            selectedImageUrl={formik.values.cardType?.imageUrl}
-            selectedFallbackText={formik.values.cardType?.name}
-            valueBordered
-            onPress={handleOpenCardTypeSheet}
-          />
+            <SelectInput
+              placeholder={t('bankCardsPage:typeCardPlaceholder')}
+              value={formik.values.cardType?.name}
+              iconName="grid-outline"
+              selectedImageUrl={formik.values.cardType?.imageUrl}
+              selectedFallbackText={formik.values.cardType?.name}
+              valueBordered
+              onPress={handleOpenCardTypeSheet}
+            />
 
-          <SelectInput
-            placeholder={t('bankCardsPage:selectBank')}
-            value={formik.values.bankAccount?.name}
-            iconName="grid-outline"
-            selectedImageUrl={formik.values.bankAccount?.bankType?.imageUrl}
-            selectedFallbackText={formik.values.bankAccount?.bankType?.name}
-            valueBordered
-            onPress={handleOpenBankAccountSheet}
-          />
+            <SelectInput
+              placeholder={t('bankCardsPage:selectBank')}
+              value={formik.values.bankAccount?.name}
+              iconName="grid-outline"
+              selectedImageUrl={formik.values.bankAccount?.bankType?.imageUrl}
+              selectedFallbackText={formik.values.bankAccount?.bankType?.name}
+              valueBordered
+              onPress={handleOpenBankAccountSheet}
+            />
 
-          <SelectPickerInput
-            placeholder={t('bankCardsPage:monthExpiryPlaceholder')}
-            value={formik.values.monthExpiry}
-            iconName="calendar-outline"
-            onPress={handleOpenMonthPicker}
-          />
+            <SelectPickerInput
+              placeholder={t('bankCardsPage:monthExpiryPlaceholder')}
+              value={formik.values.monthExpiry}
+              iconName="calendar-outline"
+              onPress={handleOpenMonthPicker}
+            />
 
-          <SelectPickerInput
-            placeholder={t('bankCardsPage:yearExpiryPlaceholder')}
-            value={formik.values.yearExpiry}
-            iconName="calendar-outline"
-            onPress={handleOpenYearPicker}
-          />
+            <SelectPickerInput
+              placeholder={t('bankCardsPage:yearExpiryPlaceholder')}
+              value={formik.values.yearExpiry}
+              iconName="calendar-outline"
+              onPress={handleOpenYearPicker}
+            />
+          </ScrollView>
 
+          {/* Button fixed at bottom */}
           <View style={styles.buttonContainer}>
             <Button
               buttonText={t('common:save')}
@@ -128,7 +130,7 @@ export default function BankCardFormScreen() {
               isLoading={formik.isSubmitting}
             />
           </View>
-        </ScrollView>
+        </View>
       </View>
 
       <Alert
@@ -168,14 +170,17 @@ const styles = StyleSheet.create({
   bottomContent: {
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingTop: 15,
-    paddingBottom: 40,
+    paddingBottom: 20,
   },
   buttonContainer: {
-    marginTop: 40,
-    alignItems: 'center',
+    paddingHorizontal: HORIZONTAL_PADDING,
+    paddingTop: 15,
+    paddingBottom: 20,
+    backgroundColor: theme.colors.primaryBK,
   },
   submitButton: {
     width: '60%',
+    alignSelf: 'center',
     borderRadius: GLOBAL_BORDER_RADIUS,
   },
 });

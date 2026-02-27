@@ -1,6 +1,13 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View, FlatList, Pressable, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Pressable,
+  useWindowDimensions,
+} from 'react-native';
 import { Text } from '@ui-kitten/components';
+import { useTranslation } from 'react-i18next';
 import ActionSheet, {
   ActionSheetRef,
   SheetManager,
@@ -8,36 +15,32 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 
 import { Icon } from '@/components/ui/Icon';
-import { useDataStore } from '@/stores';
+import { useLookupStore, lookupSelectors } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { CardType } from '@/types';
+import { EntityImage } from '@components/ui/EntityImage';
 
 export const CardTypeSelectSheet: React.FC<
   SheetProps<'card-type-select-sheet'>
 > = ({ sheetId }) => {
+  const { t } = useTranslation(['bankCardsPage', 'common']);
   const actionSheetRef = useRef<ActionSheetRef>(null);
-  const cardTypes = useDataStore(state => state.cardTypes);
+  const { height } = useWindowDimensions();
+  const cardTypes = useLookupStore(lookupSelectors.cardTypes);
 
   const handleSelect = (cardType: CardType) => {
-    SheetManager.hide(sheetId, {
-      payload: { cardType },
-    });
+    SheetManager.hide(sheetId, { payload: { cardType } });
   };
 
   const renderItem = ({ item }: { item: CardType }) => (
     <Pressable style={styles.itemContainer} onPress={() => handleSelect(item)}>
-      {item.imageUrl ? (
-        <Image source={{ uri: item.imageUrl }} style={styles.image} />
-      ) : (
-        <View style={styles.imagePlaceholder}>
-          <Icon
-            name="credit-card-outline"
-            color={theme.colors.basic100}
-            size={24}
-          />
-        </View>
-      )}
+      <EntityImage
+        imageUrl={item.imageUrl}
+        fallbackText={item.name}
+        size={40}
+        borderRadius={GLOBAL_BORDER_RADIUS / 2}
+      />
       <Text category="s1" style={styles.itemText}>
         {item.name}
       </Text>
@@ -59,13 +62,24 @@ export const CardTypeSelectSheet: React.FC<
       closeOnTouchBackdrop
       containerStyle={styles.container}>
       <View style={styles.content}>
-        <FlatList
-          data={cardTypes}
-          keyExtractor={item => item.id.toString()}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
-        />
+        <Text category="h6" style={styles.title}>
+          {t('bankCardsPage:typeCardPlaceholder')}
+        </Text>
+
+        <View style={{ minHeight: height * 0.3, maxHeight: height * 0.5 }}>
+          <FlatList
+            data={cardTypes}
+            keyExtractor={item => item.id.toString()}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.listContent}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>{t('common:noResults')}</Text>
+              </View>
+            }
+          />
+        </View>
       </View>
     </ActionSheet>
   );
@@ -78,8 +92,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
   },
   content: {
-    paddingTop: 10,
-    maxHeight: 400,
+    paddingTop: 15,
+  },
+  title: {
+    color: theme.colors.basic100,
+    paddingHorizontal: HORIZONTAL_PADDING,
+    marginBottom: 10,
   },
   listContent: {
     paddingBottom: 20,
@@ -88,25 +106,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: HORIZONTAL_PADDING,
-    paddingVertical: 12,
+    paddingVertical: 14,
     gap: 12,
-  },
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    resizeMode: 'cover',
-  },
-  imagePlaceholder: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: theme.colors.secondaryBK,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   itemText: {
     flex: 1,
     color: theme.colors.basic100,
+  },
+  emptyContainer: {
+    paddingVertical: 30,
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: theme.colors.textHint,
   },
 });

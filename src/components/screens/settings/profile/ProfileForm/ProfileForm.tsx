@@ -267,7 +267,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingHorizontal: HORIZONTAL_PADDING,
-
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: theme.colors.transparent,

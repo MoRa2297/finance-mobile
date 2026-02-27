@@ -112,7 +112,7 @@ const it = {
       cardLimitTitle: 'Limite carta',
       cardLimitPlaceholder: 'Inserisci il limite della carta...',
       namePlaceholder: 'Inserisci il nome...',
-      typeCardPlaceholder: 'Tipo carta...',
+      typeCardPlaceholder: 'Tipo carta',
       selectBank: 'Seleziona la banca',
       monthExpiryPlaceholder: 'Mese di chiusura',
       yearExpiryPlaceholder: 'Anno di scadenza',
