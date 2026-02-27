@@ -4,8 +4,7 @@ import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 
 import { theme } from '@/config/theme';
-import { Transaction, Category, BankAccount, BankCard } from '@/types';
-
+import { Transaction } from '@/types';
 import { groupByDate } from './ExpensesList.helpers';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BOTTOM_NAV_HEIGHT } from '@config/constants';
@@ -14,41 +13,25 @@ import { ExpenseCard } from '@components/screens/expenses';
 
 interface IExpensesListProps {
   transactions: Transaction[];
-  categories: Category[];
-  bankAccounts: BankAccount[];
-  bankCards: BankCard[];
-  loading?: boolean;
   onSelectTransaction: (transaction: Transaction) => void;
+  loading?: boolean;
 }
 
 export const ExpensesList: FC<IExpensesListProps> = ({
   transactions,
-  categories,
-  bankAccounts,
-  bankCards,
   loading = false,
   onSelectTransaction,
 }) => {
   const { t } = useTranslation('expensesPage');
   const insets = useSafeAreaInsets();
 
-  // Group transactions
-  const sections = useMemo(() => {
-    return groupByDate(transactions);
-  }, [transactions]);
+  const sections = useMemo(() => groupByDate(transactions), [transactions]);
 
-  // Render helpers
   const renderItem = useCallback(
     ({ item }: { item: Transaction }) => (
-      <ExpenseCard
-        transaction={item}
-        categories={categories}
-        bankAccounts={bankAccounts}
-        bankCards={bankCards}
-        onPress={onSelectTransaction}
-      />
+      <ExpenseCard transaction={item} onPress={onSelectTransaction} />
     ),
-    [categories, bankAccounts, bankCards, onSelectTransaction],
+    [onSelectTransaction],
   );
 
   const renderSectionHeader = useCallback(
@@ -75,18 +58,18 @@ export const ExpensesList: FC<IExpensesListProps> = ({
     [],
   );
 
-  // TODO check if use inset is good enough or I can remove it
   const listContentStyle = useMemo(
-    () => ({
-      paddingBottom: BOTTOM_NAV_HEIGHT + insets.bottom,
-    }),
+    () => ({ paddingBottom: BOTTOM_NAV_HEIGHT + insets.bottom }),
     [insets.bottom],
   );
 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <LoadingSpinner color={theme.colors.basic100} size="large" />
+        <LoadingSpinner
+          color={theme.colors.primary}
+          backgroundColor={theme.colors.secondaryBK}
+        />
       </View>
     );
   }
@@ -124,5 +107,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: theme.colors.secondaryBK,
   },
 });

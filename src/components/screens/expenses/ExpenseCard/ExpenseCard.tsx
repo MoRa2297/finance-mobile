@@ -6,67 +6,46 @@ import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
-import { Transaction, Category, BankAccount, BankCard } from '@/types';
-
+import { Transaction } from '@/types';
 import { getExpenseCardData, formatSubtitle } from './ExpenseCard.helpers';
 
 interface IExpenseCardProps {
   transaction: Transaction;
-  categories: Category[];
-  bankAccounts: BankAccount[];
-  bankCards: BankCard[];
   onPress: (transaction: Transaction) => void;
 }
 
 export const ExpenseCard: FC<IExpenseCardProps> = ({
   transaction,
-  categories,
-  bankAccounts,
-  bankCards,
   onPress,
 }) => {
   const { t } = useTranslation('expensesPage');
 
-  // Derived data
   const cardData = useMemo(
-    () => getExpenseCardData(transaction, categories, bankAccounts, bankCards),
-    [transaction, categories, bankAccounts, bankCards],
+    () => getExpenseCardData(transaction),
+    [transaction],
   );
 
   const subtitle = useMemo(
-    () =>
-      formatSubtitle(
-        cardData,
-        transaction.recurrent,
-        t('expensesPage:recurrent'),
-      ),
-    [cardData, transaction.recurrent, t],
+    () => formatSubtitle(cardData, t('expensesPage:recurrent')),
+    [cardData, t],
   );
 
   return (
     <Pressable onPress={() => onPress(transaction)} style={styles.container}>
-      {/* Icon */}
       <View style={styles.leftContainer}>
         <View
           style={[
             styles.iconContainer,
-            {
-              backgroundColor:
-                cardData.category?.categoryColor?.hexCode ||
-                theme.colors.primary,
-            },
+            { backgroundColor: cardData.categoryColor ?? theme.colors.primary },
           ]}>
           <Icon
-            // TODO fix icon
-            // name={cardData.category?.categoryIcon?.iconName || 'cube-outline'}
-            name={'cube-outline'}
+            name={cardData.categoryIconName ?? 'cube-outline'}
             color={theme.colors.basic100}
             size={28}
           />
         </View>
       </View>
 
-      {/* Content */}
       <View style={styles.centerContainer}>
         <Text category="s1" style={styles.title} numberOfLines={1}>
           {transaction.description}
@@ -76,7 +55,6 @@ export const ExpenseCard: FC<IExpenseCardProps> = ({
         </Text>
       </View>
 
-      {/* Amount & Status */}
       <View style={styles.rightContainer}>
         <Text category="p2" style={styles.amount}>
           {transaction.money} €

@@ -12,7 +12,9 @@
   },
   "transactionDetailSheet": {
     "paid": "Pagato",
+    "notPaid": "Non pagato",
     "recurring": "Ricorrente",
+    "notRecurring": "Non ricorrente",
     "description": "Descrizione",
     "date": "Data",
     "category": "Categoria",

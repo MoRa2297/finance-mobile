@@ -1,18 +1,19 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
 import { MonthItem, SpecificPrice } from '@/components/screens/home';
 import { ExpensesList } from '@/components/screens/expenses';
-import { useDataStore, useUIStore, useAuthStore } from '@/stores';
+import {
+  useTransactionStore,
+  transactionSelectors,
+  useUIStore,
+  useAuthStore,
+} from '@/stores';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
-import {
-  calculateTotals,
-  filterTransactions,
-  filterTransactionsByMonth,
-} from '@stores/data/data.selectors';
+import { Transaction } from '@/types';
 import { SheetManager } from 'react-native-actions-sheet';
 import { router } from 'expo-router';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
@@ -27,37 +28,46 @@ const TABS: Tab[] = [
   { title: 'expensesPage:tabs.income', value: 'income' },
 ];
 
-// TODO add the open function
 export default function ExpensesScreen() {
   const { t } = useTranslation('expensesPage');
 
-  // State
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedTab, setSelectedTab] = useState(TABS[0].value);
 
-  // Stores
   const user = useAuthStore(state => state.user);
-  const transactions = useDataStore(state => state.transactions);
-  const categories = useDataStore(state => state.categories);
-  const bankAccounts = useDataStore(state => state.bankAccounts);
-  const bankCards = useDataStore(state => state.bankCards);
+  const transactions = useTransactionStore(transactionSelectors.transactions);
+  const isLoading = useTransactionStore(transactionSelectors.isLoading);
+  const fetchTransactions = useTransactionStore(
+    state => state.fetchTransactions,
+  );
   const moneyIsVisible = useUIStore(state => state.moneyIsVisible);
   const setMoneyIsVisible = useUIStore(state => state.setMoneyIsVisible);
 
-  // Derived data - usa selectors
-  const filteredTransactions = useMemo(
-    () => filterTransactions(transactions, selectedDate, selectedTab),
-    [transactions, selectedDate, selectedTab],
-  );
+  useEffect(() => {
+    const filters: Record<string, any> = {};
+    if (selectedDate) {
+      filters.month = selectedDate.month() + 1;
+      filters.year = selectedDate.year();
+    }
+    fetchTransactions(filters);
+  }, [selectedDate, fetchTransactions]);
 
-  // Calculate totals for selected month
-  const totals = useMemo(
-    () =>
-      calculateTotals(filterTransactionsByMonth(transactions, selectedDate)),
-    [transactions, selectedDate],
-  );
+  const filteredTransactions = useMemo(() => {
+    if (selectedTab === 'all') return transactions;
+    return transactions.filter(t => t.type === selectedTab);
+  }, [transactions, selectedTab]);
 
-  // Handlers
+  const totals = useMemo(() => {
+    return transactions.reduce(
+      (acc, t) => {
+        if (t.type === 'income') acc.income += t.money;
+        else if (t.type === 'expense') acc.expense += t.money;
+        return acc;
+      },
+      { income: 0, expense: 0 },
+    );
+  }, [transactions]);
+
   const handleSelectMonth = useCallback((month: MonthItem) => {
     setSelectedDate(month.date);
   }, []);
@@ -66,11 +76,11 @@ export default function ExpensesScreen() {
     setSelectedTab(value);
   }, []);
 
-  const handleSelectTransaction = useCallback((transaction: any) => {
+  const handleSelectTransaction = useCallback((transaction: Transaction) => {
     SheetManager.show('transaction-detail-sheet', {
       payload: {
         transaction,
-        onEdit: tx => {
+        onEdit: (tx: Transaction) => {
           SheetManager.hide('transaction-detail-sheet');
           router.push({
             pathname: '/transaction',
@@ -85,21 +95,21 @@ export default function ExpensesScreen() {
     setMoneyIsVisible();
   }, [setMoneyIsVisible]);
 
-  const formatAmount = (amount: number) => {
-    return moneyIsVisible ? `${amount.toFixed(2)} €` : '--';
-  };
+  const formatAmount = useCallback(
+    (amount: number) => (moneyIsVisible ? `${amount.toFixed(2)} €` : '--'),
+    [moneyIsVisible],
+  );
 
   return (
     <ScreenContainer
       style={styles.container}
       horizontalPadding={false}
       forceNoBottomPadding>
-      {/* Header Section */}
       <TopRoundedContainer height="28%" paddingTop={10}>
         <Header
           left={{
             type: 'avatar',
-            source: user?.imageUrl,
+            source: user?.imageUrl || undefined,
             onPress: () => {},
           }}
           right={{
@@ -110,7 +120,6 @@ export default function ExpensesScreen() {
         />
 
         <View style={styles.headerContent}>
-          {/* Month Picker */}
           <View style={styles.monthPickerContainer}>
             <MonthSwipePicker
               onSelectMonth={handleSelectMonth}
@@ -119,7 +128,6 @@ export default function ExpensesScreen() {
             />
           </View>
 
-          {/* Income / Expense Summary */}
           <View style={styles.summaryContainer}>
             <SpecificPrice
               title={t('expensesPage:income')}
@@ -139,15 +147,12 @@ export default function ExpensesScreen() {
         </View>
       </TopRoundedContainer>
 
-      {/* Body Section */}
       <View style={styles.bodyContainer}>
         <SliderBar tabs={TABS} onTabChange={handleTabChange} />
 
         <ExpensesList
           transactions={filteredTransactions}
-          categories={categories}
-          bankAccounts={bankAccounts}
-          bankCards={bankCards}
+          loading={isLoading}
           onSelectTransaction={handleSelectTransaction}
         />
       </View>

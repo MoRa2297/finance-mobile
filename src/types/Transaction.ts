@@ -1,8 +1,12 @@
+import { Category } from './Category';
+import { BankAccount } from './BankAccount';
+import { BankCard } from './BankCard';
+
 export type TransactionType = 'income' | 'expense' | 'card_expense';
 
 export type Transaction = {
   id: number;
-  userId: number;
+  userId: number | null;
   bankAccountId: number | null;
   cardAccountId: number | null;
   categoryId: number;
@@ -14,6 +18,9 @@ export type Transaction = {
   repeat: boolean;
   note: string;
   type: TransactionType;
+  category: Category | null;
+  bankAccount: BankAccount | null;
+  card: BankCard | null;
 };
 
 export type CreateTransactionPayload = {

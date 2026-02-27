@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, FC } from 'react';
+import React, { useCallback, useRef, FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
@@ -9,72 +9,39 @@ import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 
 import { theme } from '@/config/theme';
-import {
-  GLOBAL_BORDER_RADIUS,
-  HORIZONTAL_PADDING,
-  SCREEN_HEIGHT,
-  BOTTOM_NAV_HEIGHT,
-} from '@/config/constants';
-import { useDataStore } from '@/stores';
-import { Transaction, BankAccount, BankCard, Category } from '@/types';
+import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { Button } from '@components/ui/Button';
-import { Icon } from '@components/ui/Icon';
+import { StatusPill } from './StatusPill';
+import { DetailCard } from './DetailCard';
+import { NoteCard } from './NoteCard';
 
-// ============================================================
-// TYPES
-// ============================================================
-
-type TransactionDetailSheetPayload = {
-  payload: {
-    transaction: Transaction;
-    handleEdit: (transaction: Transaction) => void;
-  };
-  sheetId: string;
-};
-
-// ============================================================
-// COMPONENT
-// ============================================================
-// TODO split components
 export const TransactionDetailSheet: FC<
   SheetProps<'transaction-detail-sheet'>
 > = props => {
   const { t } = useTranslation(['expensesPage', 'common']);
   const actionSheetRef = useRef<ActionSheetRef>(null);
 
-  // Stores
-  const categories = useDataStore(state => state.categories);
-  const bankAccounts = useDataStore(state => state.bankAccounts);
-  const bankCards = useDataStore(state => state.bankCards);
-
-  // Local state
-  const [selectedBank, setSelectedBank] = useState<BankAccount | undefined>();
-  const [selectedCategory, setSelectedCategory] = useState<
-    Category | undefined
-  >();
-  const [selectedCard, setSelectedCard] = useState<BankCard | undefined>();
-
-  // Set related data on mount
-  useEffect(() => {
-    if (!props.payload?.transaction) return;
-
-    const { bankAccountId, categoryId, cardId } = props.payload?.transaction;
-
-    setSelectedBank(bankAccounts.find(b => b.id === bankAccountId));
-    setSelectedCategory(categories.find(c => c.id === categoryId));
-    setSelectedCard(bankCards.find(c => c.id === cardId));
-  }, [props.payload?.transaction, bankAccounts, categories, bankCards]);
-
-  // Handlers
   const handleEdit = useCallback(() => {
     if (props.payload?.transaction && props.payload?.onEdit) {
-      props.payload?.onEdit(props.payload?.transaction);
+      props.payload.onEdit(props.payload.transaction);
     }
   }, [props.payload]);
 
   if (!props.payload?.transaction) return null;
 
   const { transaction } = props.payload;
+
+  const accountName = transaction.bankAccount?.name ?? transaction.card?.name;
+  const accountLabel = transaction.bankAccount
+    ? t('expensesPage:transactionDetailSheet.bankAccount')
+    : t('expensesPage:transactionDetailSheet.cardAccount');
+
+  const isExpense =
+    transaction.type === 'expense' || transaction.type === 'card_expense';
+  const amountColor = isExpense ? theme.colors.red : theme.colors.green;
+  const amountPrefix = isExpense ? '-' : '+';
+
+  console.log('transaction: ', transaction);
 
   return (
     <ActionSheet
@@ -89,71 +56,69 @@ export const TransactionDetailSheet: FC<
       containerStyle={styles.sheetContainer}
       keyboardHandlerEnabled={false}>
       <Layout style={styles.container}>
-        {/* Top Section - Status Icons */}
-        <View style={styles.topSection}>
-          <StatusIcon
-            isActive={transaction.recived} // ← 'recived' non 'received' TODO FIX TYPO NAME
-            label={t('expensesPage:transactionDetailSheet.paid')}
+        <View style={styles.handle} />
+
+        {/* Hero */}
+        <View style={styles.heroSection}>
+          <Text style={styles.description} numberOfLines={1}>
+            {transaction.description}
+          </Text>
+          <Text style={[styles.amount, { color: amountColor }]}>
+            {amountPrefix}
+            {transaction.money} €
+          </Text>
+          <Text style={styles.date}>
+            {dayjs(transaction.date).format('DD MMMM YYYY')}
+          </Text>
+        </View>
+
+        {/* Pills */}
+        <View style={styles.pillsRow}>
+          <StatusPill
+            isActive={transaction.recived}
+            activeLabel={t('expensesPage:transactionDetailSheet.paid')}
+            inactiveLabel={t('expensesPage:transactionDetailSheet.notPaid')}
+            activeColor={theme.colors.green}
+            inactiveColor={theme.colors.red}
+            iconActive="checkmark-circle-2-outline"
+            iconInactive="close-circle-outline"
           />
-          <StatusIcon
+          <StatusPill
             isActive={transaction.recurrent}
-            label={t('expensesPage:transactionDetailSheet.recurring')}
+            activeLabel={t('expensesPage:transactionDetailSheet.recurring')}
+            inactiveLabel={t(
+              'expensesPage:transactionDetailSheet.notRecurring',
+            )}
+            activeColor={theme.colors.primary}
+            inactiveColor={theme.colors.textHint}
+            iconActive="sync-outline"
+            iconInactive="sync-outline"
           />
         </View>
 
-        <View style={styles.separator} />
-
-        {/* Bottom Section - Details */}
-        <View style={styles.detailsSection}>
-          {/* Left Column */}
-          <View style={styles.detailsColumn}>
-            <DetailRow
-              iconName="edit-outline"
-              label={t('expensesPage:transactionDetailSheet.description')}
-              value={transaction.description}
-            />
-            <DetailRow
-              iconName="calendar-outline"
-              label={t('expensesPage:transactionDetailSheet.date')}
-              value={dayjs(transaction.date).format('DD-MM-YYYY')}
-            />
-            <DetailRow
-              iconName="bookmark-outline"
-              label={t('expensesPage:transactionDetailSheet.category')}
-              value={selectedCategory?.name}
-            />
-          </View>
-
-          {/* Right Column */}
-          <View style={styles.detailsColumn}>
-            {/*<DetailRow*/}
-            {/*  iconName="pricetags-outline"*/}
-            {/*  label={t('transactionDetail.value')}*/}
-            {/*  value={`${transaction.amount.toFixed(2)} €`}*/}
-            {/*/>*/}
-            <DetailRow
-              iconName="pricetags-outline"
-              label={t('expensesPage:transactionDetailSheet.value')}
-              value={`${transaction.money} €`} // ← 'money' non 'amount'
-            />
-            <DetailRow
-              iconName="grid-outline"
-              label={
-                selectedBank
-                  ? t('expensesPage:transactionDetailSheet.bankAccount')
-                  : t('expensesPage:transactionDetailSheet.cardAccount')
-              }
-              value={selectedBank?.name ?? selectedCard?.name}
-            />
-            <DetailRow
-              iconName="file-text-outline"
-              label={t('expensesPage:transactionDetailSheet.note')}
-              value={transaction.note}
-            />
-          </View>
+        {/* 2 Cards */}
+        <View style={styles.cardsRow}>
+          <DetailCard
+            iconName="bookmark-outline"
+            label={t('expensesPage:transactionDetailSheet.category')}
+            value={transaction.category?.name}
+            accent={transaction.category?.categoryColor?.hexCode}
+          />
+          <DetailCard
+            iconName="grid-outline"
+            label={accountLabel}
+            value={accountName}
+          />
         </View>
 
-        {/* Edit Button */}
+        {/* Nota */}
+        {!!transaction.note && (
+          <NoteCard
+            label={t('expensesPage:transactionDetailSheet.note')}
+            value={transaction.note}
+          />
+        )}
+
         <View style={styles.buttonContainer}>
           <Button
             onPress={handleEdit}
@@ -166,46 +131,6 @@ export const TransactionDetailSheet: FC<
   );
 };
 
-// ============================================================
-// SUB-COMPONENTS
-// ============================================================
-
-interface StatusIconProps {
-  isActive?: boolean;
-  label: string;
-}
-
-const StatusIcon: FC<StatusIconProps> = ({ isActive, label }) => (
-  <View style={styles.statusContainer}>
-    <Icon
-      name={isActive ? 'checkmark-circle-outline' : 'close-circle-outline'}
-      color={isActive ? theme.colors.green : theme.colors.red}
-      size={40}
-    />
-    <Text style={styles.statusLabel}>{label}</Text>
-  </View>
-);
-
-interface DetailRowProps {
-  iconName: string;
-  label: string;
-  value?: string | null;
-}
-
-const DetailRow: FC<DetailRowProps> = ({ iconName, label, value }) => (
-  <View style={styles.detailRow}>
-    <Icon name={iconName} color={theme.colors.basic100} size={28} />
-    <View style={styles.detailTextContainer}>
-      <Text style={styles.detailLabel}>{label}</Text>
-      <Text style={styles.detailValue}>{value || '-'}</Text>
-    </View>
-  </View>
-);
-
-// ============================================================
-// STYLES
-// ============================================================
-
 const styles = StyleSheet.create({
   sheetContainer: {
     backgroundColor: theme.colors.primaryBK,
@@ -213,74 +138,58 @@ const styles = StyleSheet.create({
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
   },
   container: {
-    paddingTop: 25,
-    minHeight: SCREEN_HEIGHT - SCREEN_HEIGHT / 2,
-    paddingHorizontal: HORIZONTAL_PADDING,
+    paddingBottom: 30,
     backgroundColor: theme.colors.transparent,
   },
-
-  // Top Section
-  topSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  statusContainer: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  statusLabel: {
-    color: theme.colors.textHint,
-    fontWeight: '300',
-    marginTop: 4,
-  },
-
-  // Separator
-  separator: {
-    height: 1,
+  handle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
     backgroundColor: theme.colors.textHint,
-    marginVertical: 15,
-    opacity: 0.3,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 20,
+    opacity: 0.4,
   },
-
-  // Details Section
-  detailsSection: {
-    flexDirection: 'row',
-    flex: 1,
+  heroSection: {
+    alignItems: 'center',
+    paddingHorizontal: HORIZONTAL_PADDING,
+    paddingBottom: 20,
   },
-  detailsColumn: {
-    flex: 1,
-  },
-  detailRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginVertical: 10,
-  },
-  detailTextContainer: {
-    marginLeft: 8,
-    flex: 1,
-  },
-  detailLabel: {
+  description: {
     color: theme.colors.textHint,
-    fontWeight: '300',
-    fontSize: 12,
-  },
-  detailValue: {
-    color: theme.colors.basic100,
-    fontWeight: '400',
     fontSize: 14,
-    marginTop: 2,
+    marginBottom: 6,
   },
-
-  // Button
-  buttonContainer: {
+  amount: {
+    fontSize: 44,
+    fontWeight: '700',
+    letterSpacing: -1,
+  },
+  date: {
+    color: theme.colors.textHint,
+    fontSize: 13,
+    marginTop: 6,
+  },
+  pillsRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    gap: 10,
+    paddingHorizontal: HORIZONTAL_PADDING,
+    marginBottom: 16,
+  },
+  cardsRow: {
+    flexDirection: 'row',
+    gap: 10,
+    paddingHorizontal: HORIZONTAL_PADDING,
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    paddingHorizontal: HORIZONTAL_PADDING,
+    marginTop: 8,
   },
   editButton: {
-    width: '60%',
     borderRadius: GLOBAL_BORDER_RADIUS,
     backgroundColor: theme.colors.primary,
     borderColor: theme.colors.primary,
-    color: theme.colors.basic100,
   },
 });
