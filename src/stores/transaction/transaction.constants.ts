@@ -1,18 +1,10 @@
-import { TransactionFilters } from '@/services';
-import { TransactionState } from './transaction.types';
+import { TransactionFilters, TransactionMeta } from '@/types';
 
-export const TRANSACTION_INITIAL_FILTERS: TransactionFilters = {
-  page: 1,
-  limit: 20,
-};
-
-export const TRANSACTION_INITIAL_STATE: Pick<
-  TransactionState,
-  'transactions' | 'meta' | 'filters' | 'isLoading' | 'error'
-> = {
+export const TRANSACTION_INITIAL_STATE = {
   transactions: [],
-  meta: null,
-  filters: TRANSACTION_INITIAL_FILTERS,
+  meta: null as TransactionMeta | null,
+  filters: {} as TransactionFilters,
   isLoading: false,
+  isMutating: false,
   error: null,
 };

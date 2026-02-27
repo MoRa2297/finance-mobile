@@ -1,16 +1,24 @@
-import { Transaction, EditTransaction } from '@/types';
-import { TransactionFilters, PaginatedTransactions } from '@/services';
+import {
+  Transaction,
+  TransactionFilters,
+  TransactionMeta,
+  CreateTransactionPayload,
+  UpdateTransactionPayload,
+} from '@/types';
 
 export interface TransactionState {
   transactions: Transaction[];
-  meta: PaginatedTransactions['meta'] | null;
+  meta: TransactionMeta | null;
   filters: TransactionFilters;
   isLoading: boolean;
+  isMutating: boolean;
   error: string | null;
-
   fetchTransactions: (filters?: TransactionFilters) => Promise<void>;
-  createTransaction: (payload: EditTransaction) => Promise<void>;
-  updateTransaction: (id: number, payload: EditTransaction) => Promise<void>;
+  createTransaction: (payload: CreateTransactionPayload) => Promise<void>;
+  updateTransaction: (
+    id: number,
+    payload: UpdateTransactionPayload,
+  ) => Promise<void>;
   deleteTransaction: (id: number) => Promise<void>;
   setFilters: (filters: TransactionFilters) => void;
   reset: () => void;

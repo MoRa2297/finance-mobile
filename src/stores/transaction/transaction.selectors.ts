@@ -5,7 +5,6 @@ export const transactionSelectors = {
   meta: (state: TransactionState) => state.meta,
   filters: (state: TransactionState) => state.filters,
   isLoading: (state: TransactionState) => state.isLoading,
+  isMutating: (state: TransactionState) => state.isMutating,
   error: (state: TransactionState) => state.error,
-  totalPages: (state: TransactionState) => state.meta?.totalPages ?? 0,
-  currentPage: (state: TransactionState) => state.meta?.page ?? 1,
 };

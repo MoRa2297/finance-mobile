@@ -6,7 +6,11 @@ import { authService } from '@/services';
 import { useLookupStore } from '@/stores/lookup/useLookupStore';
 import type { AuthState, RegisterPayload, User } from './auth.types';
 import { AUTH_INITIAL_STATE, AUTH_STORAGE_KEY } from './auth.constants';
-import { useBankAccountStore, useCardStore } from '@/stores';
+import {
+  useBankAccountStore,
+  useCardStore,
+  useTransactionStore,
+} from '@/stores';
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -66,6 +70,8 @@ export const useAuthStore = create<AuthState>()(
         useLookupStore.getState().reset();
         useBankAccountStore.getState().reset();
         useCardStore.getState().reset();
+        useTransactionStore.getState().reset();
+        useCategoryStore.getState().reset();
         set(AUTH_INITIAL_STATE);
       },
 
