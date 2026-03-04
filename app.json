@@ -1,27 +1,16 @@
 {
   "expo": {
-    "name": "finance-mobile",
-    "slug": "finance-mobile",
-    "version": "1.0.0",
-    "scheme": "finance-mobile",
-    "orientation": "portrait",
-    "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
+    "extra": {
+      "eas": {
+        "projectId": "e44df0cd-71a8-4938-b517-80d0ad677757"
+      }
+    },
+    "owner": "mora2297",
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.finance.mobile"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#111827"
-      },
-      "package": "com.finance.mobile"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "experiments": {
-      "typedRoutes": true
+      "bundleIdentifier": "com.mora2297.financemobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     }
   }
 }
