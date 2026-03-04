@@ -5,6 +5,12 @@
         "projectId": "e44df0cd-71a8-4938-b517-80d0ad677757"
       }
     },
-    "owner": "mora2297"
+    "owner": "mora2297",
+    "ios": {
+      "bundleIdentifier": "com.mora2297.financemobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    }
   }
 }
