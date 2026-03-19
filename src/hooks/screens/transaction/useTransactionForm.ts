@@ -50,7 +50,10 @@ export const useTransactionForm = () => {
   const { t } = useTranslation(['transactionPage', 'common']);
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { id, type } = useLocalSearchParams<{ id?: string; type?: string }>();
+  const { id, formType: type } = useLocalSearchParams<{
+    id?: string;
+    formType?: string;
+  }>();
   const { showActionSheetWithOptions } = useActionSheet();
 
   const transactions = useTransactionStore(transactionSelectors.transactions);
@@ -86,7 +89,8 @@ export const useTransactionForm = () => {
   const [selectionError, setSelectionError] = useState<string | null>(null);
   const [alertVisible, setAlertVisible] = useState(false);
 
-  const isCardExpense = formType === TransactionFormTypes.CARD_EXPENSE;
+  // TODO fix all logic
+  const isCardExpense = formType === TransactionFormTypes.TRANSFER;
 
   // Init selection from existing transaction
   useEffect(() => {
@@ -216,7 +220,7 @@ export const useTransactionForm = () => {
     const options = [
       t('transactionPage:income'),
       t('transactionPage:expense'),
-      t('transactionPage:card_expense'),
+      t('transactionPage:transfer'),
       t('common:cancel'),
     ];
 
@@ -231,7 +235,7 @@ export const useTransactionForm = () => {
             setFormType(TransactionFormTypes.EXPENSE);
             break;
           case 2:
-            setFormType(TransactionFormTypes.CARD_EXPENSE);
+            setFormType(TransactionFormTypes.TRANSFER);
             break;
         }
       },

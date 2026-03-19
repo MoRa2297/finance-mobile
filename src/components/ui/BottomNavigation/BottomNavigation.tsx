@@ -18,8 +18,8 @@ import {
   getSelectedIndex,
   navigateToTab,
   navigateToTransaction,
-  TransactionType,
 } from './BottomNavigation.helpers';
+import { TransactionType } from '@/types';
 
 // TODO improve animations on switch screens and selected screen UI
 export const BottomNavigation = ({}) => {

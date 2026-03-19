@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { TransactionFormTypes } from '@/types';
 import { InputIconField } from '@components/ui/InputIconField';
 import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';

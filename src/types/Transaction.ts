@@ -2,7 +2,7 @@ import { Category } from './Category';
 import { BankAccount } from './BankAccount';
 import { BankCard } from './BankCard';
 
-export type TransactionType = 'income' | 'expense' | 'card_expense';
+export type TransactionType = 'income' | 'expense' | 'transfer';
 
 export type Transaction = {
   id: number;
@@ -60,5 +60,5 @@ export type TransactionMeta = {
 export enum TransactionFormTypes {
   INCOME = 'income',
   EXPENSE = 'expense',
-  CARD_EXPENSE = 'card_expense',
+  TRANSFER = 'transfer',
 }

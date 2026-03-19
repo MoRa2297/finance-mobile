@@ -1,8 +1,7 @@
 import { router } from 'expo-router';
 
 import { ROUTES } from '@/config/constants';
-
-export type TransactionType = 'income' | 'expense' | 'card_spending';
+import { TransactionType } from '@/types';
 
 const TAB_ROUTES = [
   ROUTES.HOME,

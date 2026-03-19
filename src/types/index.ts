@@ -20,6 +20,7 @@ export type {
   Transaction,
   UpdateTransactionPayload,
   TransactionFilters,
+  TransactionType,
 } from './Transaction';
 
 export { TransactionFormTypes } from './Transaction';

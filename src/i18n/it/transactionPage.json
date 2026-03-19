@@ -1,11 +1,11 @@
 {
   "income": "Entrata",
   "expense": "Uscita",
-  "card_spending": "Spese con carta",
+  "transfer": "Trasferisci",
   "buttonFormTypes": {
     "income": "Entrata",
     "expense": "Uscita",
-    "card_spending": "Spesa carta"
+    "transfer": "Trasferisci"
   },
   "moneyValueTypes": {
     "income": "Valore entrata",

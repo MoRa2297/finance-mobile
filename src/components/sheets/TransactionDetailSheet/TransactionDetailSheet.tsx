@@ -36,8 +36,8 @@ export const TransactionDetailSheet: FC<
     ? t('expensesPage:transactionDetailSheet.bankAccount')
     : t('expensesPage:transactionDetailSheet.cardAccount');
 
-  const isExpense =
-    transaction.type === 'expense' || transaction.type === 'card_expense';
+  // TODO handle transfer
+  const isExpense = transaction.type === 'expense';
   const amountColor = isExpense ? theme.colors.red : theme.colors.green;
   const amountPrefix = isExpense ? '-' : '+';
 

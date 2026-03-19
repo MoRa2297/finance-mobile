@@ -6,7 +6,7 @@ import { theme } from '@/config/theme';
 
 // ============ TYPES ============
 
-type TransactionType = 'income' | 'expense' | 'card_spending';
+type TransactionType = 'income' | 'expense' | 'transfer';
 
 interface FloatingButtonProps {
   handlePressOption: (type: TransactionType) => void;
@@ -40,8 +40,8 @@ const ACTION_BUTTONS: ActionButton[] = [
     distance: 90,
   },
   {
-    type: 'card_spending',
-    icon: 'credit-card-outline',
+    type: 'transfer',
+    icon: 'repeat-outline',
     color: theme.colors.primary,
     angle: 270, // Top-center position
     distance: 100,
