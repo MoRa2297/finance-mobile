@@ -36,8 +36,8 @@ jobs:
 
       - name: Build on EAS (preview)
         if: github.ref == 'refs/heads/release'
-        run: eas build --platform all --profile preview --non-interactive
+        run: eas build --platform ios --profile preview --non-interactive
 
       - name: Build on EAS (production)
         if: github.ref == 'refs/heads/main'
-        run: eas build --platform all --profile production --non-interactive
+        run: eas build --platform ios --profile production --non-interactive
