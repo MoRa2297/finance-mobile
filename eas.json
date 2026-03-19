@@ -1,7 +1,6 @@
 {
   "cli": {
-    "version": ">= 10.0.0",
-    "appVersionSource": "remote"
+    "version": ">= 10.0.0"
   },
   "build": {
     "development": {
@@ -10,27 +9,21 @@
     },
     "preview": {
       "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
       "ios": {
         "simulator": false
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "ios": {}
     }
   },
   "submit": {
     "production": {
       "ios": {
-        "appleId": "your@apple.id",
+        "appleId": "manuel.morandin@gmail.com",
         "ascAppId": "your-app-store-connect-id",
         "appleTeamId": "your-team-id"
-      },
-      "android": {
-        "serviceAccountKeyPath": "./google-service-account.json",
-        "track": "internal"
       }
     }
   }
