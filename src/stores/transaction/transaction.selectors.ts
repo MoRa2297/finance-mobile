@@ -7,4 +7,5 @@ export const transactionSelectors = {
   isLoading: (state: TransactionState) => state.isLoading,
   isMutating: (state: TransactionState) => state.isMutating,
   error: (state: TransactionState) => state.error,
+  // createTransfer: (payload: CreateTransferPayload) => Promise<void>;
 };

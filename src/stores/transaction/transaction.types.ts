@@ -1,9 +1,10 @@
 import {
-  Transaction,
+  CreateTransactionPayload,
+  CreateTransferPayload,
+  UpdateTransactionPayload,
   TransactionFilters,
   TransactionMeta,
-  CreateTransactionPayload,
-  UpdateTransactionPayload,
+  Transaction,
 } from '@/types';
 
 export interface TransactionState {
@@ -13,8 +14,10 @@ export interface TransactionState {
   isLoading: boolean;
   isMutating: boolean;
   error: string | null;
+
   fetchTransactions: (filters?: TransactionFilters) => Promise<void>;
   createTransaction: (payload: CreateTransactionPayload) => Promise<void>;
+  createTransfer: (payload: CreateTransferPayload) => Promise<void>;
   updateTransaction: (
     id: number,
     payload: UpdateTransactionPayload,

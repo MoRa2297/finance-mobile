@@ -4,6 +4,7 @@ import { TransactionState } from './transaction.types';
 import { TRANSACTION_INITIAL_STATE } from './transaction.constants';
 import {
   CreateTransactionPayload,
+  CreateTransferPayload,
   UpdateTransactionPayload,
   TransactionFilters,
 } from '@/types';
@@ -29,6 +30,18 @@ export const useTransactionStore = create<TransactionState>()(set => ({
       transactions: [transaction, ...state.transactions],
       isMutating: false,
     }));
+  },
+
+  createTransfer: async (payload: CreateTransferPayload) => {
+    set({ isMutating: true, error: null });
+    await transactionService.createTransfer(payload);
+    // Il transfer crea due transazioni — refetch per averle entrambe
+    const response = await transactionService.getTransactions({});
+    set({
+      transactions: response.data,
+      meta: response.meta,
+      isMutating: false,
+    });
   },
 
   updateTransaction: async (id: number, payload: UpdateTransactionPayload) => {

@@ -1,12 +1,14 @@
 import { Color } from './General';
 
+export type CategoryType = 'INCOME' | 'EXPENSE';
+
 export type Category = {
   id: number;
   name: string;
   colorId: string;
   iconId: string;
   userId: number;
-  type: 'income' | 'expense';
+  type: CategoryType;
   categoryIcon: CategoryIcon;
   categoryColor: Color;
   updateDate?: Date;
@@ -18,7 +20,7 @@ export type EditCategory = {
   name: string;
   colorId: number | string;
   iconId: number | string;
-  type: 'income' | 'expense';
+  type: CategoryType;
   // userId: number;
   updateDate?: Date;
   createdDate?: Date;

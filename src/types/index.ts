@@ -5,7 +5,12 @@ export type {
   EditBankAccount,
 } from './BankAccount';
 export type { BankCard, EditBankCard, CardType } from './BankCard';
-export type { Category, CategoryIcon, EditCategory } from './Category';
+export type {
+  Category,
+  CategoryIcon,
+  EditCategory,
+  CategoryType,
+} from './Category';
 export type {
   GenericType,
   Color,
@@ -21,6 +26,7 @@ export type {
   UpdateTransactionPayload,
   TransactionFilters,
   TransactionType,
+  CreateTransferPayload,
 } from './Transaction';
 
 export { TransactionFormTypes } from './Transaction';

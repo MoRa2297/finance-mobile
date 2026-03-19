@@ -2,39 +2,54 @@ import { Category } from './Category';
 import { BankAccount } from './BankAccount';
 import { BankCard } from './BankCard';
 
-export type TransactionType = 'income' | 'expense' | 'transfer';
+export type TransactionType = 'INCOME' | 'EXPENSE' | 'TRANSFER';
+
+export type TransferDetail = {
+  id: number;
+  fromAccountId: number;
+  toAccountId: number;
+  fromAccount: BankAccount;
+  toAccount: BankAccount;
+};
 
 export type Transaction = {
   id: number;
   userId: number | null;
   bankAccountId: number | null;
   cardAccountId: number | null;
-  categoryId: number;
+  categoryId: number | null;
   money: number;
-  recived: boolean;
   date: string;
   description: string;
   recurrent: boolean;
-  repeat: boolean;
   note: string;
   type: TransactionType;
   category: Category | null;
   bankAccount: BankAccount | null;
   card: BankCard | null;
+  transferFrom: TransferDetail | null;
+  transferTo: TransferDetail | null;
 };
 
 export type CreateTransactionPayload = {
   bankAccountId?: number;
-  cardAccountId?: number | null;
-  categoryId: number;
+  cardAccountId?: number;
+  categoryId?: number;
   money: number;
-  recived: boolean;
   date: string;
   description: string;
   recurrent: boolean;
-  repeat: boolean;
   note: string;
   type: TransactionType;
+};
+
+export type CreateTransferPayload = {
+  money: number;
+  date: string;
+  description: string;
+  note?: string;
+  fromAccountId: number;
+  toAccountId: number;
 };
 
 export type UpdateTransactionPayload = Partial<CreateTransactionPayload>;
@@ -58,7 +73,7 @@ export type TransactionMeta = {
 };
 
 export enum TransactionFormTypes {
-  INCOME = 'income',
-  EXPENSE = 'expense',
-  TRANSFER = 'transfer',
+  INCOME = 'INCOME',
+  EXPENSE = 'EXPENSE',
+  TRANSFER = 'TRANSFER',
 }

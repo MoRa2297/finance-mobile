@@ -2,6 +2,7 @@ import apiClient from './api-client';
 import {
   Transaction,
   CreateTransactionPayload,
+  CreateTransferPayload,
   UpdateTransactionPayload,
   TransactionFilters,
   TransactionMeta,
@@ -10,6 +11,14 @@ import {
 export interface TransactionListResponse {
   data: Transaction[];
   meta: TransactionMeta;
+}
+
+export interface TransferDetailResponse {
+  id: number;
+  fromTransaction: Transaction;
+  toTransaction: Transaction;
+  fromAccount: { id: number; name: string };
+  toAccount: { id: number; name: string };
 }
 
 const transactionService = {
@@ -33,6 +42,16 @@ const transactionService = {
   ): Promise<Transaction> => {
     const { data } = await apiClient.post<Transaction>(
       '/transactions',
+      payload,
+    );
+    return data;
+  },
+
+  createTransfer: async (
+    payload: CreateTransferPayload,
+  ): Promise<TransferDetailResponse> => {
+    const { data } = await apiClient.post<TransferDetailResponse>(
+      '/transactions/transfer',
       payload,
     );
     return data;

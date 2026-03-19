@@ -20,6 +20,7 @@ import {
 import {
   TransactionFormTypes,
   CreateTransactionPayload,
+  CreateTransferPayload,
   BankAccount,
   BankCard,
   Category,
@@ -35,15 +36,14 @@ export interface TransactionFormValues {
   description: string;
   note: string;
   date: string;
-  recived: boolean;
   recurrent: boolean;
-  repeat: boolean;
 }
 
 interface SelectionState {
   bankAccount: BankAccount | null;
   category: Category | null;
   card: BankCard | null;
+  toAccount: BankAccount | null; // solo per TRANSFER
 }
 
 export const useTransactionForm = () => {
@@ -60,6 +60,7 @@ export const useTransactionForm = () => {
   const createTransaction = useTransactionStore(
     state => state.createTransaction,
   );
+  const createTransfer = useTransactionStore(state => state.createTransfer);
   const updateTransaction = useTransactionStore(
     state => state.updateTransaction,
   );
@@ -73,6 +74,8 @@ export const useTransactionForm = () => {
   );
 
   const isEditing = !!existingTransaction;
+  const isTransfer = (ft: TransactionFormTypes) =>
+    ft === TransactionFormTypes.TRANSFER;
 
   const [formType, setFormType] = useState<TransactionFormTypes>(
     (existingTransaction?.type as TransactionFormTypes) ||
@@ -84,13 +87,11 @@ export const useTransactionForm = () => {
     bankAccount: null,
     category: null,
     card: null,
+    toAccount: null,
   });
 
   const [selectionError, setSelectionError] = useState<string | null>(null);
   const [alertVisible, setAlertVisible] = useState(false);
-
-  // TODO fix all logic
-  const isCardExpense = formType === TransactionFormTypes.TRANSFER;
 
   // Init selection from existing transaction
   useEffect(() => {
@@ -105,6 +106,17 @@ export const useTransactionForm = () => {
       card: card ?? null,
     }));
   }, [existingTransaction, bankAccounts, cards]);
+
+  // Reset selections incompatibili quando cambia formType
+  useEffect(() => {
+    setSelection({
+      bankAccount: null,
+      category: null,
+      card: null,
+      toAccount: null,
+    });
+    setSelectionError(null);
+  }, [formType]);
 
   const actionSheetStyles = useMemo(
     () => ({
@@ -140,9 +152,7 @@ export const useTransactionForm = () => {
       date: existingTransaction?.date
         ? dayjs(existingTransaction.date).format(DATE_FORMAT)
         : dayjs().format(DATE_FORMAT),
-      recived: existingTransaction?.recived ?? false,
       recurrent: existingTransaction?.recurrent ?? false,
-      repeat: existingTransaction?.repeat ?? false,
     }),
     [existingTransaction],
   );
@@ -155,51 +165,67 @@ export const useTransactionForm = () => {
       const [day, month, year] = values.date.split('-');
       const dateISO = new Date(`${year}-${month}-${day}`).toISOString();
 
-      const payload: CreateTransactionPayload = {
-        money: parseFloat(values.money),
-        recived: values.recived,
-        date: dateISO,
-        description: values.description.trim(),
-        recurrent: values.recurrent,
-        repeat: values.repeat,
-        note: values.note,
-        type: formType,
-        categoryId: selection.category!.id,
-        bankAccountId: selection.bankAccount?.id,
-        cardAccountId: selection.card?.id ?? null,
-      };
-
-      if (isEditing && existingTransaction) {
-        await updateTransaction(existingTransaction.id, payload);
+      if (isTransfer(formType)) {
+        const payload: CreateTransferPayload = {
+          money: parseFloat(values.money),
+          date: dateISO,
+          description: values.description.trim(),
+          note: values.note,
+          fromAccountId: selection.bankAccount!.id,
+          toAccountId: selection.toAccount!.id,
+        };
+        await createTransfer(payload);
       } else {
-        await createTransaction(payload);
+        const payload: CreateTransactionPayload = {
+          money: parseFloat(values.money),
+          date: dateISO,
+          description: values.description.trim(),
+          recurrent: values.recurrent,
+          note: values.note,
+          type: formType,
+          categoryId: selection.category?.id,
+          bankAccountId: selection.bankAccount?.id,
+          cardAccountId: selection.card?.id,
+        };
+
+        if (isEditing && existingTransaction) {
+          await updateTransaction(existingTransaction.id, payload);
+        } else {
+          await createTransaction(payload);
+        }
       }
 
       router.back();
     },
   });
 
-  const bankAccountIdsForCards = useMemo(() => {
-    if (isCardExpense) return bankAccounts.map(ba => ba.id);
-    return selection.bankAccount ? [selection.bankAccount.id] : [];
-  }, [isCardExpense, bankAccounts, selection.bankAccount]);
-
   const validateSelections = useCallback((): boolean => {
-    if (!isCardExpense && !selection.bankAccount) {
-      setSelectionError(t('transactionPage:errors.bankRequired'));
-      return false;
-    }
-    if (isCardExpense && !selection.card) {
-      setSelectionError(t('transactionPage:errors.cardRequired'));
-      return false;
-    }
-    if (!selection.category) {
-      setSelectionError(t('transactionPage:errors.categoryRequired'));
-      return false;
+    if (isTransfer(formType)) {
+      if (!selection.bankAccount) {
+        setSelectionError(t('transactionPage:errors.fromAccountRequired'));
+        return false;
+      }
+      if (!selection.toAccount) {
+        setSelectionError(t('transactionPage:errors.toAccountRequired'));
+        return false;
+      }
+      if (selection.bankAccount.id === selection.toAccount.id) {
+        setSelectionError(t('transactionPage:errors.sameAccountError'));
+        return false;
+      }
+    } else {
+      if (!selection.bankAccount) {
+        setSelectionError(t('transactionPage:errors.bankRequired'));
+        return false;
+      }
+      if (!selection.category) {
+        setSelectionError(t('transactionPage:errors.categoryRequired'));
+        return false;
+      }
     }
     setSelectionError(null);
     return true;
-  }, [selection, isCardExpense, t]);
+  }, [selection, formType, t]);
 
   const handleSubmit = useCallback(async () => {
     const formErrors = await formik.validateForm();
@@ -285,31 +311,32 @@ export const useTransactionForm = () => {
     }
   }, []);
 
+  const handleOpenToAccountSheet = useCallback(async () => {
+    const result = await SheetManager.show('bank-account-select-sheet');
+    if (result?.bankAccount) {
+      setSelection(prev => ({ ...prev, toAccount: result.bankAccount }));
+      setSelectionError(null);
+    }
+  }, []);
+
   const handleOpenCardSheet = useCallback(async () => {
-    if (bankAccountIdsForCards.length === 0) {
+    const bankAccountIds = selection.bankAccount
+      ? [selection.bankAccount.id]
+      : [];
+
+    if (bankAccountIds.length === 0) {
       setSelectionError(t('transactionPage:errors.selectBankFirst'));
       setAlertVisible(true);
       return;
     }
     const result = await SheetManager.show('select-card-sheet', {
-      payload: { bankAccountIds: bankAccountIdsForCards },
+      payload: { bankAccountIds },
     });
     if (result?.item) {
-      if (isCardExpense) {
-        const cardBankAccount = bankAccounts.find(
-          ba => ba.id === result.item.bankAccountId,
-        );
-        setSelection(prev => ({
-          ...prev,
-          card: result.item,
-          bankAccount: cardBankAccount ?? prev.bankAccount,
-        }));
-      } else {
-        setSelection(prev => ({ ...prev, card: result.item }));
-      }
+      setSelection(prev => ({ ...prev, card: result.item }));
       setSelectionError(null);
     }
-  }, [bankAccountIdsForCards, bankAccounts, isCardExpense, t]);
+  }, [selection.bankAccount, t]);
 
   const firstError = useMemo(
     () =>
@@ -322,32 +349,27 @@ export const useTransactionForm = () => {
   );
 
   const formTypeLabel = useMemo(
-    () => t(`transactionPage:${formType}`),
+    () => t(`transactionPage:${formType.toLowerCase()}`),
     [formType, t],
   );
 
   return {
-    // Form
     formik,
     formType,
     formTypeLabel,
     selection,
-    isCardExpense,
     isEditing,
     isSubmitting: isMutating || formik.isSubmitting,
-
-    // Alert
     alertVisible,
     firstError,
     setAlertVisible,
-
-    // Handlers
     handleSubmit,
     handleCancel,
     handleOpenTypeSelector,
     handleOpenDatePicker,
     handleOpenCategorySheet,
     handleOpenBankAccountSheet,
+    handleOpenToAccountSheet,
     handleOpenCardSheet,
   };
 };

@@ -5,10 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { SheetManager } from 'react-native-actions-sheet';
 
 import { useCategoryStore, categorySelectors } from '@/stores';
-import { Category } from '@/types';
+import { Category, CategoryType } from '@/types';
 import { theme } from '@/config/theme';
 
-type CategoryType = 'income' | 'expense';
+export const CategoryTypeValue = {
+  INCOME: 'INCOME',
+  EXPENSE: 'EXPENSE',
+} as const;
 
 const TABS = [
   { title: 'common:expenses', value: 'expense' },
@@ -27,7 +30,9 @@ export const useCategoriesScreen = () => {
   const deleteCategory = useCategoryStore(state => state.deleteCategory);
 
   // Local state
-  const [selectedTab, setSelectedTab] = useState<CategoryType>('expense');
+  const [selectedTab, setSelectedTab] = useState<CategoryType>(
+    CategoryTypeValue.EXPENSE,
+  );
   const [alertVisible, setAlertVisible] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
     null,

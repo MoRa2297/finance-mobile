@@ -7,7 +7,13 @@ import {
   PickerSheet,
 } from '@components/sheets/PickerSheet/PickerSheet';
 
-import { Category, CategoryIcon, Color, Transaction } from '@/types';
+import {
+  Category,
+  CategoryIcon,
+  CategoryType,
+  Color,
+  Transaction,
+} from '@/types';
 import { ColorSheet } from '@components/sheets/ColorSheet/ColorSheet';
 import { IconSheet } from '@components/sheets/IconSheet/IconSheet';
 import { CategoryFormSheet } from '@components/sheets/CategoryFormSheet/CategoryFormSheet';
@@ -19,8 +25,8 @@ import { SelectCategorySheet } from '@components/sheets/SelectCategorySheet/Sele
 import {
   SelectCardSheet,
   SelectCardSheetPayload,
-  SelectCardSheetResult,
 } from '@components/sheets/SelectCardSheet/SelectCardSheet';
+import { CategoryTypeValue } from '@hooks/screens/categories/useCategoriesScreen';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -50,7 +56,7 @@ declare module 'react-native-actions-sheet' {
       returnValue: { icon: string };
     }>;
     'category-form-sheet': SheetDefinition<{
-      payload: { category: any | null; type: 'income' | 'expense' };
+      payload: { category: any | null; type: CategoryType };
     }>;
     'bank-select-sheet': SheetDefinition<{
       returnValue: { bank: any };
