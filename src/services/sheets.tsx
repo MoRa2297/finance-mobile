@@ -8,6 +8,7 @@ import {
 } from '@components/sheets/PickerSheet/PickerSheet';
 
 import {
+  BankCard,
   Category,
   CategoryIcon,
   CategoryType,
@@ -26,7 +27,6 @@ import {
   SelectCardSheet,
   SelectCardSheetPayload,
 } from '@components/sheets/SelectCardSheet/SelectCardSheet';
-import { CategoryTypeValue } from '@hooks/screens/categories/useCategoriesScreen';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -90,7 +90,7 @@ declare module 'react-native-actions-sheet' {
     }>;
     'select-card-sheet': SheetDefinition<{
       payload: SelectCardSheetPayload;
-      returnValue: SelectCardSheetResult;
+      returnValue: { item: BankCard };
     }>;
   }
 }

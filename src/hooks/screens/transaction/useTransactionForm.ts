@@ -329,6 +329,7 @@ export const useTransactionForm = () => {
       setAlertVisible(true);
       return;
     }
+    // TODO FIX
     const result = await SheetManager.show('select-card-sheet', {
       payload: { bankAccountIds },
     });

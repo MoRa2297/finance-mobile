@@ -26,6 +26,7 @@ import { Icon } from '@components/ui/Icon';
 export interface SelectCardSheetPayload {
   bankAccountIds: number[];
 }
+
 type SelectCardSheetProps = SheetProps<'select-card-sheet'>;
 
 const LIST_MAX_HEIGHT = SCREEN_HEIGHT / 1.5;

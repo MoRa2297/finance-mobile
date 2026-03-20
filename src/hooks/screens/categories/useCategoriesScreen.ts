@@ -14,8 +14,8 @@ export const CategoryTypeValue = {
 } as const;
 
 const TABS = [
-  { title: 'common:expenses', value: 'expense' },
-  { title: 'common:income', value: 'income' },
+  { title: 'common:expenses', value: CategoryTypeValue.EXPENSE },
+  { title: 'common:income', value: CategoryTypeValue.INCOME },
 ];
 
 export const useCategoriesScreen = () => {
