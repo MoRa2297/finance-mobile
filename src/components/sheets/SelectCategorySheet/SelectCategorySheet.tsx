@@ -84,6 +84,7 @@ export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
   }, []);
 
   const filteredCategories = useMemo(() => {
+    console.log('filteredCategories: ', { categories, payload });
     if (!categories?.length || !payload?.type) return [];
     return categories.filter(c => c.type === payload.type);
   }, [categories, payload?.type]);

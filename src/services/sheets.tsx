@@ -27,6 +27,7 @@ import {
   SelectCardSheet,
   SelectCardSheetPayload,
 } from '@components/sheets/SelectCardSheet/SelectCardSheet';
+import { SelectFrequencySheet } from '@components/sheets/SelectFrequencySheet/SelectFrequencySheet';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -40,6 +41,7 @@ registerSheet('date-picker-sheet', DatePickerSheet);
 registerSheet('transaction-detail-sheet', TransactionDetailSheet);
 registerSheet('select-category-sheet', SelectCategorySheet);
 registerSheet('select-card-sheet', SelectCardSheet);
+registerSheet('select-frequency-sheet', SelectFrequencySheet);
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {
@@ -85,13 +87,14 @@ declare module 'react-native-actions-sheet' {
       };
     }>;
     'select-category-sheet': SheetDefinition<{
-      payload: { type: 'income' | 'expense' };
+      payload: { type: CategoryType };
       returnValue: { item: Category };
     }>;
     'select-card-sheet': SheetDefinition<{
       payload: SelectCardSheetPayload;
       returnValue: { item: BankCard };
     }>;
+    'select-frequency-sheet': SelectFrequencySheet;
   }
 }
 

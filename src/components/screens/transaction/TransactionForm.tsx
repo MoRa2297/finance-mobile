@@ -14,6 +14,7 @@ import { SelectInput } from '@components/ui/SelectInput';
 import { DateInputField } from '@components/ui/DateInputField';
 import { SwitchInput } from '@components/ui/SwitchInput';
 import type { useTransactionForm } from '@/hooks/screens/transaction/useTransactionForm';
+import { RecurrenceSelector } from '@components/ui/RecurrenceSelector';
 
 type TransactionFormProps = ReturnType<typeof useTransactionForm>;
 
@@ -128,11 +129,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   />
                 )}
 
-                <SwitchInput
-                  placeholder={t('transactionPage:recurrentPlaceholder')}
-                  value={formik.values.recurrent}
-                  iconName="sync-outline"
-                  onValueChange={v => formik.setFieldValue('recurrent', v)}
+                <RecurrenceSelector
+                  values={formik.values.recurrence}
+                  onChange={v => formik.setFieldValue('recurrence', v)}
                   disabled={isSubmitting}
                 />
               </>

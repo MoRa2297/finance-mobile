@@ -26,6 +26,7 @@ import {
   Category,
 } from '@/types';
 import { theme } from '@config/theme';
+import { RecurrenceValues } from '@components/ui/RecurrenceSelector/RecurrenceSelector';
 
 dayjs.extend(customParseFormat);
 
@@ -36,7 +37,7 @@ export interface TransactionFormValues {
   description: string;
   note: string;
   date: string;
-  recurrent: boolean;
+  recurrence: RecurrenceValues;
 }
 
 interface SelectionState {
@@ -152,7 +153,12 @@ export const useTransactionForm = () => {
       date: existingTransaction?.date
         ? dayjs(existingTransaction.date).format(DATE_FORMAT)
         : dayjs().format(DATE_FORMAT),
-      recurrent: existingTransaction?.recurrent ?? false,
+      recurrence: {
+        recurrent: existingTransaction?.recurrent ?? false,
+        frequency: null,
+        interval: '1',
+        endDate: null,
+      },
     }),
     [existingTransaction],
   );
@@ -180,7 +186,7 @@ export const useTransactionForm = () => {
           money: parseFloat(values.money),
           date: dateISO,
           description: values.description.trim(),
-          recurrent: values.recurrent,
+          recurrent: values.recurrence.recurrent,
           note: values.note,
           type: formType,
           categoryId: selection.category?.id,
@@ -289,7 +295,9 @@ export const useTransactionForm = () => {
 
   const handleOpenCategorySheet = useCallback(async () => {
     const categoryType =
-      formType === TransactionFormTypes.INCOME ? 'income' : 'expense';
+      formType === TransactionFormTypes.INCOME
+        ? TransactionFormTypes.INCOME
+        : TransactionFormTypes.EXPENSE;
     const result = await SheetManager.show('select-category-sheet', {
       payload: { type: categoryType },
     });
@@ -329,7 +337,7 @@ export const useTransactionForm = () => {
       setAlertVisible(true);
       return;
     }
-    // TODO FIX
+
     const result = await SheetManager.show('select-card-sheet', {
       payload: { bankAccountIds },
     });

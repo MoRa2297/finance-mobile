@@ -27,5 +27,17 @@
   "alertMoneyError": "Errore, cifra obbligatoria",
   "dateError": "Errore, data obbligatoria",
   "descriptionError": "Errore, descrizione obbligatoria",
-  "alertButtonText": "Capito"
+  "alertButtonText": "Capito",
+  "recurrence": {
+    "frequencyPlaceholder": "Frequenza",
+    "intervalPlaceholder": "Ogni quante unità (es. 2)",
+    "endDatePlaceholder": "Fino a quando (opzionale)",
+    "noEndDate": "Rimuovi data di fine",
+    "frequency": {
+      "daily": "Ogni giorno",
+      "weekly": "Ogni settimana",
+      "monthly": "Ogni mese",
+      "yearly": "Ogni anno"
+    }
+  }
 }
