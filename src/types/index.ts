@@ -31,4 +31,4 @@ export type {
 
 export { TransactionFormTypes } from './Transaction';
 export type { User } from './User';
-export { Frequency } from './Frequency';
+export type { Frequency } from './Frequency';

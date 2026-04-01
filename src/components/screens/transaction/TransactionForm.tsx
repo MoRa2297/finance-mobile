@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -12,13 +12,12 @@ import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
 import { DateInputField } from '@components/ui/DateInputField';
-import { SwitchInput } from '@components/ui/SwitchInput';
 import type { useTransactionForm } from '@/hooks/screens/transaction/useTransactionForm';
 import { RecurrenceSelector } from '@components/ui/RecurrenceSelector';
 
 type TransactionFormProps = ReturnType<typeof useTransactionForm>;
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({
+export const TransactionForm: FC<TransactionFormProps> = ({
   formik,
   formType,
   selection,
@@ -128,14 +127,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     onPress={handleOpenCardSheet}
                   />
                 )}
-
-                <RecurrenceSelector
-                  values={formik.values.recurrence}
-                  onChange={v => formik.setFieldValue('recurrence', v)}
-                  disabled={isSubmitting}
-                />
               </>
             )}
+
+            <RecurrenceSelector
+              values={formik.values.recurrence}
+              onChange={value => formik.setFieldValue('recurrence', value)}
+              disabled={isSubmitting}
+            />
 
             <InputIconField
               placeholder={t('transactionPage:notePlaceholder')}

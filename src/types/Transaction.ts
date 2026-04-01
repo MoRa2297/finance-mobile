@@ -1,6 +1,7 @@
 import { Category } from './Category';
 import { BankAccount } from './BankAccount';
 import { BankCard } from './BankCard';
+import { Frequency } from './Frequency';
 
 export type TransactionType = 'INCOME' | 'EXPENSE' | 'TRANSFER';
 
@@ -39,6 +40,8 @@ export type CreateTransactionPayload = {
   date: string;
   description: string;
   recurrent: boolean;
+  frequency?: Frequency;
+  recurrenceEndDate?: string;
   note: string;
   type: TransactionType;
 };

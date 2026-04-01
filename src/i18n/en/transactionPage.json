@@ -10,7 +10,7 @@
   "moneyValueTypes": {
     "income": "Valore entrata",
     "expense": "Valore uscita",
-    "card_spending": "Spesa"
+    "transfer": "Quantità"
   },
   "moneyValuePlaceholder": "Inserisci il valore...",
   "recivedPlaceholder": "Ricevuto",
@@ -30,13 +30,15 @@
   "alertButtonText": "Capito",
   "recurrence": {
     "frequencyPlaceholder": "Frequenza",
-    "intervalPlaceholder": "Ogni quante unità (es. 2)",
     "endDatePlaceholder": "Fino a quando (opzionale)",
-    "noEndDate": "Rimuovi data di fine",
     "frequency": {
       "daily": "Ogni giorno",
       "weekly": "Ogni settimana",
+      "biweekly": "Ogni 2 settimane",
       "monthly": "Ogni mese",
+      "bimonthly": "Ogni 2 mesi",
+      "quarterly": "Ogni 3 mesi",
+      "semiannual": "Ogni 6 mesi",
       "yearly": "Ogni anno"
     }
   }

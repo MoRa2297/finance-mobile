@@ -5,6 +5,7 @@ import {
   View,
   ViewStyle,
   TextStyle,
+  ScrollView,
 } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
@@ -15,68 +16,73 @@ import { Layout, Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 
 import { theme } from '@config/theme';
-import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@config/constants';
+import {
+  GLOBAL_BORDER_RADIUS,
+  HORIZONTAL_PADDING,
+  SCREEN_HEIGHT,
+} from '@config/constants';
 import { Frequency } from '@/types';
 import { Icon } from '@components/ui/Icon';
 
 type SelectFrequencySheetProps = SheetProps<'select-frequency-sheet'>;
 
-const FREQUENCIES: Frequency[] = [
-  Frequency.DAILY,
-  Frequency.WEEKLY,
-  Frequency.MONTHLY,
-  Frequency.YEARLY,
-];
-
+const LIST_MAX_HEIGHT = SCREEN_HEIGHT / 1.8;
 const ICON_SIZE = 24;
 
-interface FrequencyItemProps {
+interface FrequencyOption {
   frequency: Frequency;
+  icon: string;
+}
+
+const FREQUENCY_OPTIONS: FrequencyOption[] = [
+  { frequency: Frequency.DAILY, icon: 'sun-outline' },
+  { frequency: Frequency.WEEKLY, icon: 'calendar-outline' },
+  { frequency: Frequency.BIWEEKLY, icon: 'calendar-outline' },
+  { frequency: Frequency.MONTHLY, icon: 'calendar-outline' },
+  { frequency: Frequency.BIMONTHLY, icon: 'calendar-outline' },
+  { frequency: Frequency.QUARTERLY, icon: 'calendar-outline' },
+  { frequency: Frequency.SEMIANNUAL, icon: 'calendar-outline' },
+  { frequency: Frequency.YEARLY, icon: 'star-outline' },
+];
+
+interface FrequencyItemProps {
+  option: FrequencyOption;
   onSelect: (f: Frequency) => void;
 }
 
-const FrequencyItem: FC<FrequencyItemProps> = memo(
-  ({ frequency, onSelect }) => {
-    const { t } = useTranslation('transactionPage');
-    const handlePress = useCallback(
-      () => onSelect(frequency),
-      [frequency, onSelect],
-    );
+const FrequencyItem: FC<FrequencyItemProps> = memo(({ option, onSelect }) => {
+  const { t } = useTranslation('transactionPage');
+  const handlePress = useCallback(
+    () => onSelect(option.frequency),
+    [option, onSelect],
+  );
 
-    const iconMap: Record<Frequency, string> = {
-      [Frequency.DAILY]: 'sun-outline',
-      [Frequency.WEEKLY]: 'calendar-outline',
-      [Frequency.MONTHLY]: 'calendar-outline',
-      [Frequency.YEARLY]: 'star-outline',
-    };
-
-    return (
-      <Pressable
-        style={({ pressed }) => [
-          styles.listItem,
-          pressed && styles.listItemPressed,
-        ]}
-        onPress={handlePress}
-        accessibilityRole="button">
-        <View style={styles.iconContainer}>
-          <Icon
-            name={iconMap[frequency]}
-            color={theme.colors.basic100}
-            size={ICON_SIZE}
-          />
-        </View>
-        <Text category="s1" style={styles.label}>
-          {t(`recurrence.frequency.${frequency.toLowerCase()}`)}
-        </Text>
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.listItem,
+        pressed && styles.listItemPressed,
+      ]}
+      onPress={handlePress}
+      accessibilityRole="button">
+      <View style={styles.iconContainer}>
         <Icon
-          name="arrow-ios-forward-outline"
-          color={theme.colors.textHint}
+          name={option.icon}
+          color={theme.colors.basic100}
           size={ICON_SIZE}
         />
-      </Pressable>
-    );
-  },
-);
+      </View>
+      <Text category="s1" style={styles.label}>
+        {t(`recurrence.frequency.${option.frequency.toLowerCase()}`)}
+      </Text>
+      <Icon
+        name="arrow-ios-forward-outline"
+        color={theme.colors.textHint}
+        size={ICON_SIZE}
+      />
+    </Pressable>
+  );
+});
 
 export const SelectFrequencySheet: FC<SelectFrequencySheetProps> = ({
   sheetId,
@@ -92,23 +98,24 @@ export const SelectFrequencySheet: FC<SelectFrequencySheetProps> = ({
 
   return (
     <ActionSheet
+      id={sheetId}
       ref={actionSheetRef}
-      drawUnderStatusBar
       closable
+      gestureEnabled
+      useBottomSafeAreaPadding
       closeOnTouchBackdrop
-      backgroundInteractionEnabled={false}
-      useBottomSafeAreaPadding={false}
-      isModal={false}
-      defaultOverlayOpacity={0.2}
-      containerStyle={styles.sheetContainer}
-      keyboardHandlerEnabled={false}>
+      containerStyle={styles.sheetContainer}>
       <Layout style={styles.content}>
-        {FREQUENCIES.map((f, i) => (
-          <React.Fragment key={f}>
-            <FrequencyItem frequency={f} onSelect={handleSelect} />
-            {i < FREQUENCIES.length - 1 && <Layout style={styles.separator} />}
-          </React.Fragment>
-        ))}
+        <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
+          {FREQUENCY_OPTIONS.map((option, i) => (
+            <React.Fragment key={option.frequency}>
+              <FrequencyItem option={option} onSelect={handleSelect} />
+              {i < FREQUENCY_OPTIONS.length - 1 && (
+                <Layout style={styles.separator} />
+              )}
+            </React.Fragment>
+          ))}
+        </ScrollView>
       </Layout>
     </ActionSheet>
   );
@@ -124,6 +131,10 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     paddingBottom: 20,
     backgroundColor: theme.colors.primaryBK,
+    paddingHorizontal: HORIZONTAL_PADDING,
+  } as ViewStyle,
+  list: {
+    maxHeight: LIST_MAX_HEIGHT,
   } as ViewStyle,
   separator: {
     height: 0,

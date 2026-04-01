@@ -30,8 +30,6 @@ import { Category } from '@/types';
 import { useCategoryStore, categorySelectors } from '@/stores';
 import { Icon } from '@components/ui/Icon';
 
-export type CategoryType = 'income' | 'expenses';
-
 type SelectCategorySheetProps = SheetProps<'select-category-sheet'>;
 
 const LIST_MAX_HEIGHT = SCREEN_HEIGHT / 1.5;
@@ -114,14 +112,12 @@ export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
 
   return (
     <ActionSheet
+      id={sheetId}
       ref={actionSheetRef}
-      drawUnderStatusBar
       closable
+      gestureEnabled
+      useBottomSafeAreaPadding
       closeOnTouchBackdrop
-      backgroundInteractionEnabled={false}
-      useBottomSafeAreaPadding={false}
-      isModal={false}
-      defaultOverlayOpacity={0.2}
       containerStyle={styles.sheetContainer}
       keyboardHandlerEnabled={false}>
       <Layout style={styles.content}>

@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import React, { FC, useCallback } from 'react';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SheetManager } from 'react-native-actions-sheet';
 import dayjs from 'dayjs';
@@ -23,7 +23,7 @@ interface RecurrenceSelectorProps {
   disabled?: boolean;
 }
 
-export const RecurrenceSelector: React.FC<RecurrenceSelectorProps> = ({
+export const RecurrenceSelector: FC<RecurrenceSelectorProps> = ({
   values,
   onChange,
   disabled = false,
@@ -76,7 +76,7 @@ export const RecurrenceSelector: React.FC<RecurrenceSelectorProps> = ({
     : undefined;
 
   return (
-    <View style={styles.container}>
+    <View>
       <SwitchInput
         placeholder={t('recurrentPlaceholder')}
         value={values.recurrent}
@@ -106,7 +106,3 @@ export const RecurrenceSelector: React.FC<RecurrenceSelectorProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {} as ViewStyle,
-});

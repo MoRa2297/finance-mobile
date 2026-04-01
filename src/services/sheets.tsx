@@ -1,18 +1,17 @@
 import { SheetDefinition, registerSheet } from 'react-native-actions-sheet';
-
 import { CardTypeSelectSheet } from '@components/sheets/CardTypeSelectSheet/CardTypeSelectSheet';
 import { BankAccountSelectSheet } from '@components/sheets/BankAccountSelectSheet/BankAccountSelectSheet';
 import {
   PickerItem,
   PickerSheet,
 } from '@components/sheets/PickerSheet/PickerSheet';
-
 import {
   BankCard,
   Category,
   CategoryIcon,
   CategoryType,
   Color,
+  Frequency,
   Transaction,
 } from '@/types';
 import { ColorSheet } from '@components/sheets/ColorSheet/ColorSheet';
@@ -43,6 +42,7 @@ registerSheet('select-category-sheet', SelectCategorySheet);
 registerSheet('select-card-sheet', SelectCardSheet);
 registerSheet('select-frequency-sheet', SelectFrequencySheet);
 
+// TODO improve the typos
 declare module 'react-native-actions-sheet' {
   interface Sheets {
     'color-sheet': SheetDefinition<{
@@ -94,7 +94,9 @@ declare module 'react-native-actions-sheet' {
       payload: SelectCardSheetPayload;
       returnValue: { item: BankCard };
     }>;
-    'select-frequency-sheet': SelectFrequencySheet;
+    'select-frequency-sheet': {
+      returnValue: { frequency: Frequency };
+    };
   }
 }
 

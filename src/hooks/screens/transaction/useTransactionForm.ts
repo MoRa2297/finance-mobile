@@ -44,7 +44,7 @@ interface SelectionState {
   bankAccount: BankAccount | null;
   category: Category | null;
   card: BankCard | null;
-  toAccount: BankAccount | null; // solo per TRANSFER
+  toAccount: BankAccount | null; // only for TRANSFER
 }
 
 export const useTransactionForm = () => {
@@ -172,15 +172,27 @@ export const useTransactionForm = () => {
       const dateISO = new Date(`${year}-${month}-${day}`).toISOString();
 
       if (isTransfer(formType)) {
-        const payload: CreateTransferPayload = {
+        // In onSubmit, nel branch non-transfer
+        const payload: CreateTransactionPayload = {
           money: parseFloat(values.money),
           date: dateISO,
           description: values.description.trim(),
+          recurrent: values.recurrence.recurrent,
+          frequency: values.recurrence.frequency ?? undefined,
+          recurrenceEndDate: values.recurrence.endDate
+            ? (() => {
+                const [day, month, year] =
+                  values.recurrence.endDate!.split('-');
+                return new Date(`${year}-${month}-${day}`).toISOString();
+              })()
+            : undefined,
           note: values.note,
-          fromAccountId: selection.bankAccount!.id,
-          toAccountId: selection.toAccount!.id,
+          type: formType,
+          categoryId: selection.category?.id,
+          bankAccountId: selection.bankAccount?.id,
+          cardAccountId: selection.card?.id,
         };
-        await createTransfer(payload);
+        // await createTransfer(payload);
       } else {
         const payload: CreateTransactionPayload = {
           money: parseFloat(values.money),
