@@ -147,7 +147,7 @@ export const useTransactionForm = () => {
 
   const initialValues: TransactionFormValues = useMemo(
     () => ({
-      money: existingTransaction?.money?.toString() ?? '',
+      money: existingTransaction?.amount?.toString() ?? '',
       description: existingTransaction?.description ?? '',
       note: existingTransaction?.note ?? '',
       date: existingTransaction?.date
@@ -172,9 +172,10 @@ export const useTransactionForm = () => {
       const dateISO = new Date(`${year}-${month}-${day}`).toISOString();
 
       if (isTransfer(formType)) {
+        console.log('>> TRANSFER values: ', values);
         // In onSubmit, nel branch non-transfer
-        const payload: CreateTransactionPayload = {
-          money: parseFloat(values.money),
+        const payload: CreateTransferPayload = {
+          amount: parseFloat(values.money),
           date: dateISO,
           description: values.description.trim(),
           recurrent: values.recurrence.recurrent,
@@ -187,18 +188,30 @@ export const useTransactionForm = () => {
               })()
             : undefined,
           note: values.note,
-          type: formType,
           categoryId: selection.category?.id,
-          bankAccountId: selection.bankAccount?.id,
+          fromAccountId: selection.bankAccount?.id,
           cardAccountId: selection.card?.id,
+          toAccountId: selection.toAccount?.id,
         };
-        // await createTransfer(payload);
+
+        console.log('>> TRANSFER payload: ', payload);
+        await createTransfer(payload);
       } else {
+        console.log('>> TRANSATION values: ', values);
+
         const payload: CreateTransactionPayload = {
-          money: parseFloat(values.money),
+          amount: parseFloat(values.money),
           date: dateISO,
           description: values.description.trim(),
           recurrent: values.recurrence.recurrent,
+          frequency: values.recurrence.frequency ?? undefined,
+          recurrenceEndDate: values.recurrence.endDate
+            ? (() => {
+                const [day, month, year] =
+                  values.recurrence.endDate!.split('-');
+                return new Date(`${year}-${month}-${day}`).toISOString();
+              })()
+            : undefined,
           note: values.note,
           type: formType,
           categoryId: selection.category?.id,

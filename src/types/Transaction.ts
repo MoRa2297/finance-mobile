@@ -19,7 +19,7 @@ export type Transaction = {
   bankAccountId: number | null;
   cardAccountId: number | null;
   categoryId: number | null;
-  money: number;
+  amount: number;
   date: string;
   description: string;
   recurrent: boolean;
@@ -36,7 +36,7 @@ export type CreateTransactionPayload = {
   bankAccountId?: number;
   cardAccountId?: number;
   categoryId?: number;
-  money: number;
+  amount: number;
   date: string;
   description: string;
   recurrent: boolean;
@@ -47,12 +47,17 @@ export type CreateTransactionPayload = {
 };
 
 export type CreateTransferPayload = {
-  money: number;
+  amount: number;
   date: string;
   description: string;
   note?: string;
-  fromAccountId: number;
-  toAccountId: number;
+  fromAccountId?: number;
+  toAccountId?: number;
+  recurrent?: boolean;
+  frequency?: Frequency;
+  recurrenceEndDate?: string;
+  cardAccountId?: number;
+  categoryId?: number;
 };
 
 export type UpdateTransactionPayload = Partial<CreateTransactionPayload>;

@@ -1,4 +1,4 @@
-export const Frequency = {
+export const FrequencyTypes = {
   DAILY: 'DAILY',
   WEEKLY: 'WEEKLY',
   BIWEEKLY: 'BIWEEKLY',
@@ -9,4 +9,4 @@ export const Frequency = {
   YEARLY: 'YEARLY',
 } as const;
 
-export type Frequency = (typeof Frequency)[keyof typeof Frequency];
+export type Frequency = (typeof FrequencyTypes)[keyof typeof FrequencyTypes];

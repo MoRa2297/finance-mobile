@@ -21,7 +21,7 @@ import {
   HORIZONTAL_PADDING,
   SCREEN_HEIGHT,
 } from '@config/constants';
-import { Frequency } from '@/types';
+import { Frequency, FrequencyTypes } from '@/types';
 import { Icon } from '@components/ui/Icon';
 
 type SelectFrequencySheetProps = SheetProps<'select-frequency-sheet'>;
@@ -35,14 +35,14 @@ interface FrequencyOption {
 }
 
 const FREQUENCY_OPTIONS: FrequencyOption[] = [
-  { frequency: Frequency.DAILY, icon: 'sun-outline' },
-  { frequency: Frequency.WEEKLY, icon: 'calendar-outline' },
-  { frequency: Frequency.BIWEEKLY, icon: 'calendar-outline' },
-  { frequency: Frequency.MONTHLY, icon: 'calendar-outline' },
-  { frequency: Frequency.BIMONTHLY, icon: 'calendar-outline' },
-  { frequency: Frequency.QUARTERLY, icon: 'calendar-outline' },
-  { frequency: Frequency.SEMIANNUAL, icon: 'calendar-outline' },
-  { frequency: Frequency.YEARLY, icon: 'star-outline' },
+  { frequency: FrequencyTypes.DAILY, icon: 'sun-outline' },
+  { frequency: FrequencyTypes.WEEKLY, icon: 'calendar-outline' },
+  { frequency: FrequencyTypes.BIWEEKLY, icon: 'calendar-outline' },
+  { frequency: FrequencyTypes.MONTHLY, icon: 'calendar-outline' },
+  { frequency: FrequencyTypes.BIMONTHLY, icon: 'calendar-outline' },
+  { frequency: FrequencyTypes.QUARTERLY, icon: 'calendar-outline' },
+  { frequency: FrequencyTypes.SEMIANNUAL, icon: 'calendar-outline' },
+  { frequency: FrequencyTypes.YEARLY, icon: 'star-outline' },
 ];
 
 interface FrequencyItemProps {
