@@ -1,20 +1,30 @@
-import React, { FC, useRef } from 'react';
-import { StyleSheet, View, Pressable, useWindowDimensions } from 'react-native';
+import React, { FC } from 'react';
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  useWindowDimensions,
+  ScrollView,
+} from 'react-native';
 import ActionSheet, {
-  ActionSheetRef,
   SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
 
 import { theme } from '@/config/theme';
-import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
+import {
+  GLOBAL_BORDER_RADIUS,
+  HORIZONTAL_PADDING,
+  SCREEN_HEIGHT,
+} from '@/config/constants';
 import { Icon } from '@components/ui/Icon';
+
+const SHEET_HEIGHT = SCREEN_HEIGHT / 2.5;
 
 export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
   sheetId,
   payload,
 }) => {
-  const actionSheetRef = useRef<ActionSheetRef>(null);
   const { width } = useWindowDimensions();
   const selected = payload?.selected;
   const selectedColor = payload?.selectedColor;
@@ -28,14 +38,15 @@ export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
 
   return (
     <ActionSheet
-      ref={actionSheetRef}
       id={sheetId}
       closable
       gestureEnabled
       useBottomSafeAreaPadding
       closeOnTouchBackdrop
       containerStyle={styles.container}>
-      <View style={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.grid}>
           {categoryIcons.map(icon => (
             <Pressable
@@ -65,7 +76,7 @@ export const IconSheet: FC<SheetProps<'icon-sheet'>> = ({
             </Pressable>
           ))}
         </View>
-      </View>
+      </ScrollView>
     </ActionSheet>
   );
 };
@@ -75,6 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
+    height: SHEET_HEIGHT,
   },
   content: {
     paddingHorizontal: HORIZONTAL_PADDING,

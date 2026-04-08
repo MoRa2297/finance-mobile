@@ -57,17 +57,8 @@ export const ExpenseCard: FC<IExpenseCardProps> = ({
 
       <View style={styles.rightContainer}>
         <Text category="p2" style={styles.amount}>
-          {transaction.money} €
+          {transaction.amount} €
         </Text>
-        <Icon
-          name={
-            transaction.recived
-              ? 'checkmark-circle-2-outline'
-              : 'close-circle-outline'
-          }
-          color={transaction.recived ? theme.colors.green : theme.colors.red}
-          size={20}
-        />
       </View>
     </Pressable>
   );

@@ -13,7 +13,7 @@ import {
 } from '@/stores';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
-import { Transaction } from '@/types';
+import { Transaction, TransactionType } from '@/types';
 import { SheetManager } from 'react-native-actions-sheet';
 import { router } from 'expo-router';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
@@ -24,8 +24,8 @@ import { SliderBar, Tab } from '@components/ui/SliderBar';
 
 const TABS: Tab[] = [
   { title: 'expensesPage:tabs.all', value: 'all' },
-  { title: 'expensesPage:tabs.expenses', value: 'expense' },
-  { title: 'expensesPage:tabs.income', value: 'income' },
+  { title: 'expensesPage:tabs.expenses', value: 'EXPENSE' },
+  { title: 'expensesPage:tabs.income', value: 'INCOME' },
 ];
 
 export default function ExpensesScreen() {
@@ -60,8 +60,8 @@ export default function ExpensesScreen() {
   const totals = useMemo(() => {
     return transactions.reduce(
       (acc, t) => {
-        if (t.type === 'income') acc.income += t.money;
-        else if (t.type === 'expense') acc.expense += t.money;
+        if (t.type === 'INCOME') acc.income += t.amount;
+        else if (t.type === 'EXPENSE') acc.expense += t.amount;
         return acc;
       },
       { income: 0, expense: 0 },

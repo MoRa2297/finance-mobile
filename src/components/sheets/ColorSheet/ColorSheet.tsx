@@ -1,12 +1,24 @@
 import React, { FC } from 'react';
-import { StyleSheet, View, Pressable, useWindowDimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  useWindowDimensions,
+  ScrollView,
+} from 'react-native';
 import ActionSheet, {
   SheetProps,
   SheetManager,
 } from 'react-native-actions-sheet';
 
 import { theme } from '@/config/theme';
-import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
+import {
+  GLOBAL_BORDER_RADIUS,
+  HORIZONTAL_PADDING,
+  SCREEN_HEIGHT,
+} from '@/config/constants';
+
+const SHEET_HEIGHT = SCREEN_HEIGHT / 2.5;
 
 export const ColorSheet: FC<SheetProps<'color-sheet'>> = ({
   payload,
@@ -30,7 +42,9 @@ export const ColorSheet: FC<SheetProps<'color-sheet'>> = ({
       useBottomSafeAreaPadding
       closeOnTouchBackdrop
       containerStyle={styles.container}>
-      <View style={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.grid}>
           {colors.map(color => (
             <Pressable
@@ -52,7 +66,7 @@ export const ColorSheet: FC<SheetProps<'color-sheet'>> = ({
             />
           ))}
         </View>
-      </View>
+      </ScrollView>
     </ActionSheet>
   );
 };
@@ -62,6 +76,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
+    height: SHEET_HEIGHT,
   },
   content: {
     paddingHorizontal: HORIZONTAL_PADDING,
