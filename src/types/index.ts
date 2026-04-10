@@ -27,6 +27,8 @@ export type {
   TransactionFilters,
   TransactionType,
   CreateTransferPayload,
+  CreateableTransactionType,
+  TransferDetail,
 } from './Transaction';
 
 export { TransactionFormTypes } from './Transaction';

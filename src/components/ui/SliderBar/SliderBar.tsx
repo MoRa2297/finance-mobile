@@ -6,11 +6,15 @@ import { useTranslation } from 'react-i18next';
 import { theme } from '@/config/theme';
 
 import { GLOBAL_BORDER_RADIUS } from '@config/constants';
-import { Tab } from '@components/ui/SliderBar/SliderBar.helpers';
 
-interface ISliderBarProps {
-  tabs: Tab[];
-  onTabChange: (value: string) => void;
+interface Tab<T extends string = string> {
+  title: string;
+  value: T;
+}
+
+interface ISliderBarProps<T extends string = string> {
+  tabs: Tab<T>[];
+  onTabChange: (value: T) => void;
   initialTab?: string;
 }
 

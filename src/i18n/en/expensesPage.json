@@ -21,6 +21,11 @@
     "value": "Valore",
     "bankAccount": "Account (conto)",
     "cardAccount": "Account (carta)",
-    "note": "Nota"
+    "note": "Nota",
+    "transfer": "Transfer",
+    "expense": "Expense",
+    "fromAccount": "From",
+    "toAccount": "To",
+    "income": "Entrate"
   }
 }

@@ -24,16 +24,22 @@ export interface TransferDetailResponse {
 const transactionService = {
   getTransactions: async (
     filters: TransactionFilters = {},
-  ): Promise<TransactionListResponse> => {
+    signal?: AbortSignal,
+  ) => {
     const { data } = await apiClient.get<TransactionListResponse>(
       '/transactions',
-      { params: filters },
+      {
+        params: filters,
+        signal,
+      },
     );
     return data;
   },
 
-  getTransaction: async (id: number): Promise<Transaction> => {
-    const { data } = await apiClient.get<Transaction>(`/transactions/${id}`);
+  getTransaction: async (id: number, signal?: AbortSignal) => {
+    const { data } = await apiClient.get<Transaction>(`/transactions/${id}`, {
+      signal,
+    });
     return data;
   },
 
@@ -71,6 +77,21 @@ const transactionService = {
   deleteTransaction: async (id: number): Promise<{ message: string }> => {
     const { data } = await apiClient.delete<{ message: string }>(
       `/transactions/${id}`,
+    );
+    return data;
+  },
+
+  deleteTransfer: async (transferDetailId: number): Promise<void> => {
+    await apiClient.delete(`/transactions/transfer/${transferDetailId}`);
+  },
+
+  updateTransfer: async (
+    transferDetailId: number,
+    payload: CreateTransferPayload,
+  ): Promise<TransferDetailResponse> => {
+    const { data } = await apiClient.post<TransferDetailResponse>(
+      `/transactions/transfer/${transferDetailId}`,
+      payload,
     );
     return data;
   },

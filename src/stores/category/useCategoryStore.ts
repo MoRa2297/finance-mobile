@@ -11,7 +11,6 @@ export const useCategoryStore = create<CategoryState>()((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const categories = await categoryService.getCategories();
-      console.log('categories: ', categories);
       set({ categories, isLoading: false });
     } catch (error) {
       const message =

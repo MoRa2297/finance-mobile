@@ -1,7 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
-import { useTranslation } from 'react-i18next';
 
 import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
@@ -18,48 +17,65 @@ export const ExpenseCard: FC<IExpenseCardProps> = ({
   transaction,
   onPress,
 }) => {
-  const { t } = useTranslation('expensesPage');
-
   const cardData = useMemo(
     () => getExpenseCardData(transaction),
     [transaction],
   );
-
-  const subtitle = useMemo(
-    () => formatSubtitle(cardData, t('expensesPage:recurrent')),
-    [cardData, t],
-  );
+  const subtitle = useMemo(() => formatSubtitle(cardData), [cardData]);
 
   return (
-    <Pressable onPress={() => onPress(transaction)} style={styles.container}>
-      <View style={styles.leftContainer}>
-        <View
-          style={[
-            styles.iconContainer,
-            { backgroundColor: cardData.categoryColor ?? theme.colors.primary },
-          ]}>
-          <Icon
-            name={cardData.categoryIconName ?? 'cube-outline'}
-            color={theme.colors.basic100}
-            size={28}
-          />
-        </View>
+    <Pressable
+      onPress={() => onPress(transaction)}
+      style={({ pressed }) => [styles.container, pressed && styles.pressed]}>
+      {/* Icon */}
+      <View
+        style={[
+          styles.iconContainer,
+          { backgroundColor: cardData.iconBackgroundColor },
+        ]}>
+        <Icon
+          name={cardData.iconName}
+          color={theme.colors.basic100}
+          size={24}
+        />
       </View>
 
+      {/* Center */}
       <View style={styles.centerContainer}>
-        <Text category="s1" style={styles.title} numberOfLines={1}>
-          {transaction.description}
-        </Text>
+        <View style={styles.titleRow}>
+          <Text category="s1" style={styles.title} numberOfLines={1}>
+            {transaction.description}
+          </Text>
+          {/* Badges */}
+          <View style={styles.badges}>
+            {cardData.isRecurrent && (
+              <Icon
+                name="sync-outline"
+                color={theme.colors.textHint}
+                size={14}
+              />
+            )}
+            {cardData.isTransfer && (
+              <Icon
+                name="swap-outline"
+                color={theme.colors.primary}
+                size={14}
+              />
+            )}
+          </View>
+        </View>
         <Text category="p2" style={styles.subtitle} numberOfLines={1}>
           {subtitle}
         </Text>
       </View>
 
-      <View style={styles.rightContainer}>
-        <Text category="p2" style={styles.amount}>
-          {transaction.amount} €
-        </Text>
-      </View>
+      {/* Amount */}
+      <Text
+        category="s1"
+        style={[styles.amount, { color: cardData.amountColor }]}>
+        {cardData.amountPrefix}
+        {transaction.amount.toFixed(2)} €
+      </Text>
     </Pressable>
   );
 };
@@ -68,15 +84,14 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
     borderRadius: 20,
     height: 70,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     backgroundColor: theme.colors.primaryBK,
   },
-  leftContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  pressed: {
+    opacity: 0.7,
   },
   iconContainer: {
     width: 45,
@@ -88,19 +103,28 @@ const styles = StyleSheet.create({
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
+    gap: 2,
   },
-  rightContainer: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   title: {
     fontSize: 15,
+    flexShrink: 1,
+  },
+  badges: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   subtitle: {
     fontSize: 12,
     color: theme.colors.textHint,
   },
   amount: {
-    marginBottom: 4,
+    fontSize: 15,
+    fontWeight: '600',
   },
 });

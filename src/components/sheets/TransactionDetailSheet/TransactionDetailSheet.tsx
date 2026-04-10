@@ -14,6 +14,7 @@ import { Button } from '@components/ui/Button';
 import { StatusPill } from './StatusPill';
 import { DetailCard } from './DetailCard';
 import { NoteCard } from './NoteCard';
+import { TransactionFormTypes } from '@/types';
 
 export const TransactionDetailSheet: FC<
   SheetProps<'transaction-detail-sheet'>
@@ -31,17 +32,23 @@ export const TransactionDetailSheet: FC<
 
   const { transaction } = props.payload;
 
-  const accountName = transaction.bankAccount?.name ?? transaction.card?.name;
+  const isExpense = transaction.type === TransactionFormTypes.EXPENSE;
+  const isIncome = transaction.type === TransactionFormTypes.INCOME;
+  const isTransfer = transaction.type === TransactionFormTypes.TRANSFER;
+
+  const amountColor = isIncome
+    ? theme.colors.green
+    : isExpense
+      ? theme.colors.red
+      : theme.colors.primary;
+
+  const amountPrefix = isIncome ? '+' : isExpense ? '-' : '';
+
+  const accountName =
+    transaction.bankAccount?.name ?? transaction.card?.name ?? '-';
   const accountLabel = transaction.bankAccount
     ? t('expensesPage:transactionDetailSheet.bankAccount')
     : t('expensesPage:transactionDetailSheet.cardAccount');
-
-  // TODO handle transfer
-  const isExpense = transaction.type === 'expense';
-  const amountColor = isExpense ? theme.colors.red : theme.colors.green;
-  const amountPrefix = isExpense ? '-' : '+';
-
-  console.log('transaction: ', transaction);
 
   return (
     <ActionSheet
@@ -65,7 +72,7 @@ export const TransactionDetailSheet: FC<
           </Text>
           <Text style={[styles.amount, { color: amountColor }]}>
             {amountPrefix}
-            {transaction.money} €
+            {transaction.amount.toFixed(2)} €
           </Text>
           <Text style={styles.date}>
             {dayjs(transaction.date).format('DD MMMM YYYY')}
@@ -74,15 +81,27 @@ export const TransactionDetailSheet: FC<
 
         {/* Pills */}
         <View style={styles.pillsRow}>
-          <StatusPill
-            isActive={transaction.recived}
-            activeLabel={t('expensesPage:transactionDetailSheet.paid')}
-            inactiveLabel={t('expensesPage:transactionDetailSheet.notPaid')}
-            activeColor={theme.colors.green}
-            inactiveColor={theme.colors.red}
-            iconActive="checkmark-circle-2-outline"
-            iconInactive="close-circle-outline"
-          />
+          {isTransfer ? (
+            <StatusPill
+              isActive
+              activeLabel={t('expensesPage:transactionDetailSheet.transfer')}
+              inactiveLabel=""
+              activeColor={theme.colors.primary}
+              inactiveColor={theme.colors.primary}
+              iconActive="swap-outline"
+              iconInactive="swap-outline"
+            />
+          ) : (
+            <StatusPill
+              isActive={isIncome}
+              activeLabel={t('expensesPage:transactionDetailSheet.income')}
+              inactiveLabel={t('expensesPage:transactionDetailSheet.expense')}
+              activeColor={theme.colors.green}
+              inactiveColor={theme.colors.red}
+              iconActive="arrow-circle-down-outline"
+              iconInactive="arrow-circle-up-outline"
+            />
+          )}
           <StatusPill
             isActive={transaction.recurrent}
             activeLabel={t('expensesPage:transactionDetailSheet.recurring')}
@@ -96,22 +115,39 @@ export const TransactionDetailSheet: FC<
           />
         </View>
 
-        {/* 2 Cards */}
+        {/* Detail Cards */}
         <View style={styles.cardsRow}>
-          <DetailCard
-            iconName="bookmark-outline"
-            label={t('expensesPage:transactionDetailSheet.category')}
-            value={transaction.category?.name}
-            accent={transaction.category?.categoryColor?.hexCode}
-          />
-          <DetailCard
-            iconName="grid-outline"
-            label={accountLabel}
-            value={accountName}
-          />
+          {isTransfer ? (
+            <>
+              <DetailCard
+                iconName="grid-outline"
+                label={t('expensesPage:transactionDetailSheet.fromAccount')}
+                value={transaction.transferDetail?.fromAccount?.name}
+              />
+              <DetailCard
+                iconName="grid-outline"
+                label={t('expensesPage:transactionDetailSheet.toAccount')}
+                value={transaction.transferDetail?.toAccount?.name}
+              />
+            </>
+          ) : (
+            <>
+              <DetailCard
+                iconName="bookmark-outline"
+                label={t('expensesPage:transactionDetailSheet.category')}
+                value={transaction.category?.name}
+                accent={transaction.category?.categoryColor?.hexCode}
+              />
+              <DetailCard
+                iconName="grid-outline"
+                label={accountLabel}
+                value={accountName}
+              />
+            </>
+          )}
         </View>
 
-        {/* Nota */}
+        {/* Note */}
         {!!transaction.note && (
           <NoteCard
             label={t('expensesPage:transactionDetailSheet.note')}

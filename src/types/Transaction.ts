@@ -2,8 +2,18 @@ import { Category } from './Category';
 import { BankAccount } from './BankAccount';
 import { BankCard } from './BankCard';
 import { Frequency } from './Frequency';
+import { RecurringRule } from './RecurrencyRule';
 
 export type TransactionType = 'INCOME' | 'EXPENSE' | 'TRANSFER';
+
+export type CreateableTransactionType = 'INCOME' | 'EXPENSE';
+
+export enum TransactionFormTypes {
+  ALL = 'ALL',
+  INCOME = 'INCOME',
+  EXPENSE = 'EXPENSE',
+  TRANSFER = 'TRANSFER',
+}
 
 export type TransferDetail = {
   id: number;
@@ -19,6 +29,8 @@ export type Transaction = {
   bankAccountId: number | null;
   cardAccountId: number | null;
   categoryId: number | null;
+  recurringRuleId: number | null;
+  transferDetailId: number | null;
   amount: number;
   date: string;
   description: string;
@@ -28,8 +40,8 @@ export type Transaction = {
   category: Category | null;
   bankAccount: BankAccount | null;
   card: BankCard | null;
-  transferFrom: TransferDetail | null;
-  transferTo: TransferDetail | null;
+  transferDetail: TransferDetail | null;
+  recurringRule: RecurringRule | null;
 };
 
 export type CreateTransactionPayload = {
@@ -66,7 +78,7 @@ export type TransactionFilters = {
   month?: number;
   year?: number;
   categoryId?: number;
-  type?: TransactionType;
+  type?: TransactionFormTypes;
   bankAccountId?: number;
   cardAccountId?: number;
   page?: number;
@@ -79,9 +91,3 @@ export type TransactionMeta = {
   limit: number;
   totalPages: number;
 };
-
-export enum TransactionFormTypes {
-  INCOME = 'INCOME',
-  EXPENSE = 'EXPENSE',
-  TRANSFER = 'TRANSFER',
-}

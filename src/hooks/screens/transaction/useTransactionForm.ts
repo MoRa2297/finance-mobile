@@ -4,19 +4,28 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SheetManager } from 'react-native-actions-sheet';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
+import { useBankAccounts } from '@/stores/bank-account/bank-account.queries';
+import { useCards } from '@/stores/card/card.queries';
+import { useTransaction } from '@/stores/transaction/transaction.queries';
 import {
-  useTransactionStore,
-  transactionSelectors,
-  useBankAccountStore,
-  bankAccountSelectors,
-  useCardStore,
-  cardSelectors,
-} from '@/stores';
+  useCreateTransaction,
+  useCreateTransfer,
+  useUpdateTransaction,
+  useUpdateTransfer,
+} from '@/stores/transaction/transaction.mutations';
+import { useUpdateRecurringRule } from '@/stores/recurring/recurring.mutations';
+import { isCreateableType } from '@/utils/transaction.utils';
+import { useActionSheetStyles } from '@/hooks';
+import {
+  buildRecurrenceFromTransaction,
+  DATE_FORMAT,
+  parseDate,
+} from './helpers';
+
 import {
   TransactionFormTypes,
   CreateTransactionPayload,
@@ -25,12 +34,9 @@ import {
   BankCard,
   Category,
 } from '@/types';
-import { theme } from '@config/theme';
 import { RecurrenceValues } from '@components/ui/RecurrenceSelector/RecurrenceSelector';
 
 dayjs.extend(customParseFormat);
-
-const DATE_FORMAT = 'DD-MM-YYYY';
 
 export interface TransactionFormValues {
   money: string;
@@ -44,44 +50,55 @@ interface SelectionState {
   bankAccount: BankAccount | null;
   category: Category | null;
   card: BankCard | null;
-  toAccount: BankAccount | null; // only for TRANSFER
+  toAccount: BankAccount | null;
 }
+
+// ─── Hook ──────────────────────────────────────────────────────────────────────
 
 export const useTransactionForm = () => {
   const { t } = useTranslation(['transactionPage', 'common']);
-  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { id, formType: type } = useLocalSearchParams<{
     id?: string;
     formType?: string;
   }>();
   const { showActionSheetWithOptions } = useActionSheet();
+  const actionSheetStyles = useActionSheetStyles();
 
-  const transactions = useTransactionStore(transactionSelectors.transactions);
-  const createTransaction = useTransactionStore(
-    state => state.createTransaction,
-  );
-  const createTransfer = useTransactionStore(state => state.createTransfer);
-  const updateTransaction = useTransactionStore(
-    state => state.updateTransaction,
-  );
-  const isMutating = useTransactionStore(transactionSelectors.isMutating);
-  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
-  const cards = useCardStore(cardSelectors.cards);
+  // ─── Server data ─────────────────────────────────────────────────────────────
 
-  const existingTransaction = useMemo(
-    () => transactions.find(t => t.id === Number(id)) ?? null,
-    [transactions, id],
-  );
+  const { data: bankAccounts = [] } = useBankAccounts();
+  const { data: cards = [] } = useCards();
+  const { data: existingTransaction } = useTransaction(id ? Number(id) : null);
 
   const isEditing = !!existingTransaction;
   const isTransfer = (ft: TransactionFormTypes) =>
     ft === TransactionFormTypes.TRANSFER;
 
+  // ─── Mutations ───────────────────────────────────────────────────────────────
+
+  const { mutateAsync: createTransaction, isPending: isCreating } =
+    useCreateTransaction();
+  const { mutateAsync: createTransfer, isPending: isCreatingTransfer } =
+    useCreateTransfer();
+  const { mutateAsync: updateTransaction, isPending: isUpdating } =
+    useUpdateTransaction();
+  const { mutateAsync: updateTransfer, isPending: isUpdatingTransfer } =
+    useUpdateTransfer();
+  const { mutateAsync: updateRecurringRule, isPending: isUpdatingRecurring } =
+    useUpdateRecurringRule();
+
+  const isMutating =
+    isCreating ||
+    isCreatingTransfer ||
+    isUpdating ||
+    isUpdatingTransfer ||
+    isUpdatingRecurring;
+
+  // ─── Local state ─────────────────────────────────────────────────────────────
+
   const [formType, setFormType] = useState<TransactionFormTypes>(
-    (existingTransaction?.type as TransactionFormTypes) ||
-      (type as TransactionFormTypes) ||
-      TransactionFormTypes.EXPENSE,
+    (type as TransactionFormTypes) ?? TransactionFormTypes.EXPENSE,
   );
 
   const [selection, setSelection] = useState<SelectionState>({
@@ -94,22 +111,41 @@ export const useTransactionForm = () => {
   const [selectionError, setSelectionError] = useState<string | null>(null);
   const [alertVisible, setAlertVisible] = useState(false);
 
-  // Init selection from existing transaction
+  // Sync formType from existing transaction (edit mode)
   useEffect(() => {
     if (!existingTransaction) return;
-    const bankAccount = bankAccounts.find(
-      ba => ba.id === existingTransaction.bankAccountId,
-    );
-    const card = cards.find(c => c.id === existingTransaction.cardAccountId);
-    setSelection(prev => ({
-      ...prev,
-      bankAccount: bankAccount ?? null,
-      card: card ?? null,
-    }));
+    setFormType(existingTransaction.type as TransactionFormTypes);
+  }, [existingTransaction]);
+
+  // Populate selection from existing transaction (edit mode)
+  useEffect(() => {
+    if (!existingTransaction) return;
+
+    const bankAccount =
+      bankAccounts.find(ba => ba.id === existingTransaction.bankAccountId) ??
+      null;
+    const card =
+      cards.find(c => c.id === existingTransaction.cardAccountId) ?? null;
+    const category = existingTransaction.category ?? null;
+    const toAccount =
+      isTransfer(existingTransaction.type as TransactionFormTypes) &&
+      existingTransaction.transferDetail
+        ? (bankAccounts.find(
+            ba => ba.id === existingTransaction.transferDetail?.toAccountId,
+          ) ?? null)
+        : null;
+
+    console.log('existingTransaction', existingTransaction);
+    console.log('cards', cards);
+    console.log('card', card);
+
+    setSelection({ bankAccount, card, category, toAccount });
   }, [existingTransaction, bankAccounts, cards]);
 
-  // Reset selections incompatibili quando cambia formType
+  // Reset selections on formType change — skip during edit to avoid
+  // overwriting the selections populated by the effect above
   useEffect(() => {
+    if (isEditing) return;
     setSelection({
       bankAccount: null,
       category: null,
@@ -117,33 +153,24 @@ export const useTransactionForm = () => {
       toAccount: null,
     });
     setSelectionError(null);
-  }, [formType]);
+  }, [formType, isEditing]);
 
-  const actionSheetStyles = useMemo(
-    () => ({
-      containerStyle: {
-        borderRadius: 20,
-        backgroundColor: theme.colors.secondaryBK,
-        marginHorizontal: 20,
-        borderWidth: 1,
-        borderColor: theme.colors.primaryBK,
-        marginBottom: insets.bottom,
-      },
-      textStyle: { textAlign: 'center' as const, color: theme.colors.basic100 },
-    }),
-    [insets.bottom],
+  // ─── Form ────────────────────────────────────────────────────────────────────
+
+  const validationSchema = useMemo(
+    () =>
+      Yup.object({
+        money: Yup.number()
+          .typeError(t('transactionPage:errors.moneyRequired'))
+          .moreThan(0, t('transactionPage:errors.moneyRequired'))
+          .required(t('transactionPage:errors.moneyRequired')),
+        description: Yup.string()
+          .trim()
+          .required(t('transactionPage:errors.descriptionRequired')),
+        date: Yup.string().required(t('transactionPage:errors.dateRequired')),
+      }),
+    [t],
   );
-
-  const validationSchema = Yup.object({
-    money: Yup.number()
-      .typeError(t('transactionPage:errors.moneyRequired'))
-      .moreThan(0, t('transactionPage:errors.moneyRequired'))
-      .required(t('transactionPage:errors.moneyRequired')),
-    description: Yup.string()
-      .trim()
-      .required(t('transactionPage:errors.descriptionRequired')),
-    date: Yup.string().required(t('transactionPage:errors.dateRequired')),
-  });
 
   const initialValues: TransactionFormValues = useMemo(
     () => ({
@@ -153,51 +180,76 @@ export const useTransactionForm = () => {
       date: existingTransaction?.date
         ? dayjs(existingTransaction.date).format(DATE_FORMAT)
         : dayjs().format(DATE_FORMAT),
-      recurrence: {
-        recurrent: existingTransaction?.recurrent ?? false,
-        frequency: null,
-        interval: '1',
-        endDate: null,
-      },
+      recurrence: existingTransaction
+        ? buildRecurrenceFromTransaction(existingTransaction)
+        : { recurrent: false, frequency: null, endDate: null },
     }),
     [existingTransaction],
   );
+
+  // ─── Submit ──────────────────────────────────────────────────────────────────
 
   const formik = useFormik<TransactionFormValues>({
     initialValues,
     validationSchema,
     enableReinitialize: true,
     onSubmit: async values => {
-      const [day, month, year] = values.date.split('-');
-      const dateISO = new Date(`${year}-${month}-${day}`).toISOString();
+      const dateISO = parseDate(values.date);
+      const recurrenceEndDate = values.recurrence.endDate
+        ? parseDate(values.recurrence.endDate)
+        : undefined;
 
       if (isTransfer(formType)) {
-        console.log('>> TRANSFER values: ', values);
-        // In onSubmit, nel branch non-transfer
         const payload: CreateTransferPayload = {
           amount: parseFloat(values.money),
           date: dateISO,
           description: values.description.trim(),
           recurrent: values.recurrence.recurrent,
           frequency: values.recurrence.frequency ?? undefined,
-          recurrenceEndDate: values.recurrence.endDate
-            ? (() => {
-                const [day, month, year] =
-                  values.recurrence.endDate!.split('-');
-                return new Date(`${year}-${month}-${day}`).toISOString();
-              })()
-            : undefined,
+          recurrenceEndDate,
           note: values.note,
-          categoryId: selection.category?.id,
           fromAccountId: selection.bankAccount?.id,
-          cardAccountId: selection.card?.id,
           toAccountId: selection.toAccount?.id,
+          cardAccountId: selection.card?.id,
+          categoryId: selection.category?.id,
         };
 
-        console.log('>> TRANSFER payload: ', payload);
-        await createTransfer(payload);
+        if (isEditing && existingTransaction) {
+          if (
+            existingTransaction.recurrent &&
+            existingTransaction.recurringRuleId
+          ) {
+            // Recurring transfer — update the rule only
+            // Future transactions will be regenerated by the cron job
+            await updateRecurringRule({
+              id: existingTransaction.recurringRuleId,
+              payload: {
+                amount: parseFloat(values.money),
+                description: values.description.trim(),
+                frequency: values.recurrence.frequency ?? undefined,
+                endDate: recurrenceEndDate,
+                note: values.note,
+                fromAccountId: selection.bankAccount?.id,
+                toAccountId: selection.toAccount?.id,
+              },
+            });
+          } else {
+            // Single transfer — delete both legs and recreate atomically
+            if (!existingTransaction.transferDetailId) {
+              throw new Error(
+                'transferDetailId not found on existing transaction',
+              );
+            }
+            await updateTransfer({
+              transferDetailId: existingTransaction.transferDetailId,
+              payload,
+            });
+          }
+        } else {
+          await createTransfer(payload);
+        }
       } else {
-        console.log('>> TRANSATION values: ', values);
+        if (!isCreateableType(formType)) return;
 
         const payload: CreateTransactionPayload = {
           amount: parseFloat(values.money),
@@ -205,13 +257,7 @@ export const useTransactionForm = () => {
           description: values.description.trim(),
           recurrent: values.recurrence.recurrent,
           frequency: values.recurrence.frequency ?? undefined,
-          recurrenceEndDate: values.recurrence.endDate
-            ? (() => {
-                const [day, month, year] =
-                  values.recurrence.endDate!.split('-');
-                return new Date(`${year}-${month}-${day}`).toISOString();
-              })()
-            : undefined,
+          recurrenceEndDate,
           note: values.note,
           type: formType,
           categoryId: selection.category?.id,
@@ -220,7 +266,7 @@ export const useTransactionForm = () => {
         };
 
         if (isEditing && existingTransaction) {
-          await updateTransaction(existingTransaction.id, payload);
+          await updateTransaction({ id: existingTransaction.id, payload });
         } else {
           await createTransaction(payload);
         }
@@ -229,6 +275,8 @@ export const useTransactionForm = () => {
       router.back();
     },
   });
+
+  // ─── Validation ──────────────────────────────────────────────────────────────
 
   const validateSelections = useCallback((): boolean => {
     if (isTransfer(formType)) {
@@ -271,6 +319,8 @@ export const useTransactionForm = () => {
     formik.handleSubmit();
   }, [formik, validateSelections]);
 
+  // ─── Handlers ────────────────────────────────────────────────────────────────
+
   const handleCancel = useCallback(() => router.back(), [router]);
 
   const handleOpenTypeSelector = useCallback(() => {
@@ -280,7 +330,6 @@ export const useTransactionForm = () => {
       t('transactionPage:transfer'),
       t('common:cancel'),
     ];
-
     showActionSheetWithOptions(
       { options, cancelButtonIndex: 3, ...actionSheetStyles },
       selectedIndex => {
@@ -356,13 +405,11 @@ export const useTransactionForm = () => {
     const bankAccountIds = selection.bankAccount
       ? [selection.bankAccount.id]
       : [];
-
     if (bankAccountIds.length === 0) {
       setSelectionError(t('transactionPage:errors.selectBankFirst'));
       setAlertVisible(true);
       return;
     }
-
     const result = await SheetManager.show('select-card-sheet', {
       payload: { bankAccountIds },
     });
@@ -371,6 +418,8 @@ export const useTransactionForm = () => {
       setSelectionError(null);
     }
   }, [selection.bankAccount, t]);
+
+  // ─── Derived ─────────────────────────────────────────────────────────────────
 
   const firstError = useMemo(
     () =>
