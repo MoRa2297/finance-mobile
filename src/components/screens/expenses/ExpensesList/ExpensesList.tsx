@@ -14,6 +14,7 @@ import { ExpenseCard } from '@components/screens/expenses';
 interface IExpensesListProps {
   transactions: Transaction[];
   onSelectTransaction: (transaction: Transaction) => void;
+  onDeleteTransaction: (transaction: Transaction) => void;
   loading?: boolean;
 }
 
@@ -21,6 +22,7 @@ export const ExpensesList: FC<IExpensesListProps> = ({
   transactions,
   loading = false,
   onSelectTransaction,
+  onDeleteTransaction,
 }) => {
   const { t } = useTranslation('expensesPage');
   const insets = useSafeAreaInsets();
@@ -29,9 +31,13 @@ export const ExpensesList: FC<IExpensesListProps> = ({
 
   const renderItem = useCallback(
     ({ item }: { item: Transaction }) => (
-      <ExpenseCard transaction={item} onPress={onSelectTransaction} />
+      <ExpenseCard
+        transaction={item}
+        onPress={onSelectTransaction}
+        onDelete={onDeleteTransaction}
+      />
     ),
-    [onSelectTransaction],
+    [onSelectTransaction, onDeleteTransaction],
   );
 
   const renderSectionHeader = useCallback(

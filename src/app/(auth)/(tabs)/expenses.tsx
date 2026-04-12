@@ -12,9 +12,10 @@ import { Header } from '@components/ui/Header';
 import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
 import { SliderBar, Tab } from '@components/ui/SliderBar';
 import { useExpensesScreen } from '@hooks/screens/expenses';
+import { Alert } from '@components/ui/Alert';
 
 export default function ExpensesScreen() {
-  const { t } = useTranslation('expensesPage');
+  const { t } = useTranslation(['expensesPage', 'common']);
   const {
     tabs,
     handleSelectMonth,
@@ -27,6 +28,11 @@ export default function ExpensesScreen() {
     moneyIsVisible,
     handleToggleMoneyVisibility,
     handleSelectTransaction,
+    handleSelectRemoveTransaction,
+    isAlertVisible,
+    setIsAlertVisible,
+    handleDeleteTransaction,
+    selectedTransaction,
   } = useExpensesScreen();
 
   return (
@@ -83,8 +89,33 @@ export default function ExpensesScreen() {
           transactions={filteredTransactions}
           loading={isLoading}
           onSelectTransaction={handleSelectTransaction}
+          onDeleteTransaction={handleSelectRemoveTransaction}
         />
       </View>
+      {/*<Alert*/}
+      {/*  visible={isAlertVisible}*/}
+      {/*  title={t('expensesPage:deleteTransactionTitle')}*/}
+      {/*  subtitle={t('expensesPage:deleteTransactionMessage')}*/}
+      {/*  primaryButtonText={t('common:delete')}*/}
+      {/*  onPrimaryPress={() => setIsAlertVisible(false)}*/}
+      {/*  onSecondaryPress={() =>*/}
+      {/*    selectedTransaction && handleDeleteTransaction(selectedTransaction)*/}
+      {/*  }*/}
+      {/*  secondaryButtonText={t('common:cancel')}*/}
+      {/*/>*/}
+      <Alert
+        visible={isAlertVisible}
+        title={t('expensesPage:deleteTransactionTitle')}
+        subtitle={t('expensesPage:deleteTransactionMessage')}
+        primaryButtonText={t('common:cancel')}
+        onPrimaryPress={() => setIsAlertVisible(false)}
+        secondaryButtonText={t('common:delete')}
+        onSecondaryPress={() => {
+          if (selectedTransaction) {
+            handleDeleteTransaction(selectedTransaction);
+          }
+        }}
+      />
     </ScreenContainer>
   );
 }

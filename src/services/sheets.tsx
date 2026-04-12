@@ -84,6 +84,7 @@ declare module 'react-native-actions-sheet' {
       payload: {
         transaction: Transaction;
         onEdit: (transaction: Transaction) => void;
+        onDelete: (transaction: Transaction) => void;
       };
     }>;
     'select-category-sheet': SheetDefinition<{

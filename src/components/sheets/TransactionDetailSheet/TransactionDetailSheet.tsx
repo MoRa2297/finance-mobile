@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
   SheetProps,
@@ -25,6 +25,12 @@ export const TransactionDetailSheet: FC<
   const handleEdit = useCallback(() => {
     if (props.payload?.transaction && props.payload?.onEdit) {
       props.payload.onEdit(props.payload.transaction);
+    }
+  }, [props.payload]);
+
+  const handleDelete = useCallback(() => {
+    if (props.payload?.transaction && props.payload?.onDelete) {
+      props.payload.onDelete(props.payload.transaction);
     }
   }, [props.payload]);
 
@@ -157,6 +163,11 @@ export const TransactionDetailSheet: FC<
 
         <View style={styles.buttonContainer}>
           <Button
+            onPress={handleDelete}
+            buttonText={t('common:delete')}
+            style={styles.deleteButton}
+          />
+          <Button
             onPress={handleEdit}
             buttonText={t('common:edit')}
             style={styles.editButton}
@@ -220,10 +231,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContainer: {
+    flexDirection: 'row',
     paddingHorizontal: HORIZONTAL_PADDING,
     marginTop: 8,
+    gap: 10,
+  },
+  deleteButton: {
+    flex: 1,
+    borderRadius: GLOBAL_BORDER_RADIUS,
+    backgroundColor: theme.colors.red,
+    borderColor: theme.colors.red,
   },
   editButton: {
+    flex: 1,
     borderRadius: GLOBAL_BORDER_RADIUS,
     backgroundColor: theme.colors.primary,
     borderColor: theme.colors.primary,

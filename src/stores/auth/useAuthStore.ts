@@ -6,12 +6,8 @@ import { authService } from '@/services';
 import { useLookupStore } from '@/stores/lookup/useLookupStore';
 import type { AuthState, RegisterPayload, User } from './auth.types';
 import { AUTH_INITIAL_STATE, AUTH_STORAGE_KEY } from './auth.constants';
-import {
-  useBankAccountStore,
-  useCardStore,
-  useCategoryStore,
-  useTransactionStore,
-} from '@/stores';
+import { useBankAccountStore, useCardStore, useCategoryStore } from '@/stores';
+import { queryClient } from '@/config/queryClient';
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -68,12 +64,15 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        // TODO check
+        // TODO check and remove all, changing to react query
         useLookupStore.getState().reset();
         useBankAccountStore.getState().reset();
         useCardStore.getState().reset();
-        useTransactionStore.getState().reset();
+        // useTransactionStore.getState().reset();
         useCategoryStore.getState().reset();
+
+        queryClient.clear();
+
         set(AUTH_INITIAL_STATE);
       },
 

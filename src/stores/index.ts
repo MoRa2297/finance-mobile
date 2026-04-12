@@ -26,7 +26,15 @@ export { useCardStore, cardSelectors } from './card';
 // export type { CardState } from './card';
 
 // Transaction
-export { useTransactionStore, transactionSelectors } from './transaction';
-// export type { TransactionState } from './transaction';
+export {
+  useTransactions,
+  useTransaction,
+  useCreateTransaction,
+  useCreateTransfer,
+  useDeleteTransaction,
+  useDeleteTransfer,
+  useUpdateTransaction,
+  useUpdateTransfer,
+} from './transaction';
 
 export { useDataStore } from './data';

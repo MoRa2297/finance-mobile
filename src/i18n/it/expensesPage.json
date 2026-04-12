@@ -26,6 +26,8 @@
     "expense": "Expense",
     "fromAccount": "From",
     "toAccount": "To",
-    "income": "Entrate"
+    "income": "Entrate",
+    "deleteTransactionTitle": "Delete transaction",
+    "deleteTransactionMessage": "Are you sure you want to delete this transaction? This action cannot be undone."
   }
 }

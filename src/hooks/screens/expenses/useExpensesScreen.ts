@@ -3,8 +3,13 @@ import { Dayjs } from 'dayjs';
 import { SheetManager } from 'react-native-actions-sheet';
 import { router } from 'expo-router';
 
-import { useAuthStore, useUIStore } from '@/stores';
-import { useTransactions } from '@/stores/transaction/transaction.queries';
+import {
+  useAuthStore,
+  useUIStore,
+  useTransactions,
+  useDeleteTransaction,
+  useDeleteTransfer,
+} from '@/stores';
 import { Tab } from '@components/ui/SliderBar';
 import { MonthItem } from '@components/screens/home';
 import { Transaction, TransactionFilters, TransactionFormTypes } from '@/types';
@@ -20,6 +25,10 @@ export const useExpensesScreen = () => {
   const [selectedTab, setSelectedTab] = useState<TransactionFormTypes>(
     TABS[0].value as TransactionFormTypes,
   );
+
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
+
+  const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
 
   const user = useAuthStore(state => state.user);
   const moneyIsVisible = useUIStore(state => state.moneyIsVisible);
@@ -37,6 +46,9 @@ export const useExpensesScreen = () => {
   );
 
   const { data, isLoading, isError } = useTransactions(filters);
+  const { mutateAsync: deleteTransaction } = useDeleteTransaction();
+  const { mutateAsync: deleteTransfer } = useDeleteTransfer();
+
   const transactions = data?.transactions ?? [];
 
   const totals = useMemo(() => {
@@ -68,20 +80,53 @@ export const useExpensesScreen = () => {
     setMoneyIsVisible();
   }, [setMoneyIsVisible]);
 
-  const handleSelectTransaction = useCallback((transaction: Transaction) => {
-    SheetManager.show('transaction-detail-sheet', {
-      payload: {
-        transaction,
-        onEdit: (tx: Transaction) => {
-          SheetManager.hide('transaction-detail-sheet');
-          router.push({
-            pathname: '/transaction',
-            params: { id: tx.id, mode: 'edit' },
-          });
+  const handleDeleteTransaction = useCallback(
+    async (transaction: Transaction) => {
+      try {
+        if (transaction.type === 'TRANSFER' && transaction.transferDetailId) {
+          await deleteTransfer(transaction.transferDetailId);
+        } else {
+          await deleteTransaction(transaction.id);
+        }
+      } catch (e) {
+        console.error('Delete failed', e);
+      } finally {
+        setSelectedTransaction(undefined);
+        setIsAlertVisible(false);
+      }
+    },
+    [deleteTransaction, deleteTransfer],
+  );
+
+  const handleSelectRemoveTransaction = useCallback(
+    (transaction: Transaction) => {
+      setSelectedTransaction(transaction);
+      setIsAlertVisible(true);
+    },
+    [],
+  );
+
+  const handleSelectTransaction = useCallback(
+    (transaction: Transaction) => {
+      SheetManager.show('transaction-detail-sheet', {
+        payload: {
+          transaction,
+          onDelete: (tx: Transaction) => {
+            SheetManager.hide('transaction-detail-sheet');
+            handleSelectRemoveTransaction(tx);
+          },
+          onEdit: (tx: Transaction) => {
+            SheetManager.hide('transaction-detail-sheet');
+            router.push({
+              pathname: '/transaction',
+              params: { id: tx.id, mode: 'edit', formType: tx.type },
+            });
+          },
         },
-      },
-    });
-  }, []);
+      });
+    },
+    [handleSelectRemoveTransaction],
+  );
 
   return {
     tabs: TABS,
@@ -96,5 +141,10 @@ export const useExpensesScreen = () => {
     moneyIsVisible,
     handleToggleMoneyVisibility,
     handleSelectTransaction,
+    handleSelectRemoveTransaction,
+    isAlertVisible,
+    setIsAlertVisible,
+    handleDeleteTransaction,
+    selectedTransaction,
   };
 };
