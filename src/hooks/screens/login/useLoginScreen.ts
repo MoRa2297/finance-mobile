@@ -7,14 +7,7 @@ export type TLoginFormValues = {
   password: string;
 };
 
-export interface UseLoginReturn {
-  isLoading: boolean;
-  errorMessage: string | null;
-  handleLogin: (values: TLoginFormValues) => Promise<void>;
-  clearError: () => void;
-}
-
-export const useLogin = (): UseLoginReturn => {
+export const useLoginScreen = () => {
   const router = useRouter();
   const login = useAuthStore(state => state.login);
   const isLoading = useAuthStore(state => state.isLoading);
@@ -25,9 +18,9 @@ export const useLogin = (): UseLoginReturn => {
     async (values: TLoginFormValues) => {
       try {
         await login(values.email, values.password);
-        router.replace('/(auth)/(tabs)');
-      } catch (error) {
-        // Errore già gestito nello store — state.error aggiornato automaticamente
+        router.replace(ROUTES.HOME);
+      } catch {
+        // Errore già in state.error
       }
     },
     [login, router],

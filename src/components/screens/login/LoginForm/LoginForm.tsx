@@ -3,30 +3,30 @@ import { View, StyleSheet } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
 import { Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
-import { router } from 'expo-router';
 
 import { theme } from '@config/theme';
-import { ROUTES } from '@config/constants';
 
 import {
   getFieldError,
   initialFormValues,
   loginValidationSchema,
 } from './LoginForm.helpers';
-import { TLoginFormValues } from '@hooks/screens/login/useLogin';
 import { Button } from '@components/ui/Button';
 import { InputField } from '@components/ui/InputField';
+import { TLoginFormValues } from '@hooks/screens/login/useLoginScreen';
 
 interface ILoginFormProps {
   isLoading: boolean;
-  errorMessage: string;
   onSubmit: (values: TLoginFormValues) => Promise<void>;
+  onClearError: () => void;
+  errorMessage?: string;
 }
 
 export const LoginForm: FC<ILoginFormProps> = ({
   isLoading,
   errorMessage,
   onSubmit,
+  onClearError,
 }) => {
   const { t } = useTranslation(['loginPage']);
 
@@ -69,6 +69,7 @@ export const LoginForm: FC<ILoginFormProps> = ({
                   onBlur={handleBlur('email')}
                   autoCapitalize="none"
                   keyboardType="email-address"
+                  onFocus={() => onClearError()}
                 />
                 {emailError && (
                   <Text style={styles.fieldError}>{emailError}</Text>
@@ -84,6 +85,7 @@ export const LoginForm: FC<ILoginFormProps> = ({
                   secureTextEntry
                   onChange={handleChange('password')}
                   onBlur={handleBlur('password')}
+                  onFocus={() => onClearError()}
                 />
                 {passwordError && (
                   <Text style={styles.fieldError}>{passwordError}</Text>
