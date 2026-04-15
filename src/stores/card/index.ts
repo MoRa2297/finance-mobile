@@ -1,2 +1,2 @@
-export { useCardStore } from './useCardStore';
-export { cardSelectors } from './card.selectors';
+export { useCard, useCards } from './card.queries';
+export { useCreateCard, useDeleteCard, useUpdateCard } from './card.mutations';

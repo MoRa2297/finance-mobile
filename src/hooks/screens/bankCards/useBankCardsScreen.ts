@@ -5,23 +5,23 @@ import { useTranslation } from 'react-i18next';
 import { Dayjs } from 'dayjs';
 
 import { useCards } from '@/stores/card/card.queries';
+import { useDeleteCard } from '@/stores/card/card.mutations';
 import { useTransactions } from '@/stores/transaction/transaction.queries';
 import { useActionSheetStyles } from '@/hooks';
+import { useUIStore } from '@/stores';
 import { BankCard, TransactionFilters } from '@/types';
 import { MonthItem } from '@components/screens/home';
-import { useDeleteCard } from '@stores/card/card.mutations';
 
 export const useBankCardsScreen = () => {
   const { t } = useTranslation(['bankCardsPage', 'common']);
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
   const actionSheetStyles = useActionSheetStyles();
+  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [alertVisible, setAlertVisible] = useState(false);
   const [cardToDelete, setCardToDelete] = useState<BankCard | null>(null);
-
-  // ─── Queries ─────────────────────────────────────────────────────────────────
 
   const { data: bankCards = [], isLoading } = useCards();
   const { mutateAsync: deleteCard } = useDeleteCard();
@@ -39,8 +39,6 @@ export const useBankCardsScreen = () => {
   const { data: transactionData } = useTransactions(transactionFilters);
   const transactions = transactionData?.transactions ?? [];
 
-  // ─── Totals ──────────────────────────────────────────────────────────────────
-
   const totLimit = useMemo(
     () => bankCards.reduce((sum, card) => sum + card.cardLimit, 0),
     [bankCards],
@@ -54,7 +52,12 @@ export const useBankCardsScreen = () => {
     [transactions],
   );
 
-  // ─── Handlers ────────────────────────────────────────────────────────────────
+  const keyExtractor = useCallback((item: BankCard) => item.id.toString(), []);
+
+  const listContentStyle = useMemo(
+    () => ({ paddingBottom: bottomTabHeight * 2 }),
+    [bottomTabHeight],
+  );
 
   const handleSelectMonth = useCallback((month: MonthItem) => {
     setSelectedDate(month.date);
@@ -72,14 +75,9 @@ export const useBankCardsScreen = () => {
 
   const handleOptionsPress = useCallback(
     (card: BankCard) => {
-      const options = [
-        t('common:edit'),
-        t('common:delete'),
-        t('common:cancel'),
-      ];
       showActionSheetWithOptions(
         {
-          options,
+          options: [t('common:edit'), t('common:delete'), t('common:cancel')],
           cancelButtonIndex: 2,
           destructiveButtonIndex: 1,
           ...actionSheetStyles,
@@ -101,26 +99,24 @@ export const useBankCardsScreen = () => {
   );
 
   const handleAddCard = useCallback(() => {
-    const options = [
-      t('bankCardsPage:actionSheetCreateCard'),
-      t('common:cancel'),
-    ];
     showActionSheetWithOptions(
-      { options, cancelButtonIndex: 1, ...actionSheetStyles },
+      {
+        options: [t('bankCardsPage:actionSheetCreateCard'), t('common:cancel')],
+        cancelButtonIndex: 1,
+        ...actionSheetStyles,
+      },
       selectedIndex => {
-        if (selectedIndex === 0) {
+        if (selectedIndex === 0)
           router.push('/(auth)/bank-cards/bank-card-form');
-        }
       },
     );
   }, [t, showActionSheetWithOptions, actionSheetStyles, router]);
 
   const handleDeleteConfirm = useCallback(async () => {
-    if (cardToDelete) {
-      await deleteCard(cardToDelete.id);
-      setCardToDelete(null);
-      setAlertVisible(false);
-    }
+    if (!cardToDelete) return;
+    await deleteCard(cardToDelete.id);
+    setCardToDelete(null);
+    setAlertVisible(false);
   }, [cardToDelete, deleteCard]);
 
   const handleDeleteCancel = useCallback(() => {
@@ -134,6 +130,8 @@ export const useBankCardsScreen = () => {
     totLimit,
     totSpent,
     alertVisible,
+    keyExtractor,
+    listContentStyle,
     handleSelectMonth,
     handleCardPress,
     handleOptionsPress,

@@ -1,18 +1,14 @@
-import { useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import {
-  useCardStore,
-  cardSelectors,
-  useBankAccountStore,
-  bankAccountSelectors,
-  useLookupStore,
-  lookupSelectors,
-} from '@/stores';
+import { useLookupStore, lookupSelectors } from '@/stores';
+import { useCards } from '@/stores/card/card.queries';
+import { useCreateCard, useUpdateCard } from '@/stores/card/card.mutations';
+import { useBankAccounts } from '@/stores/bank-account/bank-account.queries';
 import { CardType, BankAccount } from '@/types';
 import { MONTH_NUMBER, YEARS_NUMBER } from '@/config/constants';
 
@@ -31,30 +27,19 @@ export const useBankCardForm = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEditing = !!id;
 
-  // Stores
-  const cards = useCardStore(cardSelectors.cards);
-  const createCard = useCardStore(state => state.createCard);
-  const updateCard = useCardStore(state => state.updateCard);
-  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
   const cardTypes = useLookupStore(lookupSelectors.cardTypes);
+
+  const { data: cards = [] } = useCards();
+  const { data: bankAccounts = [] } = useBankAccounts();
+  const { mutateAsync: createCard } = useCreateCard();
+  const { mutateAsync: updateCard } = useUpdateCard();
+
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const existingCard = useMemo(
     () => cards.find(c => c.id === Number(id)) ?? null,
     [cards, id],
   );
-
-  const validationSchema = Yup.object({
-    name: Yup.string().trim().required(t('bankCardsPage:alertNameError')),
-    cardLimit: Yup.number()
-      .typeError(t('bankCardsPage:alertCardLimitError'))
-      .required(t('bankCardsPage:alertCardLimitError')),
-    cardType: Yup.object()
-      .nullable()
-      .required(t('bankCardsPage:alertTypeError')),
-    bankAccount: Yup.object()
-      .nullable()
-      .required(t('bankCardsPage:alertBankAccountIdError')),
-  });
 
   const initialValues: BankCardFormValues = useMemo(
     () => ({
@@ -75,7 +60,18 @@ export const useBankCardForm = () => {
 
   const formik = useFormik<BankCardFormValues>({
     initialValues,
-    validationSchema,
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required(t('bankCardsPage:alertNameError')),
+      cardLimit: Yup.number()
+        .typeError(t('bankCardsPage:alertCardLimitError'))
+        .required(t('bankCardsPage:alertCardLimitError')),
+      cardType: Yup.object()
+        .nullable()
+        .required(t('bankCardsPage:alertTypeError')),
+      bankAccount: Yup.object()
+        .nullable()
+        .required(t('bankCardsPage:alertBankAccountIdError')),
+    }),
     enableReinitialize: true,
     onSubmit: async values => {
       const payload = {
@@ -88,51 +84,63 @@ export const useBankCardForm = () => {
       };
 
       if (isEditing && existingCard) {
-        await updateCard(existingCard.id, payload);
+        await updateCard({ id: existingCard.id, payload });
       } else {
         await createCard(payload);
       }
-
       router.back();
     },
   });
 
+  const handleSubmit = useCallback(async () => {
+    const errors = await formik.validateForm();
+    if (Object.keys(errors).length > 0) {
+      formik.setTouched({
+        name: true,
+        cardLimit: true,
+        cardType: true,
+        bankAccount: true,
+      });
+      setAlertVisible(true);
+      return;
+    }
+    formik.handleSubmit();
+  }, [formik]);
+
   const handleOpenCardTypeSheet = useCallback(async () => {
     const result = await SheetManager.show('card-type-select-sheet');
     if (result?.cardType) formik.setFieldValue('cardType', result.cardType);
-  }, [formik]);
+  }, [formik.setFieldValue]);
 
   const handleOpenBankAccountSheet = useCallback(async () => {
     const result = await SheetManager.show('bank-account-select-sheet');
     if (result?.bankAccount)
       formik.setFieldValue('bankAccount', result.bankAccount);
-  }, [formik]);
+  }, [formik.setFieldValue]);
 
   const handleOpenMonthPicker = useCallback(async () => {
     const result = await SheetManager.show('picker-sheet', {
       payload: { data: MONTH_NUMBER },
     });
-    if (result?.item?.name) {
+    if (result?.item?.name)
       formik.setFieldValue('monthExpiry', Number(result.item.name));
-    }
-  }, [formik]);
+  }, [formik.setFieldValue]);
 
   const handleOpenYearPicker = useCallback(async () => {
     const result = await SheetManager.show('picker-sheet', {
       payload: { data: YEARS_NUMBER },
     });
-    if (result?.item?.name) {
+    if (result?.item?.name)
       formik.setFieldValue('yearExpiry', Number(result.item.name));
-    }
-  }, [formik]);
+  }, [formik.setFieldValue]);
 
   const firstError = useMemo(() => {
-    const errors = formik.errors;
+    const { name, cardLimit, cardType, bankAccount } = formik.errors;
     return (
-      (errors.bankAccount as string) ||
-      errors.name ||
-      errors.cardLimit ||
-      (errors.cardType as string) ||
+      (bankAccount as string) ||
+      name ||
+      cardLimit ||
+      (cardType as string) ||
       null
     );
   }, [formik.errors]);
@@ -141,6 +149,9 @@ export const useBankCardForm = () => {
     formik,
     isEditing,
     firstError,
+    alertVisible,
+    setAlertVisible,
+    handleSubmit,
     handleOpenCardTypeSheet,
     handleOpenBankAccountSheet,
     handleOpenMonthPicker,

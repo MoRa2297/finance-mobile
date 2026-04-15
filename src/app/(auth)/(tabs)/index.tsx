@@ -21,7 +21,7 @@ export default function HomeScreen() {
         <Header
           left={{
             type: 'avatar',
-            source: user?.imageUrl,
+            source: user?.imageUrl ?? undefined,
             onPress: () => {},
           }}
           right={{

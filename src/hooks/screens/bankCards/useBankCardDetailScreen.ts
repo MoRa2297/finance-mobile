@@ -6,7 +6,12 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { useCard } from '@/stores/card/card.queries';
 import { useTransactions } from '@/stores/transaction/transaction.queries';
+import {
+  useDeleteTransaction,
+  useDeleteTransfer,
+} from '@/stores/transaction/transaction.mutations';
 import { useActionSheetStyles } from '@/hooks';
+import { useUIStore } from '@/stores';
 import { Transaction, TransactionFilters } from '@/types';
 import { MonthItem } from '@components/screens/home';
 import { groupByDate } from '@components/screens/expenses/ExpensesList/ExpensesList.helpers';
@@ -17,14 +22,20 @@ export const useBankCardDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { showActionSheetWithOptions } = useActionSheet();
   const actionSheetStyles = useActionSheetStyles();
+  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<
+    Transaction | undefined
+  >();
 
   // ─── Queries ─────────────────────────────────────────────────────────────────
 
   const { data: bankCard, isLoading } = useCard(id ? Number(id) : null);
+  const { mutateAsync: deleteTransaction } = useDeleteTransaction();
+  const { mutateAsync: deleteTransfer } = useDeleteTransfer();
 
-  // Month filtered — used for sections list and totalSpent
   const monthFilters: TransactionFilters = useMemo(
     () => ({
       cardAccountId: id ? Number(id) : undefined,
@@ -51,7 +62,6 @@ export const useBankCardDetailScreen = () => {
     };
   }, [selectedDate]);
 
-  // Total spent in selected month (or all time if no month selected)
   const totalSpent = useMemo(
     () =>
       transactions
@@ -62,6 +72,11 @@ export const useBankCardDetailScreen = () => {
 
   const sections = useMemo(() => groupByDate(transactions), [transactions]);
 
+  const contentStyle = useMemo(
+    () => ({ marginBottom: bottomTabHeight }),
+    [bottomTabHeight],
+  );
+
   // ─── Handlers ────────────────────────────────────────────────────────────────
 
   const handleSelectMonth = useCallback((month: MonthItem) => {
@@ -69,9 +84,12 @@ export const useBankCardDetailScreen = () => {
   }, []);
 
   const handleSettingsPress = useCallback(() => {
-    const options = [t('common:edit'), t('common:cancel')];
     showActionSheetWithOptions(
-      { options, cancelButtonIndex: 1, ...actionSheetStyles },
+      {
+        options: [t('common:edit'), t('common:cancel')],
+        cancelButtonIndex: 1,
+        ...actionSheetStyles,
+      },
       selectedIndex => {
         if (selectedIndex === 0 && bankCard) {
           router.push({
@@ -93,6 +111,33 @@ export const useBankCardDetailScreen = () => {
     [router],
   );
 
+  const handleSelectRemoveTransaction = useCallback(
+    (transaction: Transaction) => {
+      setSelectedTransaction(transaction);
+      setIsAlertVisible(true);
+    },
+    [],
+  );
+
+  const handleDeleteTransaction = useCallback(async () => {
+    if (!selectedTransaction) return;
+    try {
+      if (
+        selectedTransaction.type === 'TRANSFER' &&
+        selectedTransaction.transferDetailId
+      ) {
+        await deleteTransfer(selectedTransaction.transferDetailId);
+      } else {
+        await deleteTransaction(selectedTransaction.id);
+      }
+    } catch (e) {
+      console.error('Delete failed', e);
+    } finally {
+      setSelectedTransaction(undefined);
+      setIsAlertVisible(false);
+    }
+  }, [selectedTransaction, deleteTransaction, deleteTransfer]);
+
   return {
     bankCard,
     cardType,
@@ -100,9 +145,15 @@ export const useBankCardDetailScreen = () => {
     sections,
     totalSpent,
     isLoading,
+    contentStyle,
     isNotFound: !isLoading && !bankCard,
+    isAlertVisible,
+    setIsAlertVisible,
+    selectedTransaction,
     handleSelectMonth,
     handleSettingsPress,
     handleTransactionPress,
+    handleSelectRemoveTransaction,
+    handleDeleteTransaction,
   };
 };

@@ -13,6 +13,7 @@ interface IAlertProps {
   secondaryButtonText?: string;
   onPrimaryPress: () => void;
   onSecondaryPress?: () => void;
+  destructive?: boolean;
 }
 
 export const Alert: FC<IAlertProps> = ({
@@ -23,6 +24,7 @@ export const Alert: FC<IAlertProps> = ({
   secondaryButtonText,
   onPrimaryPress,
   onSecondaryPress,
+  destructive = false,
 }) => {
   return (
     <Modal
@@ -48,15 +50,29 @@ export const Alert: FC<IAlertProps> = ({
           <View style={styles.footer}>
             {onSecondaryPress && secondaryButtonText && (
               <Pressable
-                style={[styles.button, styles.buttonBorder]}
+                style={({ pressed }) => [
+                  styles.button,
+                  styles.buttonBorder,
+                  pressed && styles.buttonPressed,
+                ]}
                 onPress={onSecondaryPress}>
-                <Text category="s1" style={styles.buttonText}>
+                <Text category="s1" style={styles.secondaryButtonText}>
                   {secondaryButtonText}
                 </Text>
               </Pressable>
             )}
-            <Pressable style={styles.button} onPress={onPrimaryPress}>
-              <Text category="s1" style={styles.buttonText}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={onPrimaryPress}>
+              <Text
+                category="s1"
+                style={[
+                  styles.primaryButtonText,
+                  destructive && styles.destructiveText,
+                ]}>
                 {primaryButtonText}
               </Text>
             </Pressable>
@@ -70,47 +86,63 @@ export const Alert: FC<IAlertProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   container: {
     width: '75%',
     backgroundColor: theme.colors.secondaryBK,
-    borderRadius: GLOBAL_BORDER_RADIUS - 10,
+    borderRadius: GLOBAL_BORDER_RADIUS,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: theme.colors.primaryBK,
   },
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 5,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 16,
     alignItems: 'center',
-    gap: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.textHint,
+    gap: 6,
   },
   title: {
     color: theme.colors.basic100,
     textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
   },
   subtitle: {
     color: theme.colors.textHint,
     textAlign: 'center',
+    lineHeight: 18,
   },
   footer: {
     flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.primaryBK,
   },
   button: {
     flex: 1,
-    padding: 15,
+    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  buttonPressed: {
+    backgroundColor: theme.colors.primaryBK,
+  },
   buttonBorder: {
     borderRightWidth: 1,
-    borderRightColor: theme.colors.textHint,
+    borderRightColor: theme.colors.primaryBK,
   },
-  buttonText: {
+  primaryButtonText: {
     color: theme.colors.primary,
+    fontWeight: '600',
+  },
+  secondaryButtonText: {
+    color: theme.colors.textHint,
+    fontWeight: '400',
+  },
+  destructiveText: {
+    color: theme.colors.red,
   },
 });
