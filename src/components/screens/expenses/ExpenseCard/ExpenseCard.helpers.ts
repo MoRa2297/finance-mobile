@@ -34,8 +34,8 @@ export const getExpenseCardData = (
     isTransfer,
     isIncome,
     isExpense,
-    transferFromAccount: transaction.transferFrom?.fromAccount?.name,
-    transferToAccount: transaction.transferFrom?.toAccount?.name,
+    transferFromAccount: transaction.transferDetail?.fromAccount?.name,
+    transferToAccount: transaction.transferDetail?.toAccount?.name,
     // Amount styling
     amountColor: isIncome
       ? theme.colors.green

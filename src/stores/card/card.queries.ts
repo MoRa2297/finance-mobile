@@ -9,13 +9,20 @@ export const useCards = () => {
   });
 };
 
-export const useCardsByAccount = (bankAccountIds: number[]) => {
+export const useCard = (id: number | null) => {
   return useQuery({
-    queryKey: cardKeys.listByAccounts(bankAccountIds),
-    queryFn: () => cardService.getCards(),
-    enabled: bankAccountIds.length > 0,
-    // Filter client-side — evita un endpoint dedicato
-    select: data =>
-      data.filter(card => bankAccountIds.includes(card.bankAccountId)),
+    queryKey: cardKeys.detail(id!),
+    queryFn: () => cardService.getCard(id!),
+    enabled: id !== null && id > 0,
   });
 };
+
+// export const useCardsByAccount = (bankAccountIds: number[]) => {
+//   return useQuery({
+//     queryKey: cardKeys.listByAccounts(bankAccountIds),
+//     queryFn: () => cardService.getCards(),
+//     enabled: bankAccountIds.length > 0,
+//     select: data =>
+//       data.filter(card => bankAccountIds.includes(card.bankAccountId)),
+//   });
+// };

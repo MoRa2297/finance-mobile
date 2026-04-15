@@ -31,9 +31,9 @@ export default function BankCardDetailScreen() {
     dateRange,
     sections,
     totalSpent,
-    categories,
-    bankAccounts,
-    bankCards,
+    // categories,
+    // bankAccounts,
+    // bankCards,
     handleSelectMonth,
     handleSettingsPress,
     handleTransactionPress,
@@ -42,14 +42,15 @@ export default function BankCardDetailScreen() {
   const renderItem = useCallback(
     ({ item }: { item: Transaction }) => (
       <ExpenseCard
+        // categories={categories}
+        // bankAccounts={bankAccounts}
+        // bankCards={bankCards}
         transaction={item}
-        categories={categories}
-        bankAccounts={bankAccounts}
-        bankCards={bankCards}
         onPress={() => handleTransactionPress(item)}
+        onDelete={() => {}}
       />
     ),
-    [categories, bankAccounts, bankCards, handleTransactionPress],
+    [handleTransactionPress],
   );
 
   const renderSectionHeader = useCallback(

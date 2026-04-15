@@ -1,68 +1,86 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useTranslation } from 'react-i18next';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
-import { useBankAccountStore, bankAccountSelectors } from '@/stores';
-import { BankAccount, SwipePickerMonth } from '@/types';
+import { useBankAccounts } from '@/stores/bank-account/bank-account.queries';
+import { useDeleteBankAccount } from '@/stores/bank-account/bank-account.mutations';
+import { useTransactions } from '@/stores/transaction/transaction.queries';
+import { useActionSheetStyles } from '@/hooks';
+import { useUIStore } from '@/stores';
+import { BankAccount, TransactionFilters } from '@/types';
 import { MonthItem } from '@components/screens/home';
-import { theme } from '@config/theme';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const useBankAccountsScreen = () => {
   const { t } = useTranslation(['bankAccountPage', 'common']);
-  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
+  const actionSheetStyles = useActionSheetStyles();
+  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
-  // Store
-  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
-  const isLoading = useBankAccountStore(bankAccountSelectors.isLoading);
-  const fetchBankAccounts = useBankAccountStore(
-    state => state.fetchBankAccounts,
-  );
-  const deleteBankAccount = useBankAccountStore(
-    state => state.deleteBankAccount,
-  );
-
-  // Local state
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [alertVisible, setAlertVisible] = useState(false);
   const [accountToDelete, setAccountToDelete] = useState<BankAccount | null>(
     null,
   );
 
-  // Fetch al mount
-  useEffect(() => {
-    fetchBankAccounts();
-  }, [fetchBankAccounts]);
+  const { data: bankAccounts = [], isLoading } = useBankAccounts();
+  const { mutateAsync: deleteBankAccount } = useDeleteBankAccount();
 
-  // TODO: calcoli totali da reimplementare quando le transaction sono collegate
-  const totSpent = 0;
-  const totResidue = useMemo(
-    () =>
-      bankAccounts.reduce((acc, account) => acc + account.startingBalance, 0),
-    [bankAccounts],
+  const { data: allTransactionData } = useTransactions({});
+  const allTransactions = allTransactionData?.transactions ?? [];
+
+  const monthFilters: TransactionFilters = useMemo(
+    () => ({
+      ...(selectedDate && {
+        month: selectedDate.month() + 1,
+        year: selectedDate.year(),
+      }),
+    }),
+    [selectedDate],
   );
 
-  // Action sheet styles
-  const actionSheetStyles = useMemo(
-    () => ({
-      containerStyle: {
-        borderRadius: 20,
-        backgroundColor: theme.colors.secondaryBK,
-        marginHorizontal: 20,
-        borderWidth: 1,
-        borderColor: theme.colors.primaryBK,
-        marginBottom: insets.bottom,
-      },
-      textStyle: {
-        textAlign: 'center' as const,
-        color: theme.colors.basic100,
-      },
-    }),
-    [insets.bottom],
+  const { data: monthTransactionData } = useTransactions(monthFilters);
+  const monthTransactions = monthTransactionData?.transactions ?? [];
+
+  const totResidue = useMemo(() => {
+    const startingBalances = bankAccounts.reduce(
+      (sum, a) => sum + a.startingBalance,
+      0,
+    );
+    const relevantTransactions = selectedDate
+      ? allTransactions.filter(t =>
+          dayjs(t.date).isBefore(selectedDate.endOf('month').add(1, 'day')),
+        )
+      : allTransactions;
+
+    const totalIncome = relevantTransactions
+      .filter(t => t.type === 'INCOME')
+      .reduce((sum, t) => sum + t.amount, 0);
+    const totalExpense = relevantTransactions
+      .filter(t => t.type === 'EXPENSE')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return startingBalances + totalIncome - totalExpense;
+  }, [bankAccounts, allTransactions, selectedDate]);
+
+  const totSpent = useMemo(
+    () =>
+      monthTransactions
+        .filter(t => t.type === 'EXPENSE')
+        .reduce((sum, t) => sum + t.amount, 0),
+    [monthTransactions],
+  );
+
+  const keyExtractor = useCallback(
+    (item: BankAccount) => item.id.toString(),
+    [],
+  );
+
+  const listContentStyle = useMemo(
+    () => ({ paddingBottom: bottomTabHeight }),
+    [bottomTabHeight],
   );
 
   const handleSelectMonth = useCallback((month: MonthItem) => {
@@ -81,15 +99,9 @@ export const useBankAccountsScreen = () => {
 
   const handleOptionsPress = useCallback(
     (account: BankAccount) => {
-      const options = [
-        t('common:edit'),
-        t('common:delete'),
-        t('common:cancel'),
-      ];
-
       showActionSheetWithOptions(
         {
-          options,
+          options: [t('common:edit'), t('common:delete'), t('common:cancel')],
           cancelButtonIndex: 2,
           destructiveButtonIndex: 1,
           ...actionSheetStyles,
@@ -111,14 +123,12 @@ export const useBankAccountsScreen = () => {
   );
 
   const handleAddAccount = useCallback(() => {
-    const options = [
-      t('bankAccountPage:bankAccountActionSheet.createBankAccount'),
-      t('common:cancel'),
-    ];
-
     showActionSheetWithOptions(
       {
-        options,
+        options: [
+          t('bankAccountPage:bankAccountActionSheet.createBankAccount'),
+          t('common:cancel'),
+        ],
         cancelButtonIndex: 1,
         ...actionSheetStyles,
       },
@@ -131,11 +141,10 @@ export const useBankAccountsScreen = () => {
   }, [t, showActionSheetWithOptions, router, actionSheetStyles]);
 
   const handleDeleteConfirm = useCallback(async () => {
-    if (accountToDelete) {
-      await deleteBankAccount(accountToDelete.id);
-      setAccountToDelete(null);
-      setAlertVisible(false);
-    }
+    if (!accountToDelete) return;
+    await deleteBankAccount(accountToDelete.id);
+    setAccountToDelete(null);
+    setAlertVisible(false);
   }, [accountToDelete, deleteBankAccount]);
 
   const handleDeleteCancel = useCallback(() => {
@@ -145,10 +154,13 @@ export const useBankAccountsScreen = () => {
 
   return {
     bankAccounts,
+    allTransactions,
     isLoading,
     totSpent,
     totResidue,
     alertVisible,
+    keyExtractor,
+    listContentStyle,
     handleSelectMonth,
     handleAccountPress,
     handleOptionsPress,

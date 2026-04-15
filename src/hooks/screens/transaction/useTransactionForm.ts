@@ -1,6 +1,6 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useState, useMemo, useCallback } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
@@ -11,32 +11,17 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useBankAccounts } from '@/stores/bank-account/bank-account.queries';
 import { useCards } from '@/stores/card/card.queries';
 import { useTransaction } from '@/stores/transaction/transaction.queries';
-import {
-  useCreateTransaction,
-  useCreateTransfer,
-  useUpdateTransaction,
-  useUpdateTransfer,
-} from '@/stores/transaction/transaction.mutations';
-import { useUpdateRecurringRule } from '@/stores/recurring/recurring.mutations';
-import { isCreateableType } from '@/utils/transaction.utils';
-import { useActionSheetStyles } from '@/hooks';
-import {
-  buildRecurrenceFromTransaction,
-  DATE_FORMAT,
-  parseDate,
-} from './helpers';
-
-import {
-  TransactionFormTypes,
-  CreateTransactionPayload,
-  CreateTransferPayload,
-  BankAccount,
-  BankCard,
-  Category,
-} from '@/types';
+import { TransactionFormTypes } from '@/types';
 import { RecurrenceValues } from '@components/ui/RecurrenceSelector/RecurrenceSelector';
+import { buildRecurrenceFromTransaction } from './helpers';
+
+import { useTransactionType } from './useTransactionType';
+import { useTransactionSelection } from './useTransactionSelection';
+import { useTransactionMutations } from './useTransactionMutations';
 
 dayjs.extend(customParseFormat);
+
+const DATE_FORMAT = 'DD-MM-YYYY';
 
 export interface TransactionFormValues {
   money: string;
@@ -46,15 +31,6 @@ export interface TransactionFormValues {
   recurrence: RecurrenceValues;
 }
 
-interface SelectionState {
-  bankAccount: BankAccount | null;
-  category: Category | null;
-  card: BankCard | null;
-  toAccount: BankAccount | null;
-}
-
-// ─── Hook ──────────────────────────────────────────────────────────────────────
-
 export const useTransactionForm = () => {
   const { t } = useTranslation(['transactionPage', 'common']);
   const router = useRouter();
@@ -62,98 +38,48 @@ export const useTransactionForm = () => {
     id?: string;
     formType?: string;
   }>();
-  const { showActionSheetWithOptions } = useActionSheet();
-  const actionSheetStyles = useActionSheetStyles();
+
+  const [selectionError, setSelectionError] = useState<string | null>(null);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   // ─── Server data ─────────────────────────────────────────────────────────────
 
   const { data: bankAccounts = [] } = useBankAccounts();
   const { data: cards = [] } = useCards();
   const { data: existingTransaction } = useTransaction(id ? Number(id) : null);
-
   const isEditing = !!existingTransaction;
-  const isTransfer = (ft: TransactionFormTypes) =>
-    ft === TransactionFormTypes.TRANSFER;
 
-  // ─── Mutations ───────────────────────────────────────────────────────────────
+  // ─── Sub-hooks ───────────────────────────────────────────────────────────────
 
-  const { mutateAsync: createTransaction, isPending: isCreating } =
-    useCreateTransaction();
-  const { mutateAsync: createTransfer, isPending: isCreatingTransfer } =
-    useCreateTransfer();
-  const { mutateAsync: updateTransaction, isPending: isUpdating } =
-    useUpdateTransaction();
-  const { mutateAsync: updateTransfer, isPending: isUpdatingTransfer } =
-    useUpdateTransfer();
-  const { mutateAsync: updateRecurringRule, isPending: isUpdatingRecurring } =
-    useUpdateRecurringRule();
+  const { formType, formTypeLabel, handleOpenTypeSelector } =
+    useTransactionType({
+      initialType: type as TransactionFormTypes,
+      isEditing,
+      existingType: existingTransaction?.type as TransactionFormTypes,
+    });
 
-  const isMutating =
-    isCreating ||
-    isCreatingTransfer ||
-    isUpdating ||
-    isUpdatingTransfer ||
-    isUpdatingRecurring;
-
-  // ─── Local state ─────────────────────────────────────────────────────────────
-
-  const [formType, setFormType] = useState<TransactionFormTypes>(
-    (type as TransactionFormTypes) ?? TransactionFormTypes.EXPENSE,
-  );
-
-  const [selection, setSelection] = useState<SelectionState>({
-    bankAccount: null,
-    category: null,
-    card: null,
-    toAccount: null,
+  const {
+    selection,
+    validateSelections,
+    handleOpenCategorySheet,
+    handleOpenBankAccountSheet,
+    handleOpenToAccountSheet,
+    handleOpenCardSheet,
+  } = useTransactionSelection({
+    formType,
+    isEditing,
+    existingTransaction,
+    bankAccounts,
+    cards,
+    onError: setSelectionError,
+    onShowAlert: () => setAlertVisible(true),
   });
 
-  const [selectionError, setSelectionError] = useState<string | null>(null);
-  const [alertVisible, setAlertVisible] = useState(false);
-
-  // Sync formType from existing transaction (edit mode)
-  useEffect(() => {
-    if (!existingTransaction) return;
-    setFormType(existingTransaction.type as TransactionFormTypes);
-  }, [existingTransaction]);
-
-  // Populate selection from existing transaction (edit mode)
-  useEffect(() => {
-    if (!existingTransaction) return;
-
-    const bankAccount =
-      bankAccounts.find(ba => ba.id === existingTransaction.bankAccountId) ??
-      null;
-    const card =
-      cards.find(c => c.id === existingTransaction.cardAccountId) ?? null;
-    const category = existingTransaction.category ?? null;
-    const toAccount =
-      isTransfer(existingTransaction.type as TransactionFormTypes) &&
-      existingTransaction.transferDetail
-        ? (bankAccounts.find(
-            ba => ba.id === existingTransaction.transferDetail?.toAccountId,
-          ) ?? null)
-        : null;
-
-    console.log('existingTransaction', existingTransaction);
-    console.log('cards', cards);
-    console.log('card', card);
-
-    setSelection({ bankAccount, card, category, toAccount });
-  }, [existingTransaction, bankAccounts, cards]);
-
-  // Reset selections on formType change — skip during edit to avoid
-  // overwriting the selections populated by the effect above
-  useEffect(() => {
-    if (isEditing) return;
-    setSelection({
-      bankAccount: null,
-      category: null,
-      card: null,
-      toAccount: null,
-    });
-    setSelectionError(null);
-  }, [formType, isEditing]);
+  const { submit, isPending } = useTransactionMutations({
+    formType,
+    selection,
+    existingTransaction,
+  });
 
   // ─── Form ────────────────────────────────────────────────────────────────────
 
@@ -187,166 +113,14 @@ export const useTransactionForm = () => {
     [existingTransaction],
   );
 
-  // ─── Submit ──────────────────────────────────────────────────────────────────
-
   const formik = useFormik<TransactionFormValues>({
     initialValues,
     validationSchema,
     enableReinitialize: true,
-    onSubmit: async values => {
-      const dateISO = parseDate(values.date);
-      const recurrenceEndDate = values.recurrence.endDate
-        ? parseDate(values.recurrence.endDate)
-        : undefined;
-
-      if (isTransfer(formType)) {
-        const payload: CreateTransferPayload = {
-          amount: parseFloat(values.money),
-          date: dateISO,
-          description: values.description.trim(),
-          recurrent: values.recurrence.recurrent,
-          frequency: values.recurrence.frequency ?? undefined,
-          recurrenceEndDate,
-          note: values.note,
-          fromAccountId: selection.bankAccount?.id,
-          toAccountId: selection.toAccount?.id,
-          cardAccountId: selection.card?.id,
-          categoryId: selection.category?.id,
-        };
-
-        if (isEditing && existingTransaction) {
-          if (
-            existingTransaction.recurrent &&
-            existingTransaction.recurringRuleId
-          ) {
-            // Recurring transfer — update the rule only
-            // Future transactions will be regenerated by the cron job
-            await updateRecurringRule({
-              id: existingTransaction.recurringRuleId,
-              payload: {
-                amount: parseFloat(values.money),
-                description: values.description.trim(),
-                frequency: values.recurrence.frequency ?? undefined,
-                endDate: recurrenceEndDate,
-                note: values.note,
-                fromAccountId: selection.bankAccount?.id,
-                toAccountId: selection.toAccount?.id,
-              },
-            });
-          } else {
-            // Single transfer — delete both legs and recreate atomically
-            if (!existingTransaction.transferDetailId) {
-              throw new Error(
-                'transferDetailId not found on existing transaction',
-              );
-            }
-            await updateTransfer({
-              transferDetailId: existingTransaction.transferDetailId,
-              payload,
-            });
-          }
-        } else {
-          await createTransfer(payload);
-        }
-      } else {
-        if (!isCreateableType(formType)) return;
-
-        const payload: CreateTransactionPayload = {
-          amount: parseFloat(values.money),
-          date: dateISO,
-          description: values.description.trim(),
-          recurrent: values.recurrence.recurrent,
-          frequency: values.recurrence.frequency ?? undefined,
-          recurrenceEndDate,
-          note: values.note,
-          type: formType,
-          categoryId: selection.category?.id,
-          bankAccountId: selection.bankAccount?.id,
-          cardAccountId: selection.card?.id,
-        };
-
-        if (isEditing && existingTransaction) {
-          await updateTransaction({ id: existingTransaction.id, payload });
-        } else {
-          await createTransaction(payload);
-        }
-      }
-
-      router.back();
-    },
+    onSubmit: submit,
   });
 
-  // ─── Validation ──────────────────────────────────────────────────────────────
-
-  const validateSelections = useCallback((): boolean => {
-    if (isTransfer(formType)) {
-      if (!selection.bankAccount) {
-        setSelectionError(t('transactionPage:errors.fromAccountRequired'));
-        return false;
-      }
-      if (!selection.toAccount) {
-        setSelectionError(t('transactionPage:errors.toAccountRequired'));
-        return false;
-      }
-      if (selection.bankAccount.id === selection.toAccount.id) {
-        setSelectionError(t('transactionPage:errors.sameAccountError'));
-        return false;
-      }
-    } else {
-      if (!selection.bankAccount) {
-        setSelectionError(t('transactionPage:errors.bankRequired'));
-        return false;
-      }
-      if (!selection.category) {
-        setSelectionError(t('transactionPage:errors.categoryRequired'));
-        return false;
-      }
-    }
-    setSelectionError(null);
-    return true;
-  }, [selection, formType, t]);
-
-  const handleSubmit = useCallback(async () => {
-    const formErrors = await formik.validateForm();
-    formik.setTouched({ money: true, description: true, date: true });
-    const selectionsValid = validateSelections();
-
-    if (Object.keys(formErrors).length > 0 || !selectionsValid) {
-      setAlertVisible(true);
-      return;
-    }
-
-    formik.handleSubmit();
-  }, [formik, validateSelections]);
-
   // ─── Handlers ────────────────────────────────────────────────────────────────
-
-  const handleCancel = useCallback(() => router.back(), [router]);
-
-  const handleOpenTypeSelector = useCallback(() => {
-    const options = [
-      t('transactionPage:income'),
-      t('transactionPage:expense'),
-      t('transactionPage:transfer'),
-      t('common:cancel'),
-    ];
-    showActionSheetWithOptions(
-      { options, cancelButtonIndex: 3, ...actionSheetStyles },
-      selectedIndex => {
-        switch (selectedIndex) {
-          case 0:
-            setFormType(TransactionFormTypes.INCOME);
-            break;
-          case 1:
-            setFormType(TransactionFormTypes.EXPENSE);
-            break;
-          case 2:
-            setFormType(TransactionFormTypes.TRANSFER);
-            break;
-        }
-      },
-    );
-  }, [t, showActionSheetWithOptions, actionSheetStyles]);
 
   const handleOpenDatePicker = useCallback(async () => {
     const prevDate = dayjs(formik.values.date, DATE_FORMAT);
@@ -367,57 +141,20 @@ export const useTransactionForm = () => {
     }
   }, [formik]);
 
-  const handleOpenCategorySheet = useCallback(async () => {
-    const categoryType =
-      formType === TransactionFormTypes.INCOME
-        ? TransactionFormTypes.INCOME
-        : TransactionFormTypes.EXPENSE;
-    const result = await SheetManager.show('select-category-sheet', {
-      payload: { type: categoryType },
-    });
-    if (result?.item) {
-      setSelection(prev => ({ ...prev, category: result.item }));
-      setSelectionError(null);
-    }
-  }, [formType]);
+  const handleSubmit = useCallback(async () => {
+    const formErrors = await formik.validateForm();
+    formik.setTouched({ money: true, description: true, date: true });
+    const selectionsValid = validateSelections();
 
-  const handleOpenBankAccountSheet = useCallback(async () => {
-    const result = await SheetManager.show('bank-account-select-sheet');
-    if (result?.bankAccount) {
-      setSelection(prev => ({
-        ...prev,
-        bankAccount: result.bankAccount,
-        card: null,
-      }));
-      setSelectionError(null);
-    }
-  }, []);
-
-  const handleOpenToAccountSheet = useCallback(async () => {
-    const result = await SheetManager.show('bank-account-select-sheet');
-    if (result?.bankAccount) {
-      setSelection(prev => ({ ...prev, toAccount: result.bankAccount }));
-      setSelectionError(null);
-    }
-  }, []);
-
-  const handleOpenCardSheet = useCallback(async () => {
-    const bankAccountIds = selection.bankAccount
-      ? [selection.bankAccount.id]
-      : [];
-    if (bankAccountIds.length === 0) {
-      setSelectionError(t('transactionPage:errors.selectBankFirst'));
+    if (Object.keys(formErrors).length > 0 || !selectionsValid) {
       setAlertVisible(true);
       return;
     }
-    const result = await SheetManager.show('select-card-sheet', {
-      payload: { bankAccountIds },
-    });
-    if (result?.item) {
-      setSelection(prev => ({ ...prev, card: result.item }));
-      setSelectionError(null);
-    }
-  }, [selection.bankAccount, t]);
+
+    formik.handleSubmit();
+  }, [formik, validateSelections]);
+
+  const handleCancel = useCallback(() => router.back(), [router]);
 
   // ─── Derived ─────────────────────────────────────────────────────────────────
 
@@ -431,18 +168,13 @@ export const useTransactionForm = () => {
     [selectionError, formik.errors],
   );
 
-  const formTypeLabel = useMemo(
-    () => t(`transactionPage:${formType.toLowerCase()}`),
-    [formType, t],
-  );
-
   return {
     formik,
     formType,
     formTypeLabel,
     selection,
     isEditing,
-    isSubmitting: isMutating || formik.isSubmitting,
+    isSubmitting: isPending || formik.isSubmitting,
     alertVisible,
     firstError,
     setAlertVisible,

@@ -1,5 +1,5 @@
-import React, { FC, useMemo, useCallback } from 'react';
-import { StyleSheet, View, Pressable, Alert } from 'react-native';
+import React, { FC, useMemo } from 'react';
+import { StyleSheet, View, Pressable, TouchableHighlight } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import Animated, {
   useAnimatedStyle,
@@ -37,32 +37,6 @@ export const ExpenseCard: FC<IExpenseCardProps> = ({
   const translateX = useSharedValue(0);
   const isOpen = useSharedValue(false);
 
-  // const handleDelete = useCallback(() => {
-  //   Alert.alert(
-  //     'Delete transaction',
-  //     'Are you sure you want to delete this transaction? This action cannot be undone.',
-  //     [
-  //       {
-  //         text: 'Cancel',
-  //         style: 'cancel',
-  //         onPress: () => {
-  //           translateX.value = withSpring(0);
-  //           isOpen.value = false;
-  //         },
-  //       },
-  //       {
-  //         text: 'Delete',
-  //         style: 'destructive',
-  //         onPress: () => {
-  //           translateX.value = withSpring(0);
-  //           isOpen.value = false;
-  //           onDelete(transaction);
-  //         },
-  //       },
-  //     ],
-  //   );
-  // }, [transaction, onDelete]);
-
   const panGesture = Gesture.Pan()
     .activeOffsetX([-10, 10])
     .onUpdate(e => {
@@ -91,7 +65,7 @@ export const ExpenseCard: FC<IExpenseCardProps> = ({
 
   return (
     <View style={styles.wrapper}>
-      {/* Delete button behind card */}
+      {/* Delete button — revealed by swipe */}
       <View style={styles.deleteButton}>
         <Pressable
           style={styles.deleteButtonInner}
@@ -106,8 +80,8 @@ export const ExpenseCard: FC<IExpenseCardProps> = ({
 
       {/* Swipeable card */}
       <GestureDetector gesture={panGesture}>
-        <Animated.View style={animatedCardStyle}>
-          <Pressable
+        <Animated.View style={[styles.animatedCard, animatedCardStyle]}>
+          <TouchableHighlight
             onPress={() => {
               if (isOpen.value) {
                 translateX.value = withSpring(0);
@@ -116,59 +90,59 @@ export const ExpenseCard: FC<IExpenseCardProps> = ({
               }
               onPress(transaction);
             }}
-            style={({ pressed }) => [
-              styles.container,
-              pressed && styles.pressed,
-            ]}>
-            {/* Icon */}
-            <View
-              style={[
-                styles.iconContainer,
-                { backgroundColor: cardData.iconBackgroundColor },
-              ]}>
-              <Icon
-                name={cardData.iconName}
-                color={theme.colors.basic100}
-                size={24}
-              />
-            </View>
-
-            {/* Center */}
-            <View style={styles.centerContainer}>
-              <View style={styles.titleRow}>
-                <Text category="s1" style={styles.title} numberOfLines={1}>
-                  {transaction.description}
-                </Text>
-                <View style={styles.badges}>
-                  {cardData.isRecurrent && (
-                    <Icon
-                      name="sync-outline"
-                      color={theme.colors.textHint}
-                      size={14}
-                    />
-                  )}
-                  {cardData.isTransfer && (
-                    <Icon
-                      name="swap-outline"
-                      color={theme.colors.primary}
-                      size={14}
-                    />
-                  )}
-                </View>
+            underlayColor={theme.colors.primaryBK}
+            style={styles.touchable}>
+            <View style={styles.innerContent}>
+              {/* Icon */}
+              <View
+                style={[
+                  styles.iconContainer,
+                  { backgroundColor: cardData.iconBackgroundColor },
+                ]}>
+                <Icon
+                  name={cardData.iconName}
+                  color={theme.colors.basic100}
+                  size={24}
+                />
               </View>
-              <Text category="p2" style={styles.subtitle} numberOfLines={1}>
-                {subtitle}
+
+              {/* Center */}
+              <View style={styles.centerContainer}>
+                <View style={styles.titleRow}>
+                  <Text category="s1" style={styles.title} numberOfLines={1}>
+                    {transaction.description}
+                  </Text>
+                  <View style={styles.badges}>
+                    {cardData.isRecurrent && (
+                      <Icon
+                        name="sync-outline"
+                        color={theme.colors.textHint}
+                        size={14}
+                      />
+                    )}
+                    {cardData.isTransfer && (
+                      <Icon
+                        name="swap-outline"
+                        color={theme.colors.primary}
+                        size={14}
+                      />
+                    )}
+                  </View>
+                </View>
+                <Text category="p2" style={styles.subtitle} numberOfLines={1}>
+                  {subtitle}
+                </Text>
+              </View>
+
+              {/* Amount */}
+              <Text
+                category="s1"
+                style={[styles.amount, { color: cardData.amountColor }]}>
+                {cardData.amountPrefix}
+                {transaction.amount.toFixed(2)} €
               </Text>
             </View>
-
-            {/* Amount */}
-            <Text
-              category="s1"
-              style={[styles.amount, { color: cardData.amountColor }]}>
-              {cardData.amountPrefix}
-              {transaction.amount.toFixed(2)} €
-            </Text>
-          </Pressable>
+          </TouchableHighlight>
         </Animated.View>
       </GestureDetector>
     </View>
@@ -177,7 +151,9 @@ export const ExpenseCard: FC<IExpenseCardProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    position: 'relative',
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: theme.colors.red,
   },
   deleteButton: {
     position: 'absolute',
@@ -185,26 +161,29 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: DELETE_BUTTON_WIDTH,
-    backgroundColor: theme.colors.red,
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  deleteButtonInner: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  container: {
+  deleteButtonInner: {
+    flex: 1,
+    width: DELETE_BUTTON_WIDTH,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  animatedCard: {
+    borderRadius: 20,
+    overflow: 'hidden', // ← mantiene bordi tondi durante lo slide
+  },
+  touchable: {
+    borderRadius: 20,
+    backgroundColor: theme.colors.primaryBK,
+  },
+  innerContent: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    borderRadius: 20,
     height: 70,
     paddingHorizontal: 12,
-    backgroundColor: theme.colors.primaryBK,
-  },
-  pressed: {
-    opacity: 0.7,
   },
   iconContainer: {
     width: 45,

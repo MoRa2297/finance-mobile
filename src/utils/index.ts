@@ -1,1 +1,1 @@
-export { getMonths, formatCurrency } from './date';
+export { parseDateToDisplay } from './date';

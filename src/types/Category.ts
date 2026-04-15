@@ -21,7 +21,6 @@ export type EditCategory = {
   colorId: number | string;
   iconId: number | string;
   type: CategoryType;
-  // userId: number;
   updateDate?: Date;
   createdDate?: Date;
 };

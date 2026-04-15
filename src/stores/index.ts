@@ -14,7 +14,7 @@ export { useLookupStore, lookupSelectors } from './lookup';
 // export type { LookupState } from './lookup';
 
 // Category
-export { useCategoryStore, categorySelectors } from './category';
+// export { useCategoryStore, categorySelectors } from './category';
 // export type { CategoryState } from './category';
 
 // Bank Account
@@ -37,4 +37,4 @@ export {
   useUpdateTransfer,
 } from './transaction';
 
-export { useDataStore } from './data';
+// export { useDataStore } from './data';

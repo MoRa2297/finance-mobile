@@ -1,10 +1,9 @@
+// components/screens/home/calculateBalance.ts
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import { BankAccount, Transaction } from '@/types';
 
 dayjs.extend(isBetween);
-
-// TODO check when logic will be totally done
 
 export interface BalanceData {
   totalIncome: number;
@@ -12,76 +11,68 @@ export interface BalanceData {
   totalResidue: number;
 }
 
-/**
- * Default balance when no data
- */
 export const DEFAULT_BALANCE: BalanceData = {
   totalIncome: 0,
   totalExpense: 0,
   totalResidue: 0,
 };
 
-/**
- * Filters transactions by selected month
- */
 export const filterTransactionsByMonth = (
   transactions: Transaction[],
   selectedDate: Dayjs | null,
 ): Transaction[] => {
-  if (!transactions || transactions.length === 0) return [];
+  if (!transactions?.length) return [];
   if (!selectedDate) return transactions;
 
   const startDate = selectedDate.startOf('month');
   const endDate = selectedDate.endOf('month');
 
-  return transactions.filter(transaction => {
-    const transactionDate = dayjs(transaction.date);
-    return transactionDate.isBetween(startDate, endDate, null, '[]');
-  });
+  return transactions.filter(t =>
+    dayjs(t.date).isBetween(startDate, endDate, null, '[]'),
+  );
 };
 
-/**
- * Calculates balance summary from transactions
- */
 export const calculateBalance = (
-  transactions: Transaction[] | undefined,
-  bankAccounts: BankAccount[] | undefined,
+  allTransactions: Transaction[],
+  monthTransactions: Transaction[],
+  bankAccounts: BankAccount[],
   selectedDate: Dayjs | null,
 ): BalanceData => {
-  // Guard clauses
-  if (!transactions || !bankAccounts) {
-    return DEFAULT_BALANCE;
-  }
+  if (!allTransactions || !bankAccounts) return DEFAULT_BALANCE;
 
-  const filtered = filterTransactionsByMonth(transactions, selectedDate);
+  // Income and expense for selected month only
+  const totalIncome = monthTransactions
+    .filter(t => t.type === 'INCOME')
+    .reduce((sum, t) => sum + t.amount, 0);
 
-  const receivedTransactions = filtered.filter(t => t.recived);
+  const totalExpense = monthTransactions
+    .filter(t => t.type === 'EXPENSE')
+    .reduce((sum, t) => sum + t.amount, 0);
 
-  const totalIncome = receivedTransactions
-    .filter(t => t.type === 'income')
-    .reduce((sum, t) => sum + parseFloat(t.money || '0'), 0);
-
-  const totalExpense = receivedTransactions
-    .filter(t => t.type === 'expense' || t.type === 'card_spending')
-    .reduce((sum, t) => sum + parseFloat(t.money || '0'), 0);
+  // Residue = startingBalance + all income ever - all expenses ever
+  // up to end of selected month
+  const relevantTransactions = selectedDate
+    ? allTransactions.filter(t =>
+        dayjs(t.date).isBefore(selectedDate.endOf('month').add(1, 'day')),
+      )
+    : allTransactions;
 
   const startingBalance = bankAccounts.reduce(
-    (sum, account) => sum + (account.startingBalance || 0),
+    (sum, a) => sum + a.startingBalance,
     0,
   );
+  const allIncome = relevantTransactions
+    .filter(t => t.type === 'INCOME')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const allExpense = relevantTransactions
+    .filter(t => t.type === 'EXPENSE')
+    .reduce((sum, t) => sum + t.amount, 0);
 
-  const totalResidue = startingBalance + totalIncome - totalExpense;
+  const totalResidue = startingBalance + allIncome - allExpense;
 
-  return {
-    totalIncome,
-    totalExpense,
-    totalResidue,
-  };
+  return { totalIncome, totalExpense, totalResidue };
 };
 
-/**
- * Formats money for display
- */
 export const formatMoney = (amount: number, visible: boolean): string => {
   if (!visible) return '--';
   return `${amount.toLocaleString('it-IT', { minimumFractionDigits: 2 })} €`;

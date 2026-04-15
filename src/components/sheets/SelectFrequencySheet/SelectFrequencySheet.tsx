@@ -105,18 +105,16 @@ export const SelectFrequencySheet: FC<SelectFrequencySheetProps> = ({
       useBottomSafeAreaPadding
       closeOnTouchBackdrop
       containerStyle={styles.sheetContainer}>
-      <Layout style={styles.content}>
-        <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
-          {FREQUENCY_OPTIONS.map((option, i) => (
-            <React.Fragment key={option.frequency}>
-              <FrequencyItem option={option} onSelect={handleSelect} />
-              {i < FREQUENCY_OPTIONS.length - 1 && (
-                <Layout style={styles.separator} />
-              )}
-            </React.Fragment>
-          ))}
-        </ScrollView>
-      </Layout>
+      <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
+        {FREQUENCY_OPTIONS.map((option, i) => (
+          <React.Fragment key={option.frequency}>
+            <FrequencyItem option={option} onSelect={handleSelect} />
+            {i < FREQUENCY_OPTIONS.length - 1 && (
+              <Layout style={styles.separator} />
+            )}
+          </React.Fragment>
+        ))}
+      </ScrollView>
     </ActionSheet>
   );
 };
@@ -126,31 +124,27 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
-  } as ViewStyle,
-  content: {
-    paddingTop: 25,
-    paddingBottom: 20,
-    backgroundColor: theme.colors.primaryBK,
-    paddingHorizontal: HORIZONTAL_PADDING,
-  } as ViewStyle,
+    overflow: 'hidden',
+  },
+
   list: {
     maxHeight: LIST_MAX_HEIGHT,
-  } as ViewStyle,
+  },
   separator: {
     height: 0,
     backgroundColor: theme.colors.primaryBK,
-  } as ViewStyle,
+  },
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingVertical: 12,
     gap: 12,
-  } as ViewStyle,
+  },
   listItemPressed: {
     backgroundColor: theme.colors.secondaryBK,
     opacity: 0.8,
-  } as ViewStyle,
+  },
   iconContainer: {
     width: 40,
     height: 40,
@@ -158,6 +152,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondaryBK,
     alignItems: 'center',
     justifyContent: 'center',
-  } as ViewStyle,
-  label: { flex: 1, color: theme.colors.basic100 } as TextStyle,
+  },
+  label: { flex: 1, color: theme.colors.basic100 },
 });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -12,35 +12,22 @@ import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
 import { Header } from '@components/ui/Header';
-import { useBankAccountForm } from '@/hooks/screens/bankAccounts/useBankAccountForm';
+import { useBankAccountForm } from '@hooks/screens/bankAccounts';
 
 export default function BankAccountFormScreen() {
   const { t } = useTranslation(['bankAccountPage', 'common']);
-  const [alertVisible, setAlertVisible] = useState(false);
 
   const {
     formik,
     isEditing,
     colors,
     firstError,
+    alertVisible,
+    setAlertVisible,
+    handleSubmit,
     handleOpenBankSheet,
     handleOpenAccountTypeSheet,
   } = useBankAccountForm();
-
-  const handleSubmit = async () => {
-    const errors = await formik.validateForm();
-    if (Object.keys(errors).length > 0) {
-      formik.setTouched({
-        name: true,
-        startingBalance: true,
-        bankType: true,
-        accountType: true,
-      });
-      setAlertVisible(true);
-      return;
-    }
-    formik.handleSubmit();
-  };
 
   return (
     <ScreenContainer
@@ -83,14 +70,12 @@ export default function BankAccountFormScreen() {
             selectedFallbackText={formik.values.bankType?.name}
             onPress={handleOpenBankSheet}
           />
-
           <InputIconField
             placeholder={t('bankAccountPage:namePlaceholder')}
             value={formik.values.name}
             onChange={v => formik.setFieldValue('name', v)}
             iconName="edit-outline"
           />
-
           <SelectInput
             placeholder={t('bankAccountPage:typeSelectPlaceholder')}
             value={
@@ -101,7 +86,6 @@ export default function BankAccountFormScreen() {
             iconName="grid-outline"
             onPress={handleOpenAccountTypeSheet}
           />
-
           <ColorInputField
             value={formik.values.color}
             onChange={v => formik.setFieldValue('color', v)}
@@ -117,6 +101,7 @@ export default function BankAccountFormScreen() {
             backgroundColor={theme.colors.primary}
             style={styles.submitButton}
             isLoading={formik.isSubmitting}
+            isDisabled={formik.isSubmitting}
           />
         </View>
       </View>
@@ -133,17 +118,9 @@ export default function BankAccountFormScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.secondaryBK,
-  },
-  topSection: {
-    paddingHorizontal: HORIZONTAL_PADDING,
-    paddingTop: 15,
-  },
-  sectionLabel: {
-    color: theme.colors.textHint,
-  },
+  container: { flex: 1, backgroundColor: theme.colors.secondaryBK },
+  topSection: { paddingHorizontal: HORIZONTAL_PADDING, paddingTop: 15 },
+  sectionLabel: { color: theme.colors.textHint },
   bottomSection: {
     flex: 1,
     backgroundColor: theme.colors.primaryBK,
@@ -151,9 +128,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
     marginTop: 10,
   },
-  scrollView: {
-    flex: 1,
-  },
+  scrollView: { flex: 1 },
   scrollContent: {
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingTop: 15,

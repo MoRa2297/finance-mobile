@@ -28,6 +28,8 @@
   "dateError": "Errore, data obbligatoria",
   "descriptionError": "Errore, descrizione obbligatoria",
   "alertButtonText": "Capito",
+  "fromAccountPlaceholder": "Da quale conto?",
+  "toAccountPlaceholder": "A quale conto?",
   "recurrence": {
     "frequencyPlaceholder": "Frequenza",
     "endDatePlaceholder": "Fino a quando (opzionale)",

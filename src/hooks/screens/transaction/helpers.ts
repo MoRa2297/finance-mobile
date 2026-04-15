@@ -4,11 +4,6 @@ import { RecurrenceValues } from '@components/ui/RecurrenceSelector/RecurrenceSe
 
 export const DATE_FORMAT = 'DD-MM-YYYY';
 
-export const parseDate = (dateStr: string): string => {
-  const [day, month, year] = dateStr.split('-');
-  return new Date(`${year}-${month}-${day}`).toISOString();
-};
-
 export const buildRecurrenceFromTransaction = (
   transaction: Transaction,
 ): RecurrenceValues => ({

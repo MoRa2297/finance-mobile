@@ -92,21 +92,13 @@ export default function ExpensesScreen() {
           onDeleteTransaction={handleSelectRemoveTransaction}
         />
       </View>
-      {/*<Alert*/}
-      {/*  visible={isAlertVisible}*/}
-      {/*  title={t('expensesPage:deleteTransactionTitle')}*/}
-      {/*  subtitle={t('expensesPage:deleteTransactionMessage')}*/}
-      {/*  primaryButtonText={t('common:delete')}*/}
-      {/*  onPrimaryPress={() => setIsAlertVisible(false)}*/}
-      {/*  onSecondaryPress={() =>*/}
-      {/*    selectedTransaction && handleDeleteTransaction(selectedTransaction)*/}
-      {/*  }*/}
-      {/*  secondaryButtonText={t('common:cancel')}*/}
-      {/*/>*/}
+
       <Alert
         visible={isAlertVisible}
-        title={t('expensesPage:deleteTransactionTitle')}
-        subtitle={t('expensesPage:deleteTransactionMessage')}
+        title={t('expensesPage:transactionDetailSheet.deleteTransactionTitle')}
+        subtitle={t(
+          'expensesPage:transactionDetailSheet.deleteTransactionMessage',
+        )}
         primaryButtonText={t('common:cancel')}
         onPrimaryPress={() => setIsAlertVisible(false)}
         secondaryButtonText={t('common:delete')}

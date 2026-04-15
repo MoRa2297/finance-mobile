@@ -2,20 +2,42 @@ import React, { FC } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
+import { FormikProps } from 'formik';
 
 import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
-import { TransactionFormTypes } from '@/types';
+import { TransactionFormTypes, BankAccount, BankCard, Category } from '@/types';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { InputIconField } from '@components/ui/InputIconField';
 import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
 import { DateInputField } from '@components/ui/DateInputField';
-import type { useTransactionForm } from '@/hooks/screens/transaction/useTransactionForm';
 import { RecurrenceSelector } from '@components/ui/RecurrenceSelector';
+import { TransactionFormValues } from '@/hooks/screens/transaction/useTransactionForm';
 
-type TransactionFormProps = ReturnType<typeof useTransactionForm>;
+interface SelectionState {
+  bankAccount: BankAccount | null;
+  category: Category | null;
+  card: BankCard | null;
+  toAccount: BankAccount | null;
+}
+
+interface TransactionFormProps {
+  formik: FormikProps<TransactionFormValues>;
+  formType: TransactionFormTypes;
+  selection: SelectionState;
+  isSubmitting: boolean;
+  alertVisible: boolean;
+  firstError: string | null;
+  setAlertVisible: (visible: boolean) => void;
+  handleSubmit: () => void;
+  handleOpenDatePicker: () => void;
+  handleOpenCategorySheet: () => void;
+  handleOpenBankAccountSheet: () => void;
+  handleOpenToAccountSheet: () => void;
+  handleOpenCardSheet: () => void;
+}
 
 export const TransactionForm: FC<TransactionFormProps> = ({
   formik,
@@ -107,7 +129,6 @@ export const TransactionForm: FC<TransactionFormProps> = ({
                   valueBordered
                   onPress={handleOpenCategorySheet}
                 />
-
                 <SelectInput
                   placeholder={t('transactionPage:bankPlaceholder')}
                   value={selection.bankAccount?.name}
@@ -117,7 +138,6 @@ export const TransactionForm: FC<TransactionFormProps> = ({
                   valueBordered
                   onPress={handleOpenBankAccountSheet}
                 />
-
                 {selection.bankAccount && (
                   <SelectInput
                     placeholder={t('transactionPage:cardPlaceholder')}

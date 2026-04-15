@@ -1,12 +1,12 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { SheetManager } from 'react-native-actions-sheet';
-
-import { useCategoryStore, categorySelectors } from '@/stores';
+import { useActionSheetStyles } from '@/hooks';
+import { useUIStore } from '@/stores';
 import { Category, CategoryType } from '@/types';
-import { theme } from '@/config/theme';
+import { useCategories, useDeleteCategory } from '@stores/category';
 
 export const CategoryTypeValue = {
   INCOME: 'INCOME',
@@ -22,14 +22,14 @@ export const useCategoriesScreen = () => {
   const { t } = useTranslation(['categoriesPage', 'common']);
   const insets = useSafeAreaInsets();
   const { showActionSheetWithOptions } = useActionSheet();
+  const actionSheetStyles = useActionSheetStyles();
 
-  // Store
-  const categories = useCategoryStore(categorySelectors.categories);
-  const isLoading = useCategoryStore(categorySelectors.isLoading);
-  const fetchCategories = useCategoryStore(state => state.fetchCategories);
-  const deleteCategory = useCategoryStore(state => state.deleteCategory);
+  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
-  // Local state
+  const { data: categories = [], isLoading } = useCategories();
+  const { mutateAsync: deleteCategory, isPending: isDeleting } =
+    useDeleteCategory();
+
   const [selectedTab, setSelectedTab] = useState<CategoryType>(
     CategoryTypeValue.EXPENSE,
   );
@@ -38,37 +38,11 @@ export const useCategoriesScreen = () => {
     null,
   );
 
-  // Fetch al mount
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
-  // Derived
   const filteredCategories = useMemo(
     () => categories.filter(c => c.type === selectedTab),
     [categories, selectedTab],
   );
 
-  // Action sheet styles
-  const actionSheetStyles = useMemo(
-    () => ({
-      containerStyle: {
-        borderRadius: 20,
-        backgroundColor: theme.colors.secondaryBK,
-        marginHorizontal: 20,
-        borderWidth: 1,
-        borderColor: theme.colors.primaryBK,
-        marginBottom: insets.bottom,
-      },
-      textStyle: {
-        textAlign: 'center' as const,
-        color: theme.colors.basic100,
-      },
-    }),
-    [insets.bottom],
-  );
-
-  // Handlers
   const handleTabChange = useCallback((value: string) => {
     setSelectedTab(value as CategoryType);
   }, []);
@@ -80,11 +54,9 @@ export const useCategoriesScreen = () => {
   }, []);
 
   const handleAddCategory = useCallback(() => {
-    const options = [t('categoriesPage:createCategory'), t('common:cancel')];
-
     showActionSheetWithOptions(
       {
-        options,
+        options: [t('categoriesPage:createCategory'), t('common:cancel')],
         cancelButtonIndex: 1,
         ...actionSheetStyles,
       },
@@ -100,23 +72,16 @@ export const useCategoriesScreen = () => {
 
   const handleOptionsPress = useCallback(
     (category: Category) => {
-      const options = [
-        t('common:edit'),
-        t('common:delete'),
-        t('common:cancel'),
-      ];
-
       showActionSheetWithOptions(
         {
-          options,
+          options: [t('common:edit'), t('common:delete'), t('common:cancel')],
           cancelButtonIndex: 2,
           destructiveButtonIndex: 1,
           ...actionSheetStyles,
         },
         selectedIndex => {
-          if (selectedIndex === 0) {
-            handleCategoryPress(category);
-          } else if (selectedIndex === 1) {
+          if (selectedIndex === 0) handleCategoryPress(category);
+          if (selectedIndex === 1) {
             setCategoryToDelete(category);
             setAlertVisible(true);
           }
@@ -127,11 +92,10 @@ export const useCategoriesScreen = () => {
   );
 
   const handleDeleteConfirm = useCallback(async () => {
-    if (categoryToDelete) {
-      await deleteCategory(categoryToDelete.id);
-      setCategoryToDelete(null);
-      setAlertVisible(false);
-    }
+    if (!categoryToDelete) return;
+    await deleteCategory(categoryToDelete.id);
+    setCategoryToDelete(null);
+    setAlertVisible(false);
   }, [categoryToDelete, deleteCategory]);
 
   const handleDeleteCancel = useCallback(() => {
@@ -139,11 +103,20 @@ export const useCategoriesScreen = () => {
     setAlertVisible(false);
   }, []);
 
+  const keyExtractor = useCallback((item: Category) => item.id.toString(), []);
+
+  const listContentStyle = useMemo(
+    () => ({ paddingBottom: bottomTabHeight }),
+    [bottomTabHeight],
+  );
+
   return {
     tabs: TABS,
     filteredCategories,
-    isLoading,
+    isLoading: isLoading || isDeleting,
     alertVisible,
+    keyExtractor,
+    listContentStyle,
     handleTabChange,
     handleCategoryPress,
     handleOptionsPress,

@@ -81,7 +81,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   header: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 5,
     alignItems: 'center',
     gap: 8,
     borderBottomWidth: 1,

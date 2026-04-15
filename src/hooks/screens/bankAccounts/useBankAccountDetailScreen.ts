@@ -1,71 +1,123 @@
-import { useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import dayjs, { Dayjs } from 'dayjs';
 
-import { useBankAccountStore, bankAccountSelectors } from '@/stores';
-import { theme } from '@/config/theme';
+import { useBankAccount } from '@/stores/bank-account/bank-account.queries';
+import { useTransactions } from '@/stores/transaction/transaction.queries';
+import { useActionSheetStyles } from '@/hooks';
+import { TransactionFilters } from '@/types';
+import { MonthItem } from '@components/screens/home';
+import { groupByDate } from '@components/screens/expenses/ExpensesList/ExpensesList.helpers';
 
 export const useBankAccountDetailScreen = () => {
-  const { t } = useTranslation('bankAccountPage');
+  const { t } = useTranslation(['bankAccountPage', 'common']);
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const insets = useSafeAreaInsets();
   const { showActionSheetWithOptions } = useActionSheet();
+  const actionSheetStyles = useActionSheetStyles();
 
-  // Store
-  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
-  // Derived
-  const bankAccount = useMemo(
-    () => bankAccounts.find(ba => ba.id === Number(id)) ?? null,
-    [bankAccounts, id],
+  // ─── Queries ─────────────────────────────────────────────────────────────────
+
+  const { data: bankAccount, isLoading } = useBankAccount(
+    id ? Number(id) : null,
   );
 
-  const bankType = useMemo(() => bankAccount?.bankType ?? null, [bankAccount]);
-  const bankAccountType = useMemo(
-    () => bankAccount?.bankAccountType ?? null,
-    [bankAccount],
+  // All transactions for this account ever — used for balance calculation
+  const allAccountFilters: TransactionFilters = useMemo(
+    () => ({ bankAccountId: id ? Number(id) : undefined }),
+    [id],
   );
 
-  const stats = useMemo(
+  const { data: allTransactionData } = useTransactions(allAccountFilters);
+  const allTransactions = allTransactionData?.transactions ?? [];
+
+  // Filtered by month — used for sections list and stats
+  const monthFilters: TransactionFilters = useMemo(
     () => ({
-      currentBalance: bankAccount?.startingBalance ?? 0,
-      countSpent: '0',
-      countIncome: '0',
-      totalTransfers: '0',
+      bankAccountId: id ? Number(id) : undefined,
+      ...(selectedDate && {
+        month: selectedDate.month() + 1,
+        year: selectedDate.year(),
+      }),
     }),
-    [bankAccount],
+    [id, selectedDate],
   );
 
-  const actionSheetStyles = useMemo(
-    () => ({
-      containerStyle: {
-        borderRadius: 20,
-        backgroundColor: theme.colors.secondaryBK,
-        marginHorizontal: 20,
-        borderWidth: 1,
-        borderColor: theme.colors.primaryBK,
-        marginBottom: insets.bottom,
-      },
-      textStyle: {
-        textAlign: 'center' as const,
-        color: theme.colors.basic100,
-      },
-    }),
-    [insets.bottom],
+  const { data: monthTransactionData } = useTransactions(monthFilters);
+  const monthTransactions = monthTransactionData?.transactions ?? [];
+
+  // ─── Derived ─────────────────────────────────────────────────────────────────
+
+  const bankType = bankAccount?.bankType ?? null;
+  const bankAccountType = bankAccount?.bankAccountType ?? null;
+
+  // Real balance up to end of selected month (or all time if no month selected)
+  const currentBalance = useMemo(() => {
+    const relevantTransactions = selectedDate
+      ? allTransactions.filter(t =>
+          dayjs(t.date).isBefore(selectedDate.endOf('month').add(1, 'day')),
+        )
+      : allTransactions;
+
+    const income = relevantTransactions
+      .filter(t => t.type === 'INCOME')
+      .reduce((sum, t) => sum + t.amount, 0);
+    const expense = relevantTransactions
+      .filter(t => t.type === 'EXPENSE')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return (bankAccount?.startingBalance ?? 0) + income - expense;
+  }, [bankAccount, allTransactions, selectedDate]);
+
+  // Stats based on selected month transactions
+  const stats = useMemo(() => {
+    const countSpent = monthTransactions.filter(
+      t => t.type === 'EXPENSE',
+    ).length;
+    const countIncome = monthTransactions.filter(
+      t => t.type === 'INCOME',
+    ).length;
+    const totalTransfers = monthTransactions.filter(
+      t => t.type === 'TRANSFER',
+    ).length;
+
+    return {
+      countSpent: String(countSpent),
+      countIncome: String(countIncome),
+      totalTransfers: String(totalTransfers),
+    };
+  }, [monthTransactions]);
+
+  const sections = useMemo(
+    () => groupByDate(monthTransactions),
+    [monthTransactions],
   );
+
+  const formattedValues = useMemo(
+    () => ({
+      currentBalance: `€ ${currentBalance.toFixed(2)}`,
+      startingBalance: `€ ${(bankAccount?.startingBalance ?? 0).toFixed(2)}`,
+      accountTypeName: bankAccountType
+        ? t(`bankAccountPage:types.${bankAccountType.name}`)
+        : '-',
+    }),
+    [currentBalance, bankAccount, bankAccountType, t],
+  );
+
+  // ─── Handlers ────────────────────────────────────────────────────────────────
+
+  const handleSelectMonth = useCallback((month: MonthItem) => {
+    setSelectedDate(month.date);
+  }, []);
 
   const handleSettingsPress = useCallback(() => {
     const options = [t('common:edit'), t('common:cancel')];
-
     showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex: 1,
-        ...actionSheetStyles,
-      },
+      { options, cancelButtonIndex: 1, ...actionSheetStyles },
       selectedIndex => {
         if (selectedIndex === 0 && bankAccount) {
           router.push({
@@ -77,23 +129,15 @@ export const useBankAccountDetailScreen = () => {
     );
   }, [t, showActionSheetWithOptions, actionSheetStyles, router, bankAccount]);
 
-  const formattedValues = useMemo(
-    () => ({
-      currentBalance: `€ ${stats.currentBalance.toFixed(2)}`,
-      startingBalance: `€ ${bankAccount?.startingBalance.toFixed(2) ?? '0.00'}`,
-      accountTypeName: bankAccountType
-        ? t(`bankAccountPage:types.${bankAccountType.name}`)
-        : '-',
-    }),
-    [stats.currentBalance, bankAccount?.startingBalance, bankAccountType, t],
-  );
-
   return {
     bankAccount,
     bankType,
     stats,
+    sections,
     formattedValues,
+    isLoading,
+    isNotFound: !isLoading && !bankAccount,
+    handleSelectMonth,
     handleSettingsPress,
-    isNotFound: !bankAccount,
   };
 };

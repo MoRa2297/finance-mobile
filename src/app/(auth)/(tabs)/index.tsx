@@ -1,63 +1,28 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Dayjs } from 'dayjs';
 
-import { useDataStore, useUIStore, useAuthStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { TopRoundedContainer } from '@components/ui/TopRoundedContainer';
 import { Header } from '@components/ui/Header';
-import {
-  BalanceSummary,
-  calculateBalance,
-  MonthItem,
-  MonthPopover,
-} from '@components/screens/home';
+import { BalanceSummary } from '@components/screens/home';
+import { useHomeScreen } from '@hooks/screens/home';
 
 export default function HomeScreen() {
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-
-  // Stores
-  const user = useAuthStore(state => state.user);
-  const transactions = useDataStore(state => state.transactions);
-  const bankAccounts = useDataStore(state => state.bankAccounts);
-  const moneyIsVisible = useUIStore(state => state.moneyIsVisible);
-  const toggleMoneyVisibility = useUIStore(
-    state => state.toggleMoneyVisibility,
-  );
-
-  const setMoneyIsVisible = useUIStore(state => state.setMoneyIsVisible);
-
-  // Calculate balance based on selected month
-  const balance = useMemo(
-    () => calculateBalance(transactions, bankAccounts, selectedDate),
-    [transactions, bankAccounts, selectedDate],
-  );
-
-  // Handlers
-  const handleSelectMonth = useCallback((month: MonthItem) => {
-    setSelectedDate(month.date);
-  }, []);
-
-  const handleToggleMoneyVisibility = useCallback(() => {
-    setMoneyIsVisible();
-  }, [setMoneyIsVisible]);
+  const { user, balance, moneyIsVisible, handleToggleMoneyVisibility } =
+    useHomeScreen();
 
   return (
     <ScreenContainer
       style={styles.container}
       horizontalPadding={false}
       forceNoBottomPadding>
-      <TopRoundedContainer height={'35%'} paddingTop={10}>
+      <TopRoundedContainer height="35%" paddingTop={10}>
         <Header
           left={{
             type: 'avatar',
             source: user?.imageUrl,
             onPress: () => {},
-          }}
-          center={{
-            type: 'custom',
-            render: () => <MonthPopover onSelectMonth={handleSelectMonth} />,
           }}
           right={{
             type: 'visibility',
