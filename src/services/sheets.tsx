@@ -1,13 +1,19 @@
 import { SheetDefinition, registerSheet } from 'react-native-actions-sheet';
-
 import { CardTypeSelectSheet } from '@components/sheets/CardTypeSelectSheet/CardTypeSelectSheet';
 import { BankAccountSelectSheet } from '@components/sheets/BankAccountSelectSheet/BankAccountSelectSheet';
 import {
   PickerItem,
   PickerSheet,
 } from '@components/sheets/PickerSheet/PickerSheet';
-
-import { Category, CategoryIcon, Color, Transaction } from '@/types';
+import {
+  BankCard,
+  Category,
+  CategoryIcon,
+  CategoryType,
+  Color,
+  Frequency,
+  Transaction,
+} from '@/types';
 import { ColorSheet } from '@components/sheets/ColorSheet/ColorSheet';
 import { IconSheet } from '@components/sheets/IconSheet/IconSheet';
 import { CategoryFormSheet } from '@components/sheets/CategoryFormSheet/CategoryFormSheet';
@@ -19,8 +25,8 @@ import { SelectCategorySheet } from '@components/sheets/SelectCategorySheet/Sele
 import {
   SelectCardSheet,
   SelectCardSheetPayload,
-  SelectCardSheetResult,
 } from '@components/sheets/SelectCardSheet/SelectCardSheet';
+import { SelectFrequencySheet } from '@components/sheets/SelectFrequencySheet/SelectFrequencySheet';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -34,7 +40,9 @@ registerSheet('date-picker-sheet', DatePickerSheet);
 registerSheet('transaction-detail-sheet', TransactionDetailSheet);
 registerSheet('select-category-sheet', SelectCategorySheet);
 registerSheet('select-card-sheet', SelectCardSheet);
+registerSheet('select-frequency-sheet', SelectFrequencySheet);
 
+// TODO improve the typos
 declare module 'react-native-actions-sheet' {
   interface Sheets {
     'color-sheet': SheetDefinition<{
@@ -50,7 +58,7 @@ declare module 'react-native-actions-sheet' {
       returnValue: { icon: string };
     }>;
     'category-form-sheet': SheetDefinition<{
-      payload: { category: any | null; type: 'income' | 'expense' };
+      payload: { category: any | null; type: CategoryType };
     }>;
     'bank-select-sheet': SheetDefinition<{
       returnValue: { bank: any };
@@ -76,16 +84,20 @@ declare module 'react-native-actions-sheet' {
       payload: {
         transaction: Transaction;
         onEdit: (transaction: Transaction) => void;
+        onDelete: (transaction: Transaction) => void;
       };
     }>;
     'select-category-sheet': SheetDefinition<{
-      payload: { type: 'income' | 'expense' };
+      payload: { type: CategoryType };
       returnValue: { item: Category };
     }>;
     'select-card-sheet': SheetDefinition<{
       payload: SelectCardSheetPayload;
-      returnValue: SelectCardSheetResult;
+      returnValue: { item: BankCard };
     }>;
+    'select-frequency-sheet': {
+      returnValue: { frequency: Frequency };
+    };
   }
 }
 

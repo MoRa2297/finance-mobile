@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
@@ -12,36 +12,23 @@ import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
 import { SelectPickerInput } from '@components/ui/SelectPickerInput';
 import { Header } from '@components/ui/Header';
-import { useBankCardForm } from '@/hooks/screens/bankCards/useBankCardForm';
+import { useBankCardForm } from '@hooks/screens/bankCards';
 
 export default function BankCardFormScreen() {
   const { t } = useTranslation(['bankCardsPage', 'common']);
-  const [alertVisible, setAlertVisible] = useState(false);
 
   const {
     formik,
     isEditing,
     firstError,
+    alertVisible,
+    setAlertVisible,
+    handleSubmit,
     handleOpenCardTypeSheet,
     handleOpenBankAccountSheet,
     handleOpenMonthPicker,
     handleOpenYearPicker,
   } = useBankCardForm();
-
-  const handleSubmit = async () => {
-    const errors = await formik.validateForm();
-    if (Object.keys(errors).length > 0) {
-      formik.setTouched({
-        name: true,
-        cardLimit: true,
-        cardType: true,
-        bankAccount: true,
-      });
-      setAlertVisible(true);
-      return;
-    }
-    formik.handleSubmit();
-  };
 
   return (
     <ScreenContainer
@@ -59,7 +46,6 @@ export default function BankCardFormScreen() {
       />
 
       <View style={styles.formContainer}>
-        {/* Card Limit Section */}
         <View style={styles.topSection}>
           <Text category="p2" style={styles.sectionLabel}>
             {t('bankCardsPage:cardLimitTitle')}
@@ -84,7 +70,6 @@ export default function BankCardFormScreen() {
               onChange={v => formik.setFieldValue('name', v)}
               iconName="edit-outline"
             />
-
             <SelectInput
               placeholder={t('bankCardsPage:typeCardPlaceholder')}
               value={formik.values.cardType?.name}
@@ -94,7 +79,6 @@ export default function BankCardFormScreen() {
               valueBordered
               onPress={handleOpenCardTypeSheet}
             />
-
             <SelectInput
               placeholder={t('bankCardsPage:selectBank')}
               value={formik.values.bankAccount?.name}
@@ -104,14 +88,12 @@ export default function BankCardFormScreen() {
               valueBordered
               onPress={handleOpenBankAccountSheet}
             />
-
             <SelectPickerInput
               placeholder={t('bankCardsPage:monthExpiryPlaceholder')}
               value={formik.values.monthExpiry}
               iconName="calendar-outline"
               onPress={handleOpenMonthPicker}
             />
-
             <SelectPickerInput
               placeholder={t('bankCardsPage:yearExpiryPlaceholder')}
               value={formik.values.yearExpiry}
@@ -120,7 +102,6 @@ export default function BankCardFormScreen() {
             />
           </ScrollView>
 
-          {/* Button fixed at bottom */}
           <View style={styles.buttonContainer}>
             <Button
               buttonText={t('common:save')}
@@ -128,6 +109,7 @@ export default function BankCardFormScreen() {
               backgroundColor={theme.colors.primary}
               style={styles.submitButton}
               isLoading={formik.isSubmitting}
+              isDisabled={formik.isSubmitting}
             />
           </View>
         </View>
@@ -145,21 +127,10 @@ export default function BankCardFormScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.secondaryBK,
-  },
-  formContainer: {
-    flex: 1,
-  },
-  topSection: {
-    paddingHorizontal: HORIZONTAL_PADDING,
-    paddingTop: 15,
-    gap: 5,
-  },
-  sectionLabel: {
-    color: theme.colors.textHint,
-  },
+  container: { flex: 1, backgroundColor: theme.colors.secondaryBK },
+  formContainer: { flex: 1 },
+  topSection: { paddingHorizontal: HORIZONTAL_PADDING, paddingTop: 15, gap: 5 },
+  sectionLabel: { color: theme.colors.textHint },
   bottomSection: {
     flex: 1,
     backgroundColor: theme.colors.primaryBK,

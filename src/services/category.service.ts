@@ -1,6 +1,5 @@
 import apiClient from './api-client';
 import { Category, EditCategory } from '@/types';
-import { useAuthStore } from '@/stores';
 
 const categoryService = {
   getCategories: async (): Promise<Category[]> => {

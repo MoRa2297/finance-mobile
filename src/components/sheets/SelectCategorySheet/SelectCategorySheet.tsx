@@ -30,8 +30,6 @@ import { Category } from '@/types';
 import { useCategoryStore, categorySelectors } from '@/stores';
 import { Icon } from '@components/ui/Icon';
 
-export type CategoryType = 'income' | 'expenses';
-
 type SelectCategorySheetProps = SheetProps<'select-category-sheet'>;
 
 const LIST_MAX_HEIGHT = SCREEN_HEIGHT / 1.5;
@@ -71,6 +69,7 @@ const ListItem: FC<{ item: Category; onSelect: (item: Category) => void }> =
     );
   });
 
+// TODO add EmptyState component
 export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
   sheetId,
   payload,
@@ -113,17 +112,15 @@ export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
 
   return (
     <ActionSheet
+      id={sheetId}
       ref={actionSheetRef}
-      drawUnderStatusBar
       closable
+      gestureEnabled
+      useBottomSafeAreaPadding
       closeOnTouchBackdrop
-      backgroundInteractionEnabled={false}
-      useBottomSafeAreaPadding={false}
-      isModal={false}
-      defaultOverlayOpacity={0.2}
       containerStyle={styles.sheetContainer}
       keyboardHandlerEnabled={false}>
-      <Layout style={styles.content}>
+      <Layout>
         <List
           data={filteredCategories}
           keyExtractor={keyExtractor}
@@ -142,31 +139,28 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
-  } as ViewStyle,
-  content: {
-    paddingTop: 25,
-    backgroundColor: theme.colors.primaryBK,
-  } as ViewStyle,
+    overflow: 'hidden',
+  },
   list: {
     maxHeight: LIST_MAX_HEIGHT,
     minHeight: LIST_MIN_HEIGHT,
     backgroundColor: theme.colors.primaryBK,
-  } as ViewStyle,
+  },
   separator: {
     height: 0,
     backgroundColor: theme.colors.primaryBK,
-  } as ViewStyle,
+  },
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingVertical: 12,
     gap: 12,
-  } as ViewStyle,
+  },
   listItemPressed: {
     backgroundColor: theme.colors.secondaryBK,
     opacity: 0.8,
-  } as ViewStyle,
+  },
   iconContainer: {
     width: ICON_CONTAINER_SIZE,
     height: ICON_CONTAINER_SIZE,
@@ -174,6 +168,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondaryBK,
     alignItems: 'center',
     justifyContent: 'center',
-  } as ViewStyle,
+  },
   label: { flex: 1, color: theme.colors.basic100 } as TextStyle,
 });

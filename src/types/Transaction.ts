@@ -1,40 +1,75 @@
 import { Category } from './Category';
 import { BankAccount } from './BankAccount';
 import { BankCard } from './BankCard';
+import { Frequency } from './Frequency';
+import { RecurringRule } from './RecurrencyRule';
 
-export type TransactionType = 'income' | 'expense' | 'card_expense';
+export type TransactionType = 'INCOME' | 'EXPENSE' | 'TRANSFER';
+
+export type CreateableTransactionType = 'INCOME' | 'EXPENSE';
+
+export enum TransactionFormTypes {
+  ALL = 'ALL',
+  INCOME = 'INCOME',
+  EXPENSE = 'EXPENSE',
+  TRANSFER = 'TRANSFER',
+}
+
+export type TransferDetail = {
+  id: number;
+  fromAccountId: number;
+  toAccountId: number;
+  fromAccount: BankAccount;
+  toAccount: BankAccount;
+};
 
 export type Transaction = {
   id: number;
   userId: number | null;
   bankAccountId: number | null;
   cardAccountId: number | null;
-  categoryId: number;
-  money: number;
-  recived: boolean;
+  categoryId: number | null;
+  recurringRuleId: number | null;
+  transferDetailId: number | null;
+  amount: number;
   date: string;
   description: string;
   recurrent: boolean;
-  repeat: boolean;
   note: string;
   type: TransactionType;
   category: Category | null;
   bankAccount: BankAccount | null;
   card: BankCard | null;
+  transferDetail: TransferDetail | null;
+  recurringRule: RecurringRule | null;
 };
 
 export type CreateTransactionPayload = {
   bankAccountId?: number;
-  cardAccountId?: number | null;
-  categoryId: number;
-  money: number;
-  recived: boolean;
+  cardAccountId?: number;
+  categoryId?: number;
+  amount: number;
   date: string;
   description: string;
   recurrent: boolean;
-  repeat: boolean;
+  frequency?: Frequency;
+  recurrenceEndDate?: string;
   note: string;
   type: TransactionType;
+};
+
+export type CreateTransferPayload = {
+  amount: number;
+  date: string;
+  description: string;
+  note?: string;
+  fromAccountId?: number;
+  toAccountId?: number;
+  recurrent?: boolean;
+  frequency?: Frequency;
+  recurrenceEndDate?: string;
+  cardAccountId?: number;
+  categoryId?: number;
 };
 
 export type UpdateTransactionPayload = Partial<CreateTransactionPayload>;
@@ -43,7 +78,7 @@ export type TransactionFilters = {
   month?: number;
   year?: number;
   categoryId?: number;
-  type?: TransactionType;
+  type?: TransactionFormTypes;
   bankAccountId?: number;
   cardAccountId?: number;
   page?: number;
@@ -56,9 +91,3 @@ export type TransactionMeta = {
   limit: number;
   totalPages: number;
 };
-
-export enum TransactionFormTypes {
-  INCOME = 'income',
-  EXPENSE = 'expense',
-  CARD_EXPENSE = 'card_expense',
-}

@@ -12,25 +12,24 @@ import { useTransactionForm } from '@/hooks/screens/transaction/useTransactionFo
 
 export default function TransactionFormScreen() {
   const { t } = useTranslation(['transactionPage', 'common']);
-
-  const hook = useTransactionForm();
-
-  const renderTypeSelector = () => (
-    <Button
-      buttonText={hook.formTypeLabel}
-      onPress={hook.handleOpenTypeSelector}
-      backgroundColor={theme.colors.primary}
-      style={styles.typeSelectorButton}
-      textStyle={styles.typeSelectorText}
-      accessoryRight={() => (
-        <Icon
-          name="arrow-ios-downward-outline"
-          color={theme.colors.basic100}
-          size={20}
-        />
-      )}
-    />
-  );
+  const {
+    formik,
+    formType,
+    formTypeLabel,
+    selection,
+    isSubmitting,
+    alertVisible,
+    firstError,
+    setAlertVisible,
+    handleSubmit,
+    handleCancel,
+    handleOpenTypeSelector,
+    handleOpenDatePicker,
+    handleOpenCategorySheet,
+    handleOpenBankAccountSheet,
+    handleOpenToAccountSheet,
+    handleOpenCardSheet,
+  } = useTransactionForm();
 
   return (
     <ScreenContainer
@@ -42,22 +41,59 @@ export default function TransactionFormScreen() {
           type: 'back',
           variant: 'text',
           text: t('common:cancel'),
-          onPress: hook.handleCancel,
+          onPress: handleCancel,
         }}
-        center={{ type: 'custom', render: renderTypeSelector }}
+        center={{
+          type: 'custom',
+          render: () => (
+            <Button
+              buttonText={formTypeLabel}
+              onPress={handleOpenTypeSelector}
+              backgroundColor={theme.colors.primary}
+              style={styles.typeSelectorButton}
+              textStyle={styles.typeSelectorText}
+              accessoryRight={() => (
+                <Icon
+                  name="arrow-ios-downward-outline"
+                  color={theme.colors.basic100}
+                  size={20}
+                />
+              )}
+            />
+          ),
+        }}
       />
 
-      <TransactionForm {...hook} />
+      <TransactionForm
+        formik={formik}
+        formType={formType}
+        selection={selection}
+        isSubmitting={isSubmitting}
+        alertVisible={alertVisible}
+        firstError={firstError}
+        setAlertVisible={setAlertVisible}
+        handleSubmit={handleSubmit}
+        handleOpenDatePicker={handleOpenDatePicker}
+        handleOpenCategorySheet={handleOpenCategorySheet}
+        handleOpenBankAccountSheet={handleOpenBankAccountSheet}
+        handleOpenToAccountSheet={handleOpenToAccountSheet}
+        handleOpenCardSheet={handleOpenCardSheet}
+      />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: theme.colors.secondaryBK },
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.secondaryBK,
+  },
   typeSelectorButton: {
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 60,
   },
-  typeSelectorText: { color: theme.colors.basic100 },
+  typeSelectorText: {
+    color: theme.colors.basic100,
+  },
 });

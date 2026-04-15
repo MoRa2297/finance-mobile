@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { HORIZONTAL_PADDING } from '@/config/constants';
 import { BankCard } from '@/types';
@@ -14,11 +13,10 @@ import { EmptyData, LoadingSpinner } from '@components/common';
 import { SpecificPrice } from '@components/screens/home';
 import { Header } from '@components/ui/Header';
 import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
-import { useBankCardsScreen } from '@/hooks/screens/bankCards';
+import { useBankCardsScreen } from '@hooks/screens/bankCards';
 
 export default function BankCardsScreen() {
   const { t } = useTranslation(['bankCardsPage', 'common']);
-  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
   const {
     bankCards,
@@ -26,6 +24,8 @@ export default function BankCardsScreen() {
     isLoading,
     totSpent,
     alertVisible,
+    keyExtractor,
+    listContentStyle,
     handleSelectMonth,
     handleCardPress,
     handleOptionsPress,
@@ -45,9 +45,6 @@ export default function BankCardsScreen() {
     [handleCardPress, handleOptionsPress],
   );
 
-  const keyExtractor = useCallback((item: BankCard) => item.id.toString(), []);
-
-  // Aggiorna renderEmpty
   const renderEmpty = useCallback(() => {
     if (isLoading) return null;
     return <EmptyData title={t('bankCardsPage:emptyData')} />;
@@ -107,8 +104,8 @@ export default function BankCardsScreen() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={[
               styles.listContent,
-              { paddingBottom: bottomTabHeight * 2 },
               bankCards.length === 0 && styles.listContentEmpty,
+              listContentStyle,
             ]}
           />
         )}
@@ -128,33 +125,19 @@ export default function BankCardsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.secondaryBK,
-  },
-  subContainer: {
-    flex: 1,
-    justifyContent: 'space-evenly',
-  },
-  pickerContainer: {
-    alignItems: 'center',
-    width: '100%',
-  },
+  container: { flex: 1, backgroundColor: theme.colors.secondaryBK },
+  subContainer: { flex: 1, justifyContent: 'space-evenly' },
+  pickerContainer: { alignItems: 'center', width: '100%' },
   amountContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
   },
-  listContainer: {
-    flex: 1,
-    backgroundColor: theme.colors.secondaryBK,
-  },
+  listContainer: { flex: 1, backgroundColor: theme.colors.secondaryBK },
   listContent: {
     paddingTop: 25,
     marginHorizontal: HORIZONTAL_PADDING,
     gap: 15,
   },
-  listContentEmpty: {
-    flex: 1,
-  },
+  listContentEmpty: { flex: 1 },
 });

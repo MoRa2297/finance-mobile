@@ -1,16 +1,16 @@
 {
   "income": "Entrata",
   "expense": "Uscita",
-  "card_spending": "Spese con carta",
+  "transfer": "Trasferisci",
   "buttonFormTypes": {
     "income": "Entrata",
     "expense": "Uscita",
-    "card_spending": "Spesa carta"
+    "transfer": "Trasferisci"
   },
   "moneyValueTypes": {
     "income": "Valore entrata",
     "expense": "Valore uscita",
-    "card_spending": "Spesa"
+    "transfer": "Quantità"
   },
   "moneyValuePlaceholder": "Inserisci il valore...",
   "recivedPlaceholder": "Ricevuto",
@@ -27,5 +27,21 @@
   "alertMoneyError": "Errore, cifra obbligatoria",
   "dateError": "Errore, data obbligatoria",
   "descriptionError": "Errore, descrizione obbligatoria",
-  "alertButtonText": "Capito"
+  "alertButtonText": "Capito",
+  "fromAccountPlaceholder": "Da quale conto?",
+  "toAccountPlaceholder": "A quale conto?",
+  "recurrence": {
+    "frequencyPlaceholder": "Frequenza",
+    "endDatePlaceholder": "Fino a quando (opzionale)",
+    "frequency": {
+      "daily": "Ogni giorno",
+      "weekly": "Ogni settimana",
+      "biweekly": "Ogni 2 settimane",
+      "monthly": "Ogni mese",
+      "bimonthly": "Ogni 2 mesi",
+      "quarterly": "Ogni 3 mesi",
+      "semiannual": "Ogni 6 mesi",
+      "yearly": "Ogni anno"
+    }
+  }
 }

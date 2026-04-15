@@ -3,7 +3,6 @@ import { StyleSheet, View, FlatList } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { BankAccountListCard } from '@/components/screens/settings/bankAccounts';
-import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccount } from '@/types';
@@ -14,18 +13,20 @@ import { EmptyData, LoadingSpinner } from '@components/common';
 import { SpecificPrice } from '@components/screens/home';
 import { Header } from '@components/ui/Header';
 import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
-import { useBankAccountsScreen } from '@/hooks/screens/bankAccounts';
+import { useBankAccountsScreen } from '@hooks/screens/bankAccounts';
 
 export default function BankAccountsScreen() {
   const { t } = useTranslation(['bankAccountPage', 'common']);
-  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
   const {
+    allTransactions,
     bankAccounts,
     isLoading,
     totSpent,
     totResidue,
     alertVisible,
+    keyExtractor,
+    listContentStyle,
     handleSelectMonth,
     handleAccountPress,
     handleOptionsPress,
@@ -38,22 +39,18 @@ export default function BankAccountsScreen() {
     ({ item }: { item: BankAccount }) => (
       <BankAccountListCard
         bankAccount={item}
+        allTransactions={allTransactions}
         onPress={handleAccountPress}
         onOptionsPress={handleOptionsPress}
       />
     ),
-    [handleAccountPress, handleOptionsPress],
+    [handleAccountPress, handleOptionsPress, allTransactions],
   );
 
   const renderEmpty = useCallback(() => {
     if (isLoading) return null;
     return <EmptyData title={t('bankAccountPage:emptyData')} />;
   }, [isLoading, t]);
-
-  const keyExtractor = useCallback(
-    (item: BankAccount) => item.id.toString(),
-    [],
-  );
 
   return (
     <ScreenContainer
@@ -94,7 +91,7 @@ export default function BankAccountsScreen() {
         </View>
       </TopRoundedContainer>
 
-      <View style={[styles.listContainer, { paddingBottom: bottomTabHeight }]}>
+      <View style={styles.listContainer}>
         {isLoading ? (
           <LoadingSpinner
             color={theme.colors.primary}
@@ -110,6 +107,7 @@ export default function BankAccountsScreen() {
             contentContainerStyle={[
               styles.listContent,
               bankAccounts.length === 0 && styles.listContentEmpty,
+              listContentStyle,
             ]}
           />
         )}
@@ -129,18 +127,9 @@ export default function BankAccountsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.secondaryBK,
-  },
-  subContainer: {
-    flex: 1,
-    justifyContent: 'space-evenly',
-  },
-  pickerContainer: {
-    alignItems: 'center',
-    width: '100%',
-  },
+  container: { flex: 1, backgroundColor: theme.colors.secondaryBK },
+  subContainer: { flex: 1, justifyContent: 'space-evenly' },
+  pickerContainer: { alignItems: 'center', width: '100%' },
   amountContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -156,9 +145,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: HORIZONTAL_PADDING,
     gap: 15,
     paddingBottom: 30,
-    flex: 1,
   },
-  listContentEmpty: {
-    flex: 1,
-  },
+  listContentEmpty: { flex: 1 },
 });

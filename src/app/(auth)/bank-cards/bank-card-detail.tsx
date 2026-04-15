@@ -3,18 +3,18 @@ import { StyleSheet, View, SectionList } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 
-import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { Transaction } from '@/types';
 import { ExpenseCard } from '@/components/screens/expenses';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { EmptyData } from '@components/common';
+import { Alert } from '@components/ui/Alert';
 import { GenericSmallDetail } from '@components/ui/GenericSmallDetail';
 import { EntityImage } from '@components/ui/EntityImage';
 import { Header } from '@components/ui/Header';
 import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
-import { useBankCardDetailScreen } from '@/hooks/screens/bankCards';
+import { useBankCardDetailScreen } from '@hooks/screens/bankCards';
 
 interface TransactionSection {
   title: string;
@@ -23,7 +23,6 @@ interface TransactionSection {
 
 export default function BankCardDetailScreen() {
   const { t } = useTranslation(['bankCardsPage', 'common']);
-  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
   const {
     bankCard,
@@ -31,25 +30,25 @@ export default function BankCardDetailScreen() {
     dateRange,
     sections,
     totalSpent,
-    categories,
-    bankAccounts,
-    bankCards,
+    contentStyle,
+    isAlertVisible,
+    setIsAlertVisible,
     handleSelectMonth,
     handleSettingsPress,
     handleTransactionPress,
+    handleSelectRemoveTransaction,
+    handleDeleteTransaction,
   } = useBankCardDetailScreen();
 
   const renderItem = useCallback(
     ({ item }: { item: Transaction }) => (
       <ExpenseCard
         transaction={item}
-        categories={categories}
-        bankAccounts={bankAccounts}
-        bankCards={bankCards}
         onPress={() => handleTransactionPress(item)}
+        onDelete={() => handleSelectRemoveTransaction(item)}
       />
     ),
-    [categories, bankAccounts, bankCards, handleTransactionPress],
+    [handleTransactionPress, handleSelectRemoveTransaction],
   );
 
   const renderSectionHeader = useCallback(
@@ -95,7 +94,6 @@ export default function BankCardDetailScreen() {
         right={{ type: 'settings', onPress: handleSettingsPress }}
       />
 
-      {/* Month Picker */}
       <View style={styles.pickerContainer}>
         <MonthSwipePicker
           onSelectMonth={handleSelectMonth}
@@ -104,9 +102,7 @@ export default function BankCardDetailScreen() {
         />
       </View>
 
-      <View
-        style={[styles.contentContainer, { marginBottom: bottomTabHeight }]}>
-        {/* Card Image */}
+      <View style={[styles.contentContainer, contentStyle]}>
         <View style={styles.cardImageContainer}>
           <EntityImage
             imageUrl={cardType?.imageUrl}
@@ -116,7 +112,6 @@ export default function BankCardDetailScreen() {
           />
         </View>
 
-        {/* Details */}
         <View style={styles.detailsContainer}>
           <View style={styles.rowContainer}>
             <GenericSmallDetail
@@ -152,28 +147,25 @@ export default function BankCardDetailScreen() {
           />
         </View>
       </View>
+
+      <Alert
+        visible={isAlertVisible}
+        title={t('bankCardsPage:alertDeleteTitle')}
+        subtitle={t('bankCardsPage:alertDeleteSubTitle')}
+        primaryButtonText={t('common:delete')}
+        secondaryButtonText={t('common:cancel')}
+        onPrimaryPress={handleDeleteTransaction}
+        onSecondaryPress={() => setIsAlertVisible(false)}
+      />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.secondaryBK,
-  },
-  errorContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  errorText: {
-    color: theme.colors.textHint,
-  },
-  pickerContainer: {
-    alignItems: 'center',
-    width: '100%',
-    paddingVertical: 10,
-  },
+  container: { flex: 1, backgroundColor: theme.colors.secondaryBK },
+  errorContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  errorText: { color: theme.colors.textHint },
+  pickerContainer: { alignItems: 'center', width: '100%', paddingVertical: 10 },
   contentContainer: {
     flex: 1,
     backgroundColor: theme.colors.primaryBK,
@@ -193,22 +185,14 @@ const styles = StyleSheet.create({
     gap: 15,
     paddingTop: 15,
   },
-  rowContainer: {
-    flexDirection: 'row',
-  },
-  singleRowContainer: {
-    flexDirection: 'row',
-  },
-  list: {
-    flex: 1,
-  },
+  rowContainer: { flexDirection: 'row' },
+  singleRowContainer: { flexDirection: 'row' },
+  list: { flex: 1 },
   sectionHeader: {
     fontSize: 17,
     backgroundColor: theme.colors.primaryBK,
     paddingVertical: 10,
     color: theme.colors.textHint,
   },
-  separator: {
-    height: 15,
-  },
+  separator: { height: 15 },
 });

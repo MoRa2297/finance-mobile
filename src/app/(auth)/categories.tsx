@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { Category } from '@/types';
@@ -12,17 +11,18 @@ import { Header } from '@components/ui/Header';
 import { Alert } from '@components/ui/Alert';
 import { EmptyData, LoadingSpinner } from '@components/common';
 import { CategoryListCard } from '@components/screens/settings';
-import { useCategoriesScreen } from '@/hooks/screens/categories';
+import { useCategoriesScreen } from '@hooks/screens/categories';
 
 export default function CategoriesScreen() {
   const { t } = useTranslation(['categoriesPage', 'common']);
-  const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
 
   const {
     tabs,
     filteredCategories,
     isLoading,
     alertVisible,
+    keyExtractor,
+    listContentStyle,
     handleTabChange,
     handleCategoryPress,
     handleOptionsPress,
@@ -31,8 +31,8 @@ export default function CategoriesScreen() {
     handleDeleteCancel,
   } = useCategoriesScreen();
 
-  const renderItem = useCallback(
-    ({ item }: { item: Category }) => (
+  const renderItem = useCallback<ListRenderItem<Category>>(
+    ({ item }) => (
       <CategoryListCard
         category={item}
         onPress={handleCategoryPress}
@@ -46,8 +46,6 @@ export default function CategoriesScreen() {
     if (isLoading) return null;
     return <EmptyData title={t('categoriesPage:emptyData')} />;
   }, [isLoading, t]);
-
-  const keyExtractor = useCallback((item: Category) => item.id.toString(), []);
 
   return (
     <ScreenContainer
@@ -63,7 +61,7 @@ export default function CategoriesScreen() {
         <SliderBar tabs={tabs} onTabChange={handleTabChange} />
       </View>
 
-      <View style={[styles.listContainer, { paddingBottom: bottomTabHeight }]}>
+      <View style={styles.listContainer}>
         {isLoading ? (
           <LoadingSpinner color={theme.colors.primary} />
         ) : (
@@ -76,6 +74,7 @@ export default function CategoriesScreen() {
             contentContainerStyle={[
               styles.listContent,
               filteredCategories.length === 0 && styles.listContentEmpty,
+              listContentStyle,
             ]}
           />
         )}

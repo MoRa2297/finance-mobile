@@ -21,6 +21,13 @@
     "value": "Valore",
     "bankAccount": "Account (conto)",
     "cardAccount": "Account (carta)",
-    "note": "Nota"
+    "note": "Nota",
+    "transfer": "Transfer",
+    "expense": "Expense",
+    "fromAccount": "From",
+    "toAccount": "To",
+    "income": "Entrate",
+    "deleteTransactionTitle": "Delete transaction",
+    "deleteTransactionMessage": "Are you sure you want to delete this transaction? This action cannot be undone."
   }
 }

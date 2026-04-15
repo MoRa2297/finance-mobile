@@ -26,6 +26,7 @@ import { Icon } from '@components/ui/Icon';
 export interface SelectCardSheetPayload {
   bankAccountIds: number[];
 }
+
 type SelectCardSheetProps = SheetProps<'select-card-sheet'>;
 
 const LIST_MAX_HEIGHT = SCREEN_HEIGHT / 1.5;
@@ -141,17 +142,15 @@ export const SelectCardSheet: React.FC<SelectCardSheetProps> = ({
 
   return (
     <ActionSheet
+      id={sheetId}
       ref={actionSheetRef}
-      drawUnderStatusBar
       closable
+      gestureEnabled
+      useBottomSafeAreaPadding
       closeOnTouchBackdrop
-      backgroundInteractionEnabled={false}
-      useBottomSafeAreaPadding={false}
-      isModal={false}
-      defaultOverlayOpacity={0.2}
       containerStyle={styles.sheetContainer}
       keyboardHandlerEnabled={false}>
-      <Layout style={styles.content}>
+      <Layout>
         {filteredCards.length === 0 ? (
           <EmptyState />
         ) : (
@@ -174,31 +173,28 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
-  } as ViewStyle,
-  content: {
-    paddingTop: 25,
-    backgroundColor: theme.colors.primaryBK,
-  } as ViewStyle,
+    overflow: 'hidden',
+  },
   list: {
     maxHeight: LIST_MAX_HEIGHT,
     minHeight: LIST_MIN_HEIGHT,
     backgroundColor: theme.colors.primaryBK,
-  } as ViewStyle,
+  },
   separator: {
     height: 0,
     backgroundColor: theme.colors.primaryBK,
-  } as ViewStyle,
+  },
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingVertical: 12,
     gap: 12,
-  } as ViewStyle,
+  },
   listItemPressed: {
     backgroundColor: theme.colors.secondaryBK,
     opacity: 0.8,
-  } as ViewStyle,
+  },
   iconContainer: {
     width: ICON_CONTAINER_SIZE,
     height: ICON_CONTAINER_SIZE,
@@ -206,16 +202,17 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondaryBK,
     alignItems: 'center',
     justifyContent: 'center',
-  } as ViewStyle,
-  cardInfo: { flex: 1, gap: 2 } as ViewStyle,
-  cardName: { color: theme.colors.basic100 } as TextStyle,
-  cardDetails: { color: theme.colors.textHint } as TextStyle,
+  },
+  cardInfo: { flex: 1, gap: 2 },
+  cardName: { color: theme.colors.basic100 },
+  cardDetails: { color: theme.colors.textHint },
   emptyContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 48,
     paddingHorizontal: HORIZONTAL_PADDING,
-  } as ViewStyle,
+    backgroundColor: theme.colors.primaryBK,
+  },
   emptyIconContainer: {
     width: 80,
     height: 80,
@@ -224,14 +221,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
-  } as ViewStyle,
+  },
   emptyTitle: {
     color: theme.colors.basic100,
     marginBottom: 8,
     textAlign: 'center',
-  } as TextStyle,
+  },
   emptyDescription: {
     color: theme.colors.textHint,
     textAlign: 'center',
-  } as TextStyle,
+  },
 });

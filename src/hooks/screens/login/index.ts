@@ -1,2 +1,2 @@
-export { useLogin } from './useLogin';
+export { useLoginScreen } from './useLoginScreen';
 export { isAuthError, getAuthErrorMessage } from './helpers';

@@ -1,27 +1,48 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
+import { FormikProps } from 'formik';
 
 import { useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
+import { TransactionFormTypes, BankAccount, BankCard, Category } from '@/types';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { TransactionFormTypes } from '@/types';
 import { InputIconField } from '@components/ui/InputIconField';
 import { Button } from '@components/ui/Button';
 import { Alert } from '@components/ui/Alert';
 import { SelectInput } from '@components/ui/SelectInput';
 import { DateInputField } from '@components/ui/DateInputField';
-import { SwitchInput } from '@components/ui/SwitchInput';
-import type { useTransactionForm } from '@/hooks/screens/transaction/useTransactionForm';
+import { RecurrenceSelector } from '@components/ui/RecurrenceSelector';
+import { TransactionFormValues } from '@/hooks/screens/transaction/useTransactionForm';
 
-type TransactionFormProps = ReturnType<typeof useTransactionForm>;
+interface SelectionState {
+  bankAccount: BankAccount | null;
+  category: Category | null;
+  card: BankCard | null;
+  toAccount: BankAccount | null;
+}
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({
+interface TransactionFormProps {
+  formik: FormikProps<TransactionFormValues>;
+  formType: TransactionFormTypes;
+  selection: SelectionState;
+  isSubmitting: boolean;
+  alertVisible: boolean;
+  firstError: string | null;
+  setAlertVisible: (visible: boolean) => void;
+  handleSubmit: () => void;
+  handleOpenDatePicker: () => void;
+  handleOpenCategorySheet: () => void;
+  handleOpenBankAccountSheet: () => void;
+  handleOpenToAccountSheet: () => void;
+  handleOpenCardSheet: () => void;
+}
+
+export const TransactionForm: FC<TransactionFormProps> = ({
   formik,
   formType,
   selection,
-  isCardExpense,
   isSubmitting,
   alertVisible,
   firstError,
@@ -30,10 +51,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   handleOpenDatePicker,
   handleOpenCategorySheet,
   handleOpenBankAccountSheet,
+  handleOpenToAccountSheet,
   handleOpenCardSheet,
 }) => {
   const { t } = useTranslation(['transactionPage', 'common']);
   const bottomTabHeight = useUIStore(state => state.bottomTabHeight);
+  const isTransfer = formType === TransactionFormTypes.TRANSFER;
 
   return (
     <ScrollView
@@ -44,7 +67,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         {/* Money */}
         <View style={styles.topSection}>
           <Text category="p2" style={styles.moneyLabel}>
-            {t(`transactionPage:moneyValueTypes.${formType}`)}
+            {t(`transactionPage:moneyValueTypes.${formType.toLowerCase()}`)}
           </Text>
           <InputIconField
             placeholder={t('transactionPage:moneyValuePlaceholder')}
@@ -58,16 +81,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
         <View style={styles.bottomSection}>
           <View style={styles.inputsContainer}>
-            {!isCardExpense && (
-              <SwitchInput
-                placeholder={t('transactionPage:recivedPlaceholder')}
-                value={formik.values.recived}
-                iconName="checkmark-circle-outline"
-                onValueChange={v => formik.setFieldValue('recived', v)}
-                disabled={isSubmitting}
-              />
-            )}
-
             <DateInputField
               value={formik.values.date}
               iconName="calendar-outline"
@@ -83,50 +96,63 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               editable={!isSubmitting}
             />
 
-            <SelectInput
-              placeholder={t('transactionPage:categoryPlaceholder')}
-              value={selection.category?.name}
-              iconName="bookmark-outline"
-              selectedBorderColor={selection.category?.categoryColor?.hexCode}
-              valueBordered
-              onPress={handleOpenCategorySheet}
-            />
-
-            {!isCardExpense && (
-              <SelectInput
-                placeholder={t('transactionPage:bankPlaceholder')}
-                value={selection.bankAccount?.name}
-                iconName="grid-outline"
-                selectedImageUrl={selection.bankAccount?.bankType?.imageUrl}
-                selectedFallbackText={selection.bankAccount?.bankType?.name}
-                valueBordered
-                onPress={handleOpenBankAccountSheet}
-              />
+            {isTransfer ? (
+              <>
+                <SelectInput
+                  placeholder={t('transactionPage:fromAccountPlaceholder')}
+                  value={selection.bankAccount?.name}
+                  iconName="grid-outline"
+                  selectedImageUrl={selection.bankAccount?.bankType?.imageUrl}
+                  selectedFallbackText={selection.bankAccount?.bankType?.name}
+                  valueBordered
+                  onPress={handleOpenBankAccountSheet}
+                />
+                <SelectInput
+                  placeholder={t('transactionPage:toAccountPlaceholder')}
+                  value={selection.toAccount?.name}
+                  iconName="grid-outline"
+                  selectedImageUrl={selection.toAccount?.bankType?.imageUrl}
+                  selectedFallbackText={selection.toAccount?.bankType?.name}
+                  valueBordered
+                  onPress={handleOpenToAccountSheet}
+                />
+              </>
+            ) : (
+              <>
+                <SelectInput
+                  placeholder={t('transactionPage:categoryPlaceholder')}
+                  value={selection.category?.name}
+                  iconName="bookmark-outline"
+                  selectedBorderColor={
+                    selection.category?.categoryColor?.hexCode
+                  }
+                  valueBordered
+                  onPress={handleOpenCategorySheet}
+                />
+                <SelectInput
+                  placeholder={t('transactionPage:bankPlaceholder')}
+                  value={selection.bankAccount?.name}
+                  iconName="grid-outline"
+                  selectedImageUrl={selection.bankAccount?.bankType?.imageUrl}
+                  selectedFallbackText={selection.bankAccount?.bankType?.name}
+                  valueBordered
+                  onPress={handleOpenBankAccountSheet}
+                />
+                {selection.bankAccount && (
+                  <SelectInput
+                    placeholder={t('transactionPage:cardPlaceholder')}
+                    value={selection.card?.name}
+                    iconName="credit-card-outline"
+                    valueBordered
+                    onPress={handleOpenCardSheet}
+                  />
+                )}
+              </>
             )}
 
-            {(isCardExpense || selection.bankAccount) && (
-              <SelectInput
-                placeholder={t('transactionPage:cardPlaceholder')}
-                value={selection.card?.name}
-                iconName="credit-card-outline"
-                valueBordered
-                onPress={handleOpenCardSheet}
-              />
-            )}
-
-            <SwitchInput
-              placeholder={t('transactionPage:recurrentPlaceholder')}
-              value={formik.values.recurrent}
-              iconName="sync-outline"
-              onValueChange={v => formik.setFieldValue('recurrent', v)}
-              disabled={isSubmitting}
-            />
-
-            <SwitchInput
-              placeholder={t('transactionPage:repeatPlaceholder')}
-              value={formik.values.repeat}
-              iconName="repeat-outline"
-              onValueChange={v => formik.setFieldValue('repeat', v)}
+            <RecurrenceSelector
+              values={formik.values.recurrence}
+              onChange={value => formik.setFieldValue('recurrence', value)}
               disabled={isSubmitting}
             />
 

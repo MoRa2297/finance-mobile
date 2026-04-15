@@ -3,12 +3,14 @@ import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { theme } from '@/config/theme';
-import { ProfileForm } from '@components/screens/settings/profile/ProfileForm/ProfileForm';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { Header } from '@components/ui/Header';
+import { useProfileScreen } from '@hooks/screens/profile';
+import { ProfileForm } from '@components/screens/settings/profile/ProfileForm/ProfileForm';
 
 export default function ProfileScreen() {
-  const { t } = useTranslation(['profilePage', 'common']);
+  const { t } = useTranslation('profilePage');
+  const profileScreen = useProfileScreen();
 
   return (
     <ScreenContainer
@@ -19,7 +21,7 @@ export default function ProfileScreen() {
         left={{ type: 'back', variant: 'icon' }}
         center={{ type: 'title', title: t('profilePage:headerTitle') }}
       />
-      <ProfileForm />
+      <ProfileForm {...profileScreen} />
     </ScreenContainer>
   );
 }

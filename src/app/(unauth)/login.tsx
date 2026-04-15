@@ -8,15 +8,15 @@ import {
   LoginHeader,
   SocialLoginButtons,
 } from '@components/screens/login';
-import { useLogin } from '@hooks/screens/login';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
+import { useLoginScreen } from '@hooks/screens/login';
 
 // TODO lock the scroll
 export default function LoginScreen() {
   const { t } = useTranslation(['loginPage']);
 
   // TODO handle clearError in LoginForm
-  const { isLoading, errorMessage, handleLogin, clearError } = useLogin();
+  const { isLoading, errorMessage, handleLogin, clearError } = useLoginScreen();
 
   return (
     <ScreenContainer scrollable={true}>
@@ -25,8 +25,9 @@ export default function LoginScreen() {
           <LoginHeader />
           <LoginForm
             isLoading={isLoading}
-            errorMessage={errorMessage}
+            errorMessage={errorMessage ?? ''}
             onSubmit={handleLogin}
+            onClearError={clearError}
           />
           <LoginDivider text={t('loginPage:or')} />
           <SocialLoginButtons disabled />

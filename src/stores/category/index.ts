@@ -1,2 +1,6 @@
-export { useCategoryStore } from './useCategoryStore';
-export { categorySelectors } from './category.selectors';
+export { useCategories } from './category.queries';
+export {
+  useCreateCategory,
+  useDeleteCategory,
+  useUpdateCategory,
+} from './category.mutations';

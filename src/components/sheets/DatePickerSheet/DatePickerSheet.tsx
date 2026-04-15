@@ -41,10 +41,10 @@ export const DatePickerSheet: React.FC<SheetProps<'date-picker-sheet'>> = ({
 
   return (
     <ActionSheet
-      ref={actionSheetRef}
       id={sheetId}
-      gestureEnabled
+      ref={actionSheetRef}
       closable
+      gestureEnabled
       useBottomSafeAreaPadding
       closeOnTouchBackdrop
       containerStyle={styles.container}>

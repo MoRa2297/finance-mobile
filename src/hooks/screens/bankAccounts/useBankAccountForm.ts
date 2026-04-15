@@ -1,16 +1,16 @@
-import { useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { SheetManager } from 'react-native-actions-sheet';
 
+import { useLookupStore, lookupSelectors } from '@/stores';
+import { useBankAccounts } from '@/stores/bank-account/bank-account.queries';
 import {
-  useBankAccountStore,
-  bankAccountSelectors,
-  useLookupStore,
-  lookupSelectors,
-} from '@/stores';
+  useCreateBankAccount,
+  useUpdateBankAccount,
+} from '@/stores/bank-account/bank-account.mutations';
 import { BankType, BankAccountType } from '@/types';
 
 export interface BankAccountFormValues {
@@ -27,38 +27,21 @@ export const useBankAccountForm = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEditing = !!id;
 
-  // Store
-  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
-  const createBankAccount = useBankAccountStore(
-    state => state.createBankAccount,
-  );
-  const updateBankAccount = useBankAccountStore(
-    state => state.updateBankAccount,
-  );
   const colors = useLookupStore(lookupSelectors.colors);
   const bankTypes = useLookupStore(lookupSelectors.bankTypes);
   const bankAccountTypes = useLookupStore(lookupSelectors.bankAccountTypes);
+
+  const { data: bankAccounts = [] } = useBankAccounts();
+  const { mutateAsync: createBankAccount } = useCreateBankAccount();
+  const { mutateAsync: updateBankAccount } = useUpdateBankAccount();
+
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const existingAccount = useMemo(
     () => bankAccounts.find(ba => ba.id === Number(id)) ?? null,
     [bankAccounts, id],
   );
 
-  // Validation schema
-  const validationSchema = Yup.object({
-    name: Yup.string().trim().required(t('bankAccountPage:alertNameError')),
-    startingBalance: Yup.number()
-      .typeError(t('bankAccountPage:alertStartingMoneyError'))
-      .required(t('bankAccountPage:alertStartingMoneyError')),
-    bankType: Yup.object()
-      .nullable()
-      .required(t('bankAccountPage:alertBankIDError')),
-    accountType: Yup.object()
-      .nullable()
-      .required(t('bankAccountPage:alertTypeError')),
-  });
-
-  // Initial values
   const initialValues: BankAccountFormValues = useMemo(
     () => ({
       name: existingAccount?.name ?? '',
@@ -82,11 +65,21 @@ export const useBankAccountForm = () => {
 
   const formik = useFormik<BankAccountFormValues>({
     initialValues,
-    validationSchema,
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required(t('bankAccountPage:alertNameError')),
+      startingBalance: Yup.number()
+        .typeError(t('bankAccountPage:alertStartingMoneyError'))
+        .required(t('bankAccountPage:alertStartingMoneyError')),
+      bankType: Yup.object()
+        .nullable()
+        .required(t('bankAccountPage:alertBankIDError')),
+      accountType: Yup.object()
+        .nullable()
+        .required(t('bankAccountPage:alertTypeError')),
+    }),
     enableReinitialize: true,
     onSubmit: async values => {
       const colorData = colors.find(c => c.hexCode === values.color);
-
       const payload = {
         name: values.name.trim(),
         startingBalance: parseFloat(values.startingBalance),
@@ -96,35 +89,47 @@ export const useBankAccountForm = () => {
       };
 
       if (isEditing && existingAccount) {
-        await updateBankAccount(existingAccount.id, payload);
+        await updateBankAccount({ id: existingAccount.id, payload });
       } else {
         await createBankAccount(payload);
       }
-
       router.back();
     },
   });
 
-  // Sheet handlers
+  const handleSubmit = useCallback(async () => {
+    const errors = await formik.validateForm();
+    if (Object.keys(errors).length > 0) {
+      formik.setTouched({
+        name: true,
+        startingBalance: true,
+        bankType: true,
+        accountType: true,
+      });
+      setAlertVisible(true);
+      return;
+    }
+    formik.handleSubmit();
+  }, [formik]);
+
   const handleOpenBankSheet = useCallback(async () => {
     const result = await SheetManager.show('bank-select-sheet');
     if (result?.bank) formik.setFieldValue('bankType', result.bank);
-  }, [formik]);
+  }, [formik.setFieldValue]);
 
   const handleOpenAccountTypeSheet = useCallback(async () => {
     const result = await SheetManager.show('bank-account-type-sheet');
     if (result?.accountType)
       formik.setFieldValue('accountType', result.accountType);
-  }, [formik]);
+  }, [formik.setFieldValue]);
 
-  // First error for alert
   const firstError = useMemo(() => {
-    const errors = formik.errors;
+    const { name, startingBalance, bankType, accountType } = formik.errors;
     return (
-      (errors.bankType as string) ||
-      errors.name ||
-      errors.startingBalance ||
-      (errors.accountType as string) ||
+      (bankType as string) ||
+      name ||
+      startingBalance ||
+      (accountType as string) ||
       null
     );
   }, [formik.errors]);
@@ -134,6 +139,9 @@ export const useBankAccountForm = () => {
     isEditing,
     colors,
     firstError,
+    alertVisible,
+    setAlertVisible,
+    handleSubmit,
     handleOpenBankSheet,
     handleOpenAccountTypeSheet,
   };

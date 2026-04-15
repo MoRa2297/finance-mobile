@@ -3,10 +3,10 @@ import { Animated, Pressable, StyleSheet, View } from 'react-native';
 
 import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
-
+import { TransactionType } from '@/types';
 // ============ TYPES ============
 
-type TransactionType = 'income' | 'expense' | 'card_spending';
+// type TransactionType = 'income' | 'expense' | 'transfer';
 
 interface FloatingButtonProps {
   handlePressOption: (type: TransactionType) => void;
@@ -33,21 +33,21 @@ interface ActionButton {
  */
 const ACTION_BUTTONS: ActionButton[] = [
   {
-    type: 'expense',
+    type: 'EXPENSE',
     icon: 'trending-down-outline',
     color: theme.colors.red,
     angle: 210, // Bottom-left position
     distance: 90,
   },
   {
-    type: 'card_spending',
-    icon: 'credit-card-outline',
+    type: 'TRANSFER',
+    icon: 'repeat-outline',
     color: theme.colors.primary,
     angle: 270, // Top-center position
     distance: 100,
   },
   {
-    type: 'income',
+    type: 'INCOME',
     icon: 'trending-up-outline',
     color: theme.colors.green,
     angle: 330, // Bottom-right position

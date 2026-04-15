@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 
@@ -13,7 +13,7 @@ interface SpecificPriceProps {
   iconColor: string;
 }
 
-export const SpecificPrice: React.FC<SpecificPriceProps> = ({
+export const SpecificPrice: FC<SpecificPriceProps> = ({
   title,
   amount,
   amountColor,

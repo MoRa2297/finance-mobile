@@ -1,3 +1,4 @@
+// components/screens/settings/bankAccounts/BankAccountListCard.tsx
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '@ui-kitten/components';
@@ -5,25 +6,29 @@ import { useTranslation } from 'react-i18next';
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
-import { BankAccount } from '@/types';
+import { BankAccount, Transaction } from '@/types';
 import { useBankAccountCard } from '@hooks/screens/bankAccounts';
 import { EntityImage } from '@components/ui/EntityImage';
 import { OptionsButton } from '@components/ui/OptionsButton';
 
 interface BankAccountListCardProps {
   bankAccount: BankAccount;
+  allTransactions: Transaction[];
   onPress: (bankAccount: BankAccount) => void;
   onOptionsPress: (bankAccount: BankAccount) => void;
 }
 
 export const BankAccountListCard: React.FC<BankAccountListCardProps> = ({
   bankAccount,
+  allTransactions,
   onPress,
   onOptionsPress,
 }) => {
   const { t } = useTranslation('bankAccountPage');
-  const { imageUrl, currentBalance, bankType } =
-    useBankAccountCard(bankAccount);
+  const { imageUrl, currentBalance } = useBankAccountCard(
+    bankAccount,
+    allTransactions,
+  );
 
   return (
     <Pressable style={styles.container} onPress={() => onPress(bankAccount)}>
@@ -63,12 +68,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     borderRadius: GLOBAL_BORDER_RADIUS / 2,
     padding: HORIZONTAL_PADDING,
-  },
-  imageContainer: {
-    width: 45,
-    height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   contentContainer: {
     flex: 1,

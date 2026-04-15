@@ -4,14 +4,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { authService } from '@/services';
 import { useLookupStore } from '@/stores/lookup/useLookupStore';
-import type { AuthState, RegisterPayload, User } from './auth.types';
-import { AUTH_INITIAL_STATE, AUTH_STORAGE_KEY } from './auth.constants';
+import type { AuthState, RegisterPayload, User } from '@/stores';
+import { queryClient } from '@config/queryClient';
 import {
-  useBankAccountStore,
-  useCardStore,
-  useCategoryStore,
-  useTransactionStore,
-} from '@/stores';
+  AUTH_INITIAL_STATE,
+  AUTH_STORAGE_KEY,
+} from '@stores/auth/auth.constants';
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -26,20 +24,17 @@ export const useAuthStore = create<AuthState>()(
             password,
           );
           const { token: _, ...cleanUser } = user;
-
           set({
             user: cleanUser,
             token: accessToken,
             isAuthenticated: true,
             isLoading: false,
           });
-
-          // Carica lookup in background — non blocca il login
-          // useLookupStore.getState().fetchAll();
         } catch (error) {
-          const message =
-            error instanceof Error ? error.message : 'Login failed';
-          set({ isLoading: false, error: message });
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Login failed',
+          });
           throw error;
         }
       },
@@ -49,31 +44,24 @@ export const useAuthStore = create<AuthState>()(
         try {
           const { accessToken, user } = await authService.register(payload);
           const { token: _, ...cleanUser } = user;
-
           set({
             user: cleanUser,
             token: accessToken,
             isAuthenticated: true,
             isLoading: false,
           });
-
-          // Carica lookup in background — non blocca il register
-          // useLookupStore.getState().fetchAll();
         } catch (error) {
-          const message =
-            error instanceof Error ? error.message : 'Register failed';
-          set({ isLoading: false, error: message });
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Register failed',
+          });
           throw error;
         }
       },
 
       logout: () => {
-        // TODO check
         useLookupStore.getState().reset();
-        useBankAccountStore.getState().reset();
-        useCardStore.getState().reset();
-        useTransactionStore.getState().reset();
-        useCategoryStore.getState().reset();
+        queryClient.clear();
         set(AUTH_INITIAL_STATE);
       },
 
@@ -86,13 +74,9 @@ export const useAuthStore = create<AuthState>()(
         if (currentUser) set({ user: { ...currentUser, ...updates } });
       },
 
-      clearError: () => {
-        set({ error: null });
-      },
+      clearError: () => set({ error: null }),
 
-      reset: () => {
-        set(AUTH_INITIAL_STATE);
-      },
+      reset: () => set(AUTH_INITIAL_STATE),
     }),
     {
       name: AUTH_STORAGE_KEY,
