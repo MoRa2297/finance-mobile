@@ -10,6 +10,7 @@ import {
 } from '@components/screens/login';
 import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { useLoginScreen } from '@hooks/screens/login';
+import { ROUTES } from '@config/constants';
 
 // TODO lock the scroll
 export default function LoginScreen() {
@@ -36,7 +37,7 @@ export default function LoginScreen() {
         <LoginFooter
           message={t('loginPage:noAccount')}
           linkText={t('loginPage:signUp')}
-          linkHref={''}
+          linkHref={ROUTES.REGISTER}
         />
       </View>
     </ScreenContainer>

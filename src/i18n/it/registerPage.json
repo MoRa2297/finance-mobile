@@ -1,0 +1,24 @@
+{
+  "welcome": "Crea Account",
+  "welcomeSub": "Registrati per iniziare",
+  "or": "oppure",
+  "hasAccount": "Hai già un account?",
+  "signIn": "Accedi",
+  "form": {
+    "namePlaceholder": "Nome",
+    "emailPlaceholder": "Indirizzo email",
+    "passwordPlaceholder": "Password",
+    "signUp": "Registrati"
+  },
+  "errors": {
+    "nameRequired": "Il nome è obbligatorio",
+    "emailRequired": "L'email è obbligatoria",
+    "emailInvalid": "Inserisci un'email valida",
+    "passwordRequired": "La password è obbligatoria",
+    "passwordMin": "Almeno 7 caratteri",
+    "passwordNumber": "Deve contenere un numero",
+    "passwordLowercase": "Deve contenere una lettera minuscola",
+    "passwordUppercase": "Deve contenere una lettera maiuscola",
+    "passwordSymbol": "Deve contenere un simbolo"
+  }
+}

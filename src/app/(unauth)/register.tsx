@@ -1,33 +1,56 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+
+import { ScreenContainer } from '@components/ui/ScreenContainer';
+import {
+  LoginDivider,
+  LoginFooter,
+  SocialLoginButtons,
+} from '@components/screens/login';
+import { useRegisterScreen } from '@hooks/screens/register/useRegisterScreen';
+import { ROUTES } from '@config/constants';
+import { RegisterForm, RegisterHeader } from '@components/screens/register';
 
 export default function RegisterScreen() {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Registrazione</Text>
+  const { t } = useTranslation(['registerPage']);
+  const { isLoading, errorMessage, handleRegister, clearError } =
+    useRegisterScreen();
 
-            <Link href="/login" asChild>
-                <Pressable style={styles.link}>
-                    <Text>Hai già un account? Accedi</Text>
-                </Pressable>
-            </Link>
+  return (
+    <ScreenContainer scrollable>
+      <View style={styles.content}>
+        <View style={styles.mainSection}>
+          <RegisterHeader />
+          <RegisterForm
+            isLoading={isLoading}
+            errorMessage={errorMessage ?? ''}
+            onSubmit={handleRegister}
+            onClearError={clearError}
+          />
+          <LoginDivider text={t('registerPage:or')} />
+          <SocialLoginButtons disabled />
         </View>
-    );
+
+        <LoginFooter
+          message={t('registerPage:hasAccount')}
+          linkText={t('registerPage:signIn')}
+          linkHref={ROUTES.LOGIN}
+        />
+      </View>
+    </ScreenContainer>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        marginBottom: 40,
-    },
-    link: {
-        marginTop: 20,
-    },
+  content: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  mainSection: {
+    flex: 1,
+    flexShrink: 1,
+    justifyContent: 'center',
+    gap: 32,
+  },
 });

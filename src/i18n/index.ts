@@ -7,6 +7,9 @@ import commonEn from './en/common.json';
 import loginIt from './it/loginPage.json';
 import loginEn from './en/loginPage.json';
 
+import registerIt from './it/registerPage.json';
+import registerEn from './en/registerPage.json';
+
 import homeIt from './it/homePage.json';
 import homeEn from './en/homePage.json';
 
@@ -43,6 +46,7 @@ const i18nResources = {
   it: {
     common: commonIt,
     loginPage: loginIt,
+    registerPage: registerIt,
     homePage: homeIt,
     expensesPage: expensesIt,
     settingsPage: settingsIt,
@@ -56,6 +60,7 @@ const i18nResources = {
   en: {
     common: commonEn,
     loginPage: loginEn,
+    registerPage: registerEn,
     homePage: homeEn,
     expensesPage: expensesEn,
     settingsPage: settingsEn,

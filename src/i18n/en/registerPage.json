@@ -1,0 +1,24 @@
+{
+  "welcome": "Create Account",
+  "welcomeSub": "Sign up to get started",
+  "or": "or",
+  "hasAccount": "Already have an account?",
+  "signIn": "Sign In",
+  "form": {
+    "namePlaceholder": "First name",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "signUp": "Sign Up"
+  },
+  "errors": {
+    "nameRequired": "Name is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email",
+    "passwordRequired": "Password is required",
+    "passwordMin": "At least 7 characters",
+    "passwordNumber": "Must contain a number",
+    "passwordLowercase": "Must contain a lowercase letter",
+    "passwordUppercase": "Must contain an uppercase letter",
+    "passwordSymbol": "Must contain a symbol"
+  }
+}
