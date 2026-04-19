@@ -72,18 +72,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
   },
-  content: {
-    paddingTop: 10,
-  },
-  handle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.textHint,
-    alignSelf: 'center',
-    marginBottom: 10,
-    opacity: 0.4,
-  },
   listContent: {
     paddingBottom: 20,
   },

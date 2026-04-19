@@ -2,7 +2,7 @@
 export { useAuthStore } from './auth/useAuthStore';
 export { authSelectors } from './auth/auth.selectors';
 export type { AuthState, User, RegisterPayload } from './auth/auth.types';
- // UI
+// UI
 export { useUIStore } from './ui/useUIStore';
 export { uiSelectors } from './ui/ui.selectors';
 export type { UIStore } from './ui/ui.types';
@@ -16,7 +16,13 @@ export { useLookupStore, lookupSelectors } from './lookup';
 // export type { CategoryState } from './category';
 
 // Bank Account
-// export { useBankAccountStore, bankAccountSelectors } from './bank-account';
+export {
+  useCreateBankAccount,
+  useDeleteBankAccount,
+  useUpdateBankAccount,
+  useBankAccounts,
+  useBankAccount,
+} from './bank-account';
 // export type { BankAccountState } from './bank-account';
 
 // Card

@@ -100,7 +100,7 @@ i18next
       try {
         const language = await AsyncStorage.getItem('language');
         cb(language || locale.lang);
-      } catch (err) {
+      } catch (_) {
         cb(locale.lang);
       }
     },

@@ -1,0 +1,54 @@
+name: ✨ Feature Request
+description: Propose a new feature or improvement
+title: '[FEAT] '
+labels: [ 'enhancement', 'triage' ]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Motivation
+      description: What problem does this feature solve?
+      placeholder: |
+        I can't see my monthly spending broken down by category at a glance.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How do you envision the feature? Include UX considerations
+      placeholder: |
+        Add a pie chart on the home screen showing current month's
+        expenses grouped by category, with tappable segments.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - UI / UX only
+        - Requires API changes
+        - New third-party integration
+        - Infrastructure / tooling
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (self-assigned)
+      options:
+        - 🔥 High — blocking daily usage
+        - 📅 Medium — useful, to be planned
+        - 💡 Low — nice to have
+    validations:
+      required: true
+
+  - type: textarea
+    id: mockup
+    attributes:
+      label: Mockup / Reference
+      description: Drawings, screenshots from other apps, Figma links

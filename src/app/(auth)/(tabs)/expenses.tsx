@@ -10,7 +10,7 @@ import { ScreenContainer } from '@components/ui/ScreenContainer';
 import { TopRoundedContainer } from '@components/ui/TopRoundedContainer';
 import { Header } from '@components/ui/Header';
 import { MonthSwipePicker } from '@components/ui/MonthSwipePicker';
-import { SliderBar, Tab } from '@components/ui/SliderBar';
+import { SliderBar } from '@components/ui/SliderBar';
 import { useExpensesScreen } from '@hooks/screens/expenses';
 import { Alert } from '@components/ui/Alert';
 
