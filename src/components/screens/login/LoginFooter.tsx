@@ -20,7 +20,7 @@ export const LoginFooter: FC<ILoginFooterProps> = ({
     <Layout style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.text}>{message} </Text>
-        <Link href={linkHref as any} asChild>
+        <Link href={linkHref as string} asChild>
           <Pressable>
             <Text style={styles.linkText}>{linkText}</Text>
           </Pressable>

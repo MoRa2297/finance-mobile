@@ -5,7 +5,7 @@ import { bankAccountKeys } from './bank-account.keys';
 export const useBankAccounts = () => {
   return useQuery({
     queryKey: bankAccountKeys.lists(),
-    queryFn: ({ signal }) => bankAccountService.getBankAccounts(),
+    queryFn: () => bankAccountService.getBankAccounts(),
     select: data => data,
   });
 };
@@ -13,7 +13,7 @@ export const useBankAccounts = () => {
 export const useBankAccount = (id: number | null) => {
   return useQuery({
     queryKey: bankAccountKeys.detail(id!),
-    queryFn: ({ signal }) => bankAccountService.getBankAccount(id!),
+    queryFn: () => bankAccountService.getBankAccount(id!),
     enabled: id !== null && id > 0,
   });
 };

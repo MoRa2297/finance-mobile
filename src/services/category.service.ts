@@ -13,13 +13,8 @@ const categoryService = {
   },
 
   createCategory: async (payload: EditCategory): Promise<Category> => {
-    try {
-      const response = await apiClient.post<Category>('/categories', payload);
-
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await apiClient.post<Category>('/categories', payload);
+    return response.data;
   },
 
   updateCategory: async (

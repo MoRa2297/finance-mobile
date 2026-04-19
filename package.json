@@ -4,6 +4,7 @@
   "packageManager": "pnpm@10.28.2",
   "main": "expo-router/entry",
   "license": "MIT",
+  "doctor": "expo-doctor",
   "scripts": {
     "start": "EXPO_ROUTER_APP_ROOT=./src/app expo start",
     "ios": "EXPO_ROUTER_APP_ROOT=./src/app expo start --ios",
@@ -65,10 +66,21 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@react-native/eslint-config": "^0.85.1",
     "@tanstack/eslint-plugin-query": "^5.97.0",
     "@types/react": "~19.1.0",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-native": "^5.0.0",
+    "expo-doctor": "^1.18.18",
+    "globals": "^17.5.0",
     "prettier": "^3.7.4",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.58.2"
   },
   "private": true,
   "expo": {

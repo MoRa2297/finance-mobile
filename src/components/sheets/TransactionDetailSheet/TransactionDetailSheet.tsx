@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, FC } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
   SheetProps,

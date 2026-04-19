@@ -1,6 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useActionSheetStyles } from '@/hooks';
@@ -20,7 +19,6 @@ const TABS = [
 
 export const useCategoriesScreen = () => {
   const { t } = useTranslation(['categoriesPage', 'common']);
-  const insets = useSafeAreaInsets();
   const { showActionSheetWithOptions } = useActionSheet();
   const actionSheetStyles = useActionSheetStyles();
 
