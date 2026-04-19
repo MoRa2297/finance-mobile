@@ -10,6 +10,5 @@ export default {
   STATIC_TOKEN: '',
   BASE_API_LOCAL: _IS_ENV_DEVELOPMENT
     ? 'http://localhost:4000/api/v1'
-    : 'https://production-backend-personalfinance.onrender.com/api/v1',
+    : 'curl https://finance-api-production-7d68.up.railway.app/',
 };
-
