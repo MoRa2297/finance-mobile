@@ -1,12 +1,5 @@
 import React, { FC, memo, useCallback, useRef } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  View,
-  ViewStyle,
-  TextStyle,
-  ScrollView,
-} from 'react-native';
+import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
   SheetManager,

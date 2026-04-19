@@ -3,7 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const persistStorageItem = async (itemName: string, data: any) => {
   try {
     await AsyncStorage.setItem(itemName, JSON.stringify(data));
-  } catch (_) {}
+  } catch (_) {
+    return undefined;
+  }
 };
 
 export const getStorageItem = async (itemName: string) => {

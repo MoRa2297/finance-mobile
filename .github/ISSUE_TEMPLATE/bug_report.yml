@@ -1,0 +1,82 @@
+name: 🐛 Bug Report
+description: Report a bug in the mobile app
+title: '[BUG] '
+labels: [ 'bug', 'triage' ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Fill in the fields below to help reproduce the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happens? What did you expect to happen?
+      placeholder: |
+        When I tap "Add Transaction", the modal opens but the amount input is not focused.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the app, log in
+        2. Tap FAB "+"
+        3. Tap "Add Transaction"
+        4. Notice the amount field is not focused
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Error messages, logs, stack traces
+      render: shell
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - iOS (Simulator)
+        - iOS (Physical device)
+        - Expo Go
+        - Development build
+    validations:
+      required: true
+
+  - type: input
+    id: ios-version
+    attributes:
+      label: iOS version
+      placeholder: e.g. 17.5
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      placeholder: e.g. iPhone 15 Pro Simulator, iPhone 13
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App version / commit
+      placeholder: e.g. v0.1.2 or abc1234
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Screenshots, recordings, related issues

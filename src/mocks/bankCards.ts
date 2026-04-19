@@ -1,4 +1,5 @@
 import { BankCard, CardType } from '@/types';
+import { MOCK_BANK_ACCOUNTS } from './bankAccounts';
 
 export const MOCK_CARD_TYPES: CardType[] = [
   {
@@ -30,38 +31,50 @@ export const MOCK_CARD_TYPES: CardType[] = [
 export const MOCK_BANK_CARDS: BankCard[] = [
   {
     id: 1,
+    userId: 1,
     bankAccountId: 1,
     name: 'Main Debit Card',
-    cardTypeId: 1, // Visa
-    cardLimit: '5000',
+    cardTypeId: 1,
+    cardLimit: 5000,
     monthExpiry: 12,
     yearExpiry: 2026,
+    cardType: MOCK_CARD_TYPES[0],
+    bankAccount: MOCK_BANK_ACCOUNTS[0],
   },
   {
     id: 2,
+    userId: 1,
     bankAccountId: 1,
     name: 'Travel Card',
-    cardTypeId: 2, // Mastercard
-    cardLimit: '3000',
+    cardTypeId: 2,
+    cardLimit: 3000,
     monthExpiry: 6,
     yearExpiry: 2025,
+    cardType: MOCK_CARD_TYPES[1],
+    bankAccount: MOCK_BANK_ACCOUNTS[0],
   },
   {
     id: 3,
+    userId: 1,
     bankAccountId: 2,
     name: 'Business Card',
-    cardTypeId: 3, // Amex
-    cardLimit: '10000',
+    cardTypeId: 3,
+    cardLimit: 10000,
     monthExpiry: 9,
     yearExpiry: 2027,
+    cardType: MOCK_CARD_TYPES[2],
+    bankAccount: MOCK_BANK_ACCOUNTS[1],
   },
   {
     id: 4,
+    userId: 1,
     bankAccountId: 3,
     name: 'Savings Debit',
-    cardTypeId: 4, // Maestro
-    cardLimit: '2000',
+    cardTypeId: 4,
+    cardLimit: 2000,
     monthExpiry: 3,
     yearExpiry: 2026,
+    cardType: MOCK_CARD_TYPES[3],
+    bankAccount: MOCK_BANK_ACCOUNTS[2],
   },
 ];

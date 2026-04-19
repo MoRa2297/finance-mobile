@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import {
   BottomNavigation as BottomNavigationUI,
@@ -22,7 +22,7 @@ import {
 import { TransactionType } from '@/types';
 
 // TODO improve animations on switch screens and selected screen UI
-export const BottomNavigation = ({}) => {
+export const BottomNavigation = () => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const { t } = useTranslation('common');

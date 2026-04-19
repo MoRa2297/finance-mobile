@@ -17,6 +17,7 @@ import { setupReactQueryOnline } from '@config/reactQueryOnline';
 import { setupReactQueryLogger } from '@config/reactQueryLogger';
 
 if (__DEV__) {
+  // @typescript-eslint/no-require-imports
   require('@config/reactotron');
 }
 

@@ -106,7 +106,7 @@ export const BankSelectSheet: FC<SheetProps<'bank-select-sheet'>> = ({
           value={search}
           onChangeText={setSearch}
           style={styles.search}
-          accessoryLeft={props => (
+          accessoryLeft={() => (
             <Icon
               name="search-outline"
               color={theme.colors.textHint}

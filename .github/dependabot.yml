@@ -1,0 +1,43 @@
+# Dependabot configuration — mobile
+# Strategy: security updates only.
+# Routine version bumps are disabled because Expo/React Native upgrades
+# must be done manually with `npx expo install` to keep dep versions compatible.
+
+version: 2
+updates:
+  # npm dependencies — security only
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+    open-pull-requests-limit: 0
+    target-branch: 'main'
+    labels:
+      - 'dependencies'
+      - 'security'
+    commit-message:
+      prefix: 'chore(deps)'
+      include: 'scope'
+    # Even if a security PR is opened, ignore these packages:
+    # they must be upgraded via `npx expo install` to stay compatible.
+    ignore:
+      - dependency-name: 'expo'
+      - dependency-name: 'expo-*'
+      - dependency-name: 'react-native'
+      - dependency-name: 'react-native-*'
+      - dependency-name: 'react'
+      - dependency-name: 'react-dom'
+
+  # GitHub Actions — security only
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+    open-pull-requests-limit: 0
+    target-branch: 'main'
+    labels:
+      - 'dependencies'
+      - 'ci'
+      - 'security'
+    commit-message:
+      prefix: 'chore(ci)'

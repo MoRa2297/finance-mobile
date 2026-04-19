@@ -26,7 +26,7 @@ export default function AuthLayout() {
       queryKey: categoryKeys.listByType(),
       queryFn: () => categoryService.getCategories(),
     });
-  }, []);
+  }, [queryClient]);
 
   return (
     <Stack
