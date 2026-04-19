@@ -1,18 +1,5 @@
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useMemo,
-  useRef,
-  useEffect,
-} from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  View,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
+import React, { FC, memo, useCallback, useMemo, useRef } from 'react';
+import { Pressable, StyleSheet, View, TextStyle } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
   SheetManager,
@@ -27,8 +14,8 @@ import {
   SCREEN_HEIGHT,
 } from '@config/constants';
 import { Category } from '@/types';
-import { useCategoryStore, categorySelectors } from '@/stores';
 import { Icon } from '@components/ui/Icon';
+import { useCategories } from '@stores/category';
 
 type SelectCategorySheetProps = SheetProps<'select-category-sheet'>;
 
@@ -75,12 +62,7 @@ export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
   payload,
 }) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
-  const categories = useCategoryStore(categorySelectors.categories);
-  const fetchCategories = useCategoryStore(state => state.fetchCategories);
-
-  useEffect(() => {
-    if (categories.length === 0) fetchCategories();
-  }, []);
+  const { data: categories = [] } = useCategories();
 
   const filteredCategories = useMemo(() => {
     if (!categories?.length || !payload?.type) return [];

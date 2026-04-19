@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { FormikErrors, FormikTouched } from 'formik';
 
 import { i18n } from '@/i18n';
-import { TLoginFormValues } from '@hooks/screens/login/useLogin';
+import { TLoginFormValues } from '@hooks/screens/login/useLoginScreen';
 
 const t = (key: string) => i18n.t(key);
 

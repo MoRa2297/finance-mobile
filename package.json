@@ -1,13 +1,19 @@
 {
   "name": "finance-mobile",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.28.2",
   "main": "expo-router/entry",
   "license": "MIT",
   "scripts": {
     "start": "EXPO_ROUTER_APP_ROOT=./src/app expo start",
     "ios": "EXPO_ROUTER_APP_ROOT=./src/app expo start --ios",
     "android": "EXPO_ROUTER_APP_ROOT=./src/app expo start --android",
-    "web": "EXPO_ROUTER_APP_ROOT=./src/app expo start --web"
+    "web": "EXPO_ROUTER_APP_ROOT=./src/app expo start --web",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
+    "lint:check": "eslint \"src/**/*.{ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@eva-design/eva": "^2.2.0",

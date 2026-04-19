@@ -15,7 +15,7 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 
 import { Icon } from '@/components/ui/Icon';
-import { useBankAccountStore, bankAccountSelectors } from '@/stores';
+import { useBankAccounts } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccount } from '@/types';
@@ -27,17 +27,7 @@ export const BankAccountSelectSheet: React.FC<
   const { t } = useTranslation(['bankCardsPage', 'common']);
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const { height } = useWindowDimensions();
-  const bankAccounts = useBankAccountStore(bankAccountSelectors.bankAccounts);
-  const fetchBankAccounts = useBankAccountStore(
-    state => state.fetchBankAccounts,
-  );
-
-  // TODO verifiy if is needed
-  useEffect(() => {
-    if (bankAccounts.length === 0) {
-      fetchBankAccounts();
-    }
-  }, []);
+  const { data: bankAccounts = [] } = useBankAccounts();
 
   const handleSelect = (bankAccount: BankAccount) => {
     SheetManager.hide(sheetId, { payload: { bankAccount } });

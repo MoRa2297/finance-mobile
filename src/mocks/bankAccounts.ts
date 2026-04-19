@@ -1,4 +1,4 @@
-import { BankAccount, BankType, BankAccountType } from '@/types';
+import { BankAccount, BankType, BankAccountType, Color } from '@/types';
 
 export const MOCK_BANK_TYPES: BankType[] = [
   {
@@ -57,6 +57,12 @@ export const MOCK_BANK_ACCOUNT_TYPES: BankAccountType[] = [
   { id: 3, name: 'investment' },
 ];
 
+const MOCK_COLORS: Record<number, Color> = {
+  1: { id: 1, hexCode: '#E53935' },
+  5: { id: 5, hexCode: '#43A047' },
+  19: { id: 19, hexCode: '#00897B' },
+};
+
 export const MOCK_BANK_ACCOUNTS: BankAccount[] = [
   {
     id: 1,
@@ -66,6 +72,9 @@ export const MOCK_BANK_ACCOUNTS: BankAccount[] = [
     colorId: 1,
     bankTypeId: 1,
     bankAccountTypeId: 1,
+    bankType: MOCK_BANK_TYPES[0],
+    bankAccountType: MOCK_BANK_ACCOUNT_TYPES[0],
+    color: MOCK_COLORS[1],
   },
   {
     id: 2,
@@ -75,6 +84,9 @@ export const MOCK_BANK_ACCOUNTS: BankAccount[] = [
     colorId: 5,
     bankTypeId: 4,
     bankAccountTypeId: 2,
+    bankType: MOCK_BANK_TYPES[3],
+    bankAccountType: MOCK_BANK_ACCOUNT_TYPES[1],
+    color: MOCK_COLORS[5],
   },
   {
     id: 3,
@@ -84,5 +96,8 @@ export const MOCK_BANK_ACCOUNTS: BankAccount[] = [
     colorId: 19,
     bankTypeId: 6,
     bankAccountTypeId: 1,
+    bankType: MOCK_BANK_TYPES[5],
+    bankAccountType: MOCK_BANK_ACCOUNT_TYPES[0],
+    color: MOCK_COLORS[19],
   },
 ];

@@ -16,7 +16,13 @@ export { useLookupStore, lookupSelectors } from './lookup';
 // export type { CategoryState } from './category';
 
 // Bank Account
-// export { useBankAccountStore, bankAccountSelectors } from './bank-account';
+ export {
+   useCreateBankAccount,
+   useDeleteBankAccount,
+   useUpdateBankAccount,
+   useBankAccounts,
+   useBankAccount
+ } from './bank-account';
 // export type { BankAccountState } from './bank-account';
 
 // Card

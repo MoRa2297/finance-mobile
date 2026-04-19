@@ -1,11 +1,5 @@
 import React, { memo, useCallback, useMemo, useRef, useEffect } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  View,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
   SheetManager,
@@ -20,8 +14,9 @@ import {
   SCREEN_HEIGHT,
 } from '@config/constants';
 import { BankCard } from '@/types';
-import { useCardStore, cardSelectors } from '@/stores';
+
 import { Icon } from '@components/ui/Icon';
+import { useCards } from '@stores/card';
 
 export interface SelectCardSheetPayload {
   bankAccountIds: number[];
@@ -105,12 +100,7 @@ export const SelectCardSheet: React.FC<SelectCardSheetProps> = ({
   sheetId,
 }) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
-  const cards = useCardStore(cardSelectors.cards);
-  const fetchCards = useCardStore(state => state.fetchCards);
-
-  useEffect(() => {
-    if (cards.length === 0) fetchCards();
-  }, []);
+  const { data: cards = [] } = useCards();
 
   const filteredCards = useMemo(() => {
     if (!cards?.length || !payload?.bankAccountIds?.length) return [];
