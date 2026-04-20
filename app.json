@@ -1,20 +1,33 @@
 {
   "expo": {
-    "jsEngine": "hermes",
-    "extra": {
-      "eas": {
-        "projectId": "13f6a984-74f9-4d97-a35b-6f59c54f4fc7"
-      }
-    },
+    "name": "Finance",
+    "slug": "finance-mobile",
+    "version": "0.1.0",
+    "scheme": "finance",
     "owner": "personal-finance",
-
+    "orientation": "portrait",
+    "jsEngine": "hermes",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "jsEngine": "jsc",
       "bundleIdentifier": "com.mora2297.financemobile",
+      "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
-    "plugins": ["expo-font"]
+    "plugins": ["expo-font"],
+    "extra": {
+      "eas": {
+        "projectId": "13f6a984-74f9-4d97-a35b-6f59c54f4fc7"
+      }
+    }
   }
 }
