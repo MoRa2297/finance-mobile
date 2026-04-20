@@ -15,10 +15,10 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 
 import { Icon } from '@/components/ui/Icon';
-import { useLookupStore, lookupSelectors } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccountType } from '@/types';
+import { useBankTypes } from '@stores/lookup';
 
 const ACCOUNT_TYPE_ICONS: Record<number, string> = {
   1: 'credit-card-outline', // Checking Account
@@ -36,7 +36,8 @@ export const BankAccountTypeSheet: FC<
   const { t } = useTranslation(['bankAccountPage', 'common']);
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const { height } = useWindowDimensions();
-  const bankAccountTypes = useLookupStore(lookupSelectors.bankAccountTypes);
+
+  const { data: bankAccountTypes = [] } = useBankTypes();
 
   const handleSelect = (accountType: BankAccountType) => {
     SheetManager.hide(sheetId, { payload: { accountType } });

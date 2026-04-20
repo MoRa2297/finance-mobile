@@ -5,13 +5,13 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import { useLookupStore, lookupSelectors } from '@/stores';
 import { useBankAccounts } from '@/stores/bank-account/bank-account.queries';
 import {
   useCreateBankAccount,
   useUpdateBankAccount,
 } from '@/stores/bank-account/bank-account.mutations';
 import { BankType, BankAccountType } from '@/types';
+import { useBankAccountTypes, useBankTypes, useColors } from '@stores/lookup';
 
 export interface BankAccountFormValues {
   name: string;
@@ -27,10 +27,9 @@ export const useBankAccountForm = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEditing = !!id;
 
-  const colors = useLookupStore(lookupSelectors.colors);
-  const bankTypes = useLookupStore(lookupSelectors.bankTypes);
-  const bankAccountTypes = useLookupStore(lookupSelectors.bankAccountTypes);
-
+  const { data: colors = [] } = useColors();
+  const { data: bankTypes = [] } = useBankTypes();
+  const { data: bankAccountTypes = [] } = useBankAccountTypes();
   const { data: bankAccounts = [] } = useBankAccounts();
   const { mutateAsync: createBankAccount } = useCreateBankAccount();
   const { mutateAsync: updateBankAccount } = useUpdateBankAccount();
@@ -47,16 +46,20 @@ export const useBankAccountForm = () => {
       name: existingAccount?.name ?? '',
       startingBalance: existingAccount?.startingBalance?.toString() ?? '',
       color: existingAccount?.colorId
-        ? (colors.find(c => c.id === existingAccount.colorId)?.hexCode ??
+        ? (colors.find((c: { id: number }) => c.id === existingAccount.colorId)
+            ?.hexCode ??
           colors[0]?.hexCode ??
           '')
         : (colors[0]?.hexCode ?? ''),
       bankType: existingAccount
-        ? (bankTypes.find(bt => bt.id === existingAccount.bankTypeId) ?? null)
+        ? (bankTypes.find(
+            (bt: { id: number }) => bt.id === existingAccount.bankTypeId,
+          ) ?? null)
         : null,
       accountType: existingAccount
         ? (bankAccountTypes.find(
-            bat => bat.id === existingAccount.bankAccountTypeId,
+            (bat: { id: number }) =>
+              bat.id === existingAccount.bankAccountTypeId,
           ) ?? null)
         : null,
     }),
@@ -79,7 +82,9 @@ export const useBankAccountForm = () => {
     }),
     enableReinitialize: true,
     onSubmit: async values => {
-      const colorData = colors.find(c => c.hexCode === values.color);
+      const colorData = colors.find(
+        (c: { hexCode: string }) => c.hexCode === values.color,
+      );
       const payload = {
         name: values.name.trim(),
         startingBalance: parseFloat(values.startingBalance),

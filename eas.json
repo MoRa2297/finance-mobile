@@ -22,7 +22,6 @@
     "preview": {
       "extends": "base",
       "distribution": "internal",
-      "channel": "preview",
       "env": {
         "EXPO_PUBLIC_ENV": "production",
         "EXPO_PUBLIC_API_URL": "https://finance-api-production-7d68.up.railway.app"
@@ -34,7 +33,6 @@
     "production": {
       "extends": "base",
       "distribution": "store",
-      "channel": "production",
       "autoIncrement": true,
       "env": {
         "EXPO_PUBLIC_ENV": "production",
@@ -45,9 +43,9 @@
   "submit": {
     "production": {
       "ios": {
-        "appleId": "REPLACE_WITH_YOUR_APPLE_ID",
-        "ascAppId": "REPLACE_WITH_APP_STORE_CONNECT_APP_ID",
-        "appleTeamId": "REPLACE_WITH_APPLE_TEAM_ID"
+        "appleId": "manuel.morandin@gmail.com",
+        "ascAppId": "6762600567",
+        "appleTeamId": "7WNGT3Y78W"
       }
     }
   }

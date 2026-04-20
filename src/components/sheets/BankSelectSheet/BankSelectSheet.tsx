@@ -14,12 +14,12 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 
 import { Icon } from '@/components/ui/Icon';
-import { useLookupStore, lookupSelectors } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankType } from '@/types';
 import { EntityImage } from '@components/ui/EntityImage';
 import { useTranslation } from 'react-i18next';
+import { useBankTypes } from '@stores/lookup';
 
 interface SectionData {
   title: string;
@@ -33,7 +33,9 @@ export const BankSelectSheet: FC<SheetProps<'bank-select-sheet'>> = ({
 
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const { height } = useWindowDimensions();
-  const bankTypes = useLookupStore(lookupSelectors.bankTypes);
+
+  const { data: bankTypes = [] } = useBankTypes();
+
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(

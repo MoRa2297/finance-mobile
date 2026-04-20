@@ -15,11 +15,11 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 
 import { Icon } from '@/components/ui/Icon';
-import { useLookupStore, lookupSelectors } from '@/stores';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { CardType } from '@/types';
 import { EntityImage } from '@components/ui/EntityImage';
+import { useBankTypes, useCardTypes } from '@stores/lookup';
 
 export const CardTypeSelectSheet: React.FC<
   SheetProps<'card-type-select-sheet'>
@@ -27,7 +27,7 @@ export const CardTypeSelectSheet: React.FC<
   const { t } = useTranslation(['bankCardsPage', 'common']);
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const { height } = useWindowDimensions();
-  const cardTypes = useLookupStore(lookupSelectors.cardTypes);
+  const { data: cardTypes = [] } = useCardTypes();
 
   const handleSelect = (cardType: CardType) => {
     SheetManager.hide(sheetId, { payload: { cardType } });

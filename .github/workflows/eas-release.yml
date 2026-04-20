@@ -1,36 +1,25 @@
-name: EAS Production Release
+name: EAS Preview Build
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  pull_request:
+    branches: [ release ]
+    types: [ opened, synchronize, reopened ]
 
 concurrency:
-  group: eas-production
-  cancel-in-progress: false
+  group: eas-preview-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  validate-tag:
-    name: Validate tag is on release branch
+  preview:
+    name: Build iOS Preview
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Check tag is on release branch
-        run: |
-          if ! git branch -r --contains ${{ github.ref }} | grep -q 'origin/release'; then
-            echo "❌ Tag ${{ github.ref_name }} is not on the release branch"
-            exit 1
-          fi
-          echo "✅ Tag is valid"
-
-  build:
-    name: Build iOS Production
-    needs: validate-tag
-    runs-on: ubuntu-latest
-    environment:
-      name: production
+    # Gate: independent from release builds.
+    # Set variable ENABLE_IOS_PREVIEW=true on GitHub to enable.
+    # Default: disabled (preview builds are usually not needed for every PR).
+    if: vars.ENABLE_IOS_PREVIEW == 'true'
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
@@ -48,56 +37,24 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Build iOS production
-        id: build
-        run: |
-          if [ "${{ vars.ENABLE_STORE_SUBMIT }}" = "true" ]; then
-            echo "Store submit ENABLED — building with --auto-submit"
-            eas build --profile production --platform ios --non-interactive --auto-submit
-          else
-            echo "Store submit DISABLED — building only (no TestFlight submit)"
-            eas build --profile production --platform ios --non-interactive
-          fi
+      - name: Build iOS preview (internal distribution)
+        run: eas build --profile preview --platform ios --non-interactive --no-wait
+        env:
+          EAS_BUILD_NO_EXPO_GO_WARNING: 'true'
 
-  github-release:
-    name: Create GitHub Release
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
+      - name: Comment on PR
+        uses: actions/github-script@v7
         with:
-          fetch-depth: 0
-
-      - name: Generate changelog
-        id: changelog
-        run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 ${{ github.ref }}^ 2>/dev/null || echo "")
-          if [ -z "$PREV_TAG" ]; then
-            LOG=$(git log --pretty=format:"- %s (%h)" ${{ github.ref }})
-          else
-            LOG=$(git log --pretty=format:"- %s (%h)" ${PREV_TAG}..${{ github.ref }})
-          fi
-          {
-            echo "changelog<<EOF"
-            echo "$LOG"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          body: |
-            ## Changes
-            ${{ steps.changelog.outputs.changelog }}
-
-            ## Build
-            iOS build is queued on EAS.
-
-            📱 Download / install: https://expo.dev/accounts/${{ vars.EXPO_ACCOUNT }}/projects/${{ vars.EXPO_PROJECT }}/builds
-
-            > Store submission is ${{ vars.ENABLE_STORE_SUBMIT == 'true' && 'enabled' || 'disabled' }}.
-          draft: false
-          prerelease: false
+          script: |
+            github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🚀 **EAS Preview build queued**
+            
+                iOS build is queued on EAS. When ready, install via:
+                - QR code: https://expo.dev/accounts/${{ vars.EXPO_ACCOUNT }}/projects/${{ vars.EXPO_PROJECT }}/builds
+                - Or use Expo Go for quick testing
+            
+                _Build progress: check the EAS dashboard link above._`
+            })

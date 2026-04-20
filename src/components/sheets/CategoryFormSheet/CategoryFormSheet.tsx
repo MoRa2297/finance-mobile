@@ -7,8 +7,8 @@ import ActionSheet, {
 
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
-import { useLookupStore, lookupSelectors } from '@/stores';
 import { CategoryForm } from '@components/screens/settings';
+import { useCardTypes, useCategoryIcons, useColors } from '@stores/lookup';
 
 export const CategoryFormSheet: FC<SheetProps<'category-form-sheet'>> = ({
   payload,
@@ -16,8 +16,8 @@ export const CategoryFormSheet: FC<SheetProps<'category-form-sheet'>> = ({
 }) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
 
-  const colors = useLookupStore(lookupSelectors.colors);
-  const categoryIcons = useLookupStore(lookupSelectors.categoryIcons);
+  const { data: colors = [] } = useColors();
+  const { data: categoryIcons = [] } = useCategoryIcons();
 
   const handleClose = useCallback(() => {
     actionSheetRef.current?.hide();
