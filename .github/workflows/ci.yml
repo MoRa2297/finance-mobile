@@ -2,13 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [ main, release ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, release ]
+    branches: [ main ]
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/release' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
   NODE_VERSION: '20'

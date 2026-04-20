@@ -1,27 +1,26 @@
-name: EAS Preview Build
+name: EAS Release Build
 
 on:
-  pull_request:
-    branches: [ release ]
-    types: [ opened, synchronize, reopened ]
+  push:
+    tags:
+      - 'v*.*.*'
 
 concurrency:
-  group: eas-preview-${{ github.ref }}
-  cancel-in-progress: true
+  group: eas-release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  preview:
-    name: Build iOS Preview
+  release:
+    name: Build & Submit to TestFlight
     runs-on: ubuntu-latest
-    # Gate: independent from release builds.
-    # Set variable ENABLE_IOS_PREVIEW=true on GitHub to enable.
-    # Default: disabled (preview builds are usually not needed for every PR).
-    if: vars.ENABLE_IOS_PREVIEW == 'true'
+    # Gate: set ENABLE_IOS_BUILDS=true in repo Variables to enable.
+    if: vars.ENABLE_IOS_BUILDS == 'true'
     permissions:
-      contents: read
-      pull-requests: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
 
@@ -37,24 +36,22 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Build iOS preview (internal distribution)
-        run: eas build --profile preview --platform ios --non-interactive --no-wait
+      - name: Build iOS production
+        run: eas build --profile production --platform ios --non-interactive --no-wait
         env:
           EAS_BUILD_NO_EXPO_GO_WARNING: 'true'
 
-      - name: Comment on PR
-        uses: actions/github-script@v7
+      - name: Submit to TestFlight
+        if: vars.ENABLE_STORE_SUBMIT == 'true'
+        run: eas submit --profile production --platform ios --latest --non-interactive
+        env:
+          EAS_BUILD_NO_EXPO_GO_WARNING: 'true'
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          script: |
-            github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `🚀 **EAS Preview build queued**
-            
-                iOS build is queued on EAS. When ready, install via:
-                - QR code: https://expo.dev/accounts/${{ vars.EXPO_ACCOUNT }}/projects/${{ vars.EXPO_PROJECT }}/builds
-                - Or use Expo Go for quick testing
-            
-                _Build progress: check the EAS dashboard link above._`
-            })
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
