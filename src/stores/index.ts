@@ -8,7 +8,7 @@ export { uiSelectors } from './ui/ui.selectors';
 export type { UIStore } from './ui/ui.types';
 
 // Lookup
-export { useLookupStore, lookupSelectors } from './lookup';
+// export { useLookupStore, lookupSelectors } from './lookup';
 // export type { LookupState } from './lookup';
 
 // Category

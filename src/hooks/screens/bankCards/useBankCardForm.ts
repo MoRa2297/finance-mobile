@@ -5,12 +5,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import { useLookupStore, lookupSelectors } from '@/stores';
 import { useCards } from '@/stores/card/card.queries';
 import { useCreateCard, useUpdateCard } from '@/stores/card/card.mutations';
 import { useBankAccounts } from '@/stores/bank-account/bank-account.queries';
 import { CardType, BankAccount } from '@/types';
 import { MONTH_NUMBER, YEARS_NUMBER } from '@/config/constants';
+import { useCardTypes } from '@stores/lookup';
 
 export interface BankCardFormValues {
   name: string;
@@ -27,8 +27,7 @@ export const useBankCardForm = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEditing = !!id;
 
-  const cardTypes = useLookupStore(lookupSelectors.cardTypes);
-
+  const { data: cardTypes = [] } = useCardTypes();
   const { data: cards = [] } = useCards();
   const { data: bankAccounts = [] } = useBankAccounts();
   const { mutateAsync: createCard } = useCreateCard();

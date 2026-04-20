@@ -3,7 +3,6 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { authService } from '@/services';
-import { useLookupStore } from '@/stores/lookup/useLookupStore';
 import type { AuthState, RegisterPayload, User } from '@/stores';
 import { queryClient } from '@config/queryClient';
 import {
@@ -60,7 +59,6 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        useLookupStore.getState().reset();
         queryClient.clear();
         set(AUTH_INITIAL_STATE);
       },
