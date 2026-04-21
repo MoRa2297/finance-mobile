@@ -14,7 +14,6 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
-import { router } from 'expo-router';
 
 import { theme } from '@config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@config/constants';

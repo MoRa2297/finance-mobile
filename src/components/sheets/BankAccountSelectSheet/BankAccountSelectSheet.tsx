@@ -13,7 +13,6 @@ import ActionSheet, {
   SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
-import { router } from 'expo-router';
 
 import { Icon } from '@/components/ui/Icon';
 import { useBankAccounts } from '@/stores';
