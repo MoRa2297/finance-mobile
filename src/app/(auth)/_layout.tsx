@@ -9,6 +9,7 @@ import bankAccountService from '@/services/bank-account.service';
 import cardService from '@/services/card.service';
 import categoryService from '@/services/category.service';
 import { lookupService } from '@/services';
+import { theme } from '@config/theme';
 
 // Lookup data is mostly static — keep it fresh for a long time.
 const LOOKUP_STALE_TIME = 1000 * 60 * 60 * 24; // 24h
@@ -66,19 +67,32 @@ export default function AuthLayout() {
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
+        animationDuration: 250,
         gestureEnabled: true,
+        contentStyle: { backgroundColor: theme.colors.primaryBK },
       }}>
+      {/* Tabs: nessuna animazione di entrata, è il "guscio" dell'app */}
       <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
+
+      {/* Form transaction: MODAL (presentation), perché è una task isolata */}
       <Stack.Screen
         name="transaction"
         options={{
+          presentation: 'modal',
           animation: 'slide_from_bottom',
+          animationDuration: 280,
           gestureEnabled: true,
           gestureDirection: 'vertical',
         }}
       />
+
+      {/* Profile: drill-down classico */}
       <Stack.Screen name="profile" />
+
+      {/* Categories, bank-accounts, bank-cards: drill-down */}
       <Stack.Screen name="categories" />
+      <Stack.Screen name="bank-accounts" />
+      <Stack.Screen name="bank-cards" />
     </Stack>
   );
 }

@@ -42,7 +42,13 @@ export default function RootLayout() {
                   translucent
                   backgroundColor="transparent"
                 />
-                <Stack screenOptions={{ headerShown: false }}>
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                    animation: 'fade',
+                    animationDuration: 200,
+                    contentStyle: { backgroundColor: theme.colors.primaryBK },
+                  }}>
                   <Stack.Screen name="index" />
                   <Stack.Screen name="(unauth)" />
                   <Stack.Screen name="(auth)" />
