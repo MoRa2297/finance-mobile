@@ -76,7 +76,6 @@ export default function AuthLayout() {
       <Stack.Screen
         name="transaction"
         options={{
-          presentation: 'modal',
           animation: 'slide_from_bottom',
           animationDuration: 280,
           gestureEnabled: true,
@@ -87,7 +86,6 @@ export default function AuthLayout() {
       <Stack.Screen name="profile" />
       <Stack.Screen name="categories" />
 
-      {/* Sotto-route delle cartelle: ognuna è una screen separata */}
       <Stack.Screen name="bank-accounts/index" />
       <Stack.Screen name="bank-accounts/bank-account-detail" />
       <Stack.Screen name="bank-accounts/bank-account-form" />
