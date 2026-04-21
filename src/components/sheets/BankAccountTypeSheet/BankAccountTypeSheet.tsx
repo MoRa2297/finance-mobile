@@ -18,7 +18,7 @@ import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccountType } from '@/types';
-import { useBankTypes } from '@stores/lookup';
+import { useBankAccountTypes } from '@stores/lookup';
 
 const ACCOUNT_TYPE_ICONS: Record<number, string> = {
   1: 'credit-card-outline', // Checking Account
@@ -37,7 +37,7 @@ export const BankAccountTypeSheet: FC<
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const { height } = useWindowDimensions();
 
-  const { data: bankAccountTypes = [] } = useBankTypes();
+  const { data: bankAccountTypes = [] } = useBankAccountTypes();
 
   const handleSelect = (accountType: BankAccountType) => {
     SheetManager.hide(sheetId, { payload: { accountType } });
@@ -71,7 +71,7 @@ export const BankAccountTypeSheet: FC<
       id={sheetId}
       gestureEnabled
       closable
-      useBottomSafeAreaPadding
+      // useBottomSafeAreaPadding={true}
       closeOnTouchBackdrop
       containerStyle={styles.container}>
       <View style={styles.content}>
@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
+    borderWidth: 1,
+    borderColor: 'red',
   },
   content: {
     paddingTop: 15,

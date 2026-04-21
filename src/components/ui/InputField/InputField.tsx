@@ -96,6 +96,7 @@ export const InputField: React.FC<InputFiledProps> = ({
 
   return (
     <Input
+      keyboardAppearance="dark"
       style={[styles.input, style]}
       onChangeText={onChange}
       value={value}

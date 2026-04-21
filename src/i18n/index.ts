@@ -42,6 +42,8 @@ import { initReactI18next } from 'react-i18next';
 
 const DEFAULT_LANG = 'en';
 
+export const LANGUAGE_STORAGE_KEY = 'language';
+
 const i18nResources = {
   it: {
     common: commonIt,
@@ -104,8 +106,12 @@ i18next
         cb(locale.lang);
       }
     },
-    cacheUserLanguage: (language: string) => {
-      AsyncStorage.setItem('language', language);
+    cacheUserLanguage: async (language: string) => {
+      try {
+        await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+      } catch (e) {
+        if (__DEV__) console.warn('Failed to persist language', e);
+      }
     },
   })
   .use(initReactI18next)
@@ -114,6 +120,8 @@ i18next
       'common',
       'validation',
       'loginPage',
+      'registerPage',
+      'homePage',
       'expensesPage',
       'settingsPage',
       'categoriesPage',

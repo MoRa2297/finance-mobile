@@ -1,46 +1,48 @@
 {
-  "retry": "Riprova",
-  "welcome": "Benvenuto",
-  "continue": "Continua",
-  "confirm": "Conferma",
-  "send": "Invia",
-  "support": "Supporto",
-  "login": "Accedi",
-  "loading": "Caricamento in corso...",
-  "payTheInstallment": "Paga il bollettino",
+  "retry": "Retry",
+  "welcome": "Welcome",
+  "continue": "Continue",
+  "confirm": "Confirm",
+  "send": "Send",
+  "support": "Support",
+  "login": "Sign in",
+  "loading": "Loading...",
+  "payTheInstallment": "Pay the installment",
   "or": "or",
-  "delete": "Annulla",
-  "edit": "Modifica",
-  "income": "Entrate",
-  "expenses": "Uscite",
-  "selectDate": "Seleziona data",
-  "search": "Cerca...",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "edit": "Edit",
+  "income": "Income",
+  "expenses": "Expenses",
+  "selectDate": "Select date",
+  "search": "Search...",
   "bottomNavigator": {
     "home": "Home",
-    "transaction": "Transazioni",
-    "budgets": "Budget",
-    "more": "Altro"
+    "transaction": "Transactions",
+    "budgets": "Budgets",
+    "more": "More"
   },
   "month": {
-    "january": "Gennaio",
-    "february": "Febbraio",
-    "march": "Marzo",
-    "april": "Aprile",
-    "may": "Maggio",
-    "june": "Giugno",
-    "july": "Luglio",
-    "august": "Agosto",
-    "september": "Settembre",
-    "october": "Ottobre",
-    "november": "Novembre",
-    "december": "Dicembre"
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
   },
   "colorInputField": {
-    "title": "Colore",
-    "buttonText": "Altri"
+    "title": "Color",
+    "buttonText": "More"
   },
   "iconInputField": {
-    "title": "Icona",
-    "buttonText": "Altri"
-  }
+    "title": "Icon",
+    "buttonText": "More"
+  },
+  "selectLanguage": "Select language"
 }

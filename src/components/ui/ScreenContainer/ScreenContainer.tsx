@@ -9,6 +9,7 @@ import {
   ScrollView,
   Keyboard,
   TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import { Layout } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -26,6 +27,7 @@ interface IScreenContainerProps {
   centered?: boolean;
   keyboardAvoiding?: boolean;
   dismissKeyboardOnTap?: boolean;
+  statusBarBackground?: string;
 }
 
 export const ScreenContainer: React.FC<IScreenContainerProps> = ({
@@ -38,6 +40,7 @@ export const ScreenContainer: React.FC<IScreenContainerProps> = ({
   centered = false,
   keyboardAvoiding = true,
   dismissKeyboardOnTap = true,
+  statusBarBackground,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -106,7 +109,20 @@ export const ScreenContainer: React.FC<IScreenContainerProps> = ({
     return renderWithKeyboard();
   };
 
-  return <Layout style={[containerStyle, style]}>{renderWithDismiss()}</Layout>;
+  return (
+    <Layout style={[containerStyle, style]}>
+      {statusBarBackground && (
+        <View
+          pointerEvents="none"
+          style={[
+            styles.statusBarOverlay,
+            { height: insets.top, backgroundColor: statusBarBackground },
+          ]}
+        />
+      )}
+      {renderWithDismiss()}
+    </Layout>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -119,5 +135,11 @@ const styles = StyleSheet.create({
   },
   centered: {
     justifyContent: 'center',
+  },
+  statusBarOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
 });

@@ -56,7 +56,8 @@ export default function BankAccountsScreen() {
     <ScreenContainer
       style={styles.container}
       horizontalPadding={false}
-      forceNoBottomPadding>
+      forceNoBottomPadding
+      statusBarBackground={theme.colors.primaryBK}>
       <TopRoundedContainer height="30%" paddingTop={0}>
         <Header
           left={{ type: 'back', variant: 'icon' }}

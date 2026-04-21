@@ -19,7 +19,7 @@ import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { CardType } from '@/types';
 import { EntityImage } from '@components/ui/EntityImage';
-import { useBankTypes, useCardTypes } from '@stores/lookup';
+import { useCardTypes } from '@stores/lookup';
 
 export const CardTypeSelectSheet: React.FC<
   SheetProps<'card-type-select-sheet'>

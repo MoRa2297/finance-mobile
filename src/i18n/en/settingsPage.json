@@ -1,14 +1,15 @@
 {
-  "menuCategories": "Categorie",
-  "menuBankAccounts": "Conti bancari",
-  "menuBankCards": "Carte",
+  "menuCategories": "Categories",
+  "menuBankAccounts": "Bank accounts",
+  "menuBankCards": "Cards",
   "logOut": "Log Out",
-  "deleteAccount": "Elimina account",
-  "deleteAccountModalTitle": "Eliminazione  account",
-  "deleteAccountModalSubTitle": "Sei sicuro di volere eliminare definitivamente il tuo account?",
-  "deleteAccountPrimaryButtonTitle": "Si",
+  "deleteAccount": "Delete account",
+  "deleteAccountModalTitle": "Account deletion",
+  "deleteAccountModalSubTitle": "Are you sure you want to permanently delete your account?",
+  "deleteAccountPrimaryButtonTitle": "Yes",
   "deleteAccountSecondaryButtonTitle": "No",
-  "charts": "Grafici",
-  "profile": "Profilo",
-  "general": "Generale"
+  "charts": "Charts",
+  "profile": "Profile",
+  "general": "General",
+  "language": "Language"
 }
