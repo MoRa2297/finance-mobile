@@ -71,10 +71,8 @@ export default function AuthLayout() {
         gestureEnabled: true,
         contentStyle: { backgroundColor: theme.colors.primaryBK },
       }}>
-      {/* Tabs: nessuna animazione di entrata, è il "guscio" dell'app */}
       <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
 
-      {/* Form transaction: MODAL (presentation), perché è una task isolata */}
       <Stack.Screen
         name="transaction"
         options={{
@@ -86,13 +84,17 @@ export default function AuthLayout() {
         }}
       />
 
-      {/* Profile: drill-down classico */}
       <Stack.Screen name="profile" />
-
-      {/* Categories, bank-accounts, bank-cards: drill-down */}
       <Stack.Screen name="categories" />
-      <Stack.Screen name="bank-accounts" />
-      <Stack.Screen name="bank-cards" />
+
+      {/* Sotto-route delle cartelle: ognuna è una screen separata */}
+      <Stack.Screen name="bank-accounts/index" />
+      <Stack.Screen name="bank-accounts/bank-account-detail" />
+      <Stack.Screen name="bank-accounts/bank-account-form" />
+
+      <Stack.Screen name="bank-cards/index" />
+      <Stack.Screen name="bank-cards/bank-card-detail" />
+      <Stack.Screen name="bank-cards/bank-card-form" />
     </Stack>
   );
 }

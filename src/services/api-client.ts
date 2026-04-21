@@ -4,7 +4,7 @@ import axios, {
   InternalAxiosRequestConfig,
   AxiosResponse,
 } from 'axios';
-import { useAuthStore } from '@/stores';
+import { useAuthStore } from '@/stores/auth/useAuthStore';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 

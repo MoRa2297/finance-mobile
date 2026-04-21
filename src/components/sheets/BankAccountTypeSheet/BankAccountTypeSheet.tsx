@@ -18,7 +18,7 @@ import { Icon } from '@/components/ui/Icon';
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccountType } from '@/types';
-import { useBankAccountTypes, useBankTypes } from '@stores/lookup';
+import { useBankAccountTypes } from '@stores/lookup';
 
 const ACCOUNT_TYPE_ICONS: Record<number, string> = {
   1: 'credit-card-outline', // Checking Account
