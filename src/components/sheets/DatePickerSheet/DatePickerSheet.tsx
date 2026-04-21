@@ -113,7 +113,6 @@ export const DatePickerSheet: React.FC<SheetProps<'date-picker-sheet'>> = ({
           <Button
             buttonText={t('done')}
             onPress={handleConfirm}
-            backgroundColor={theme.colors.primary}
             style={styles.button}
           />
         </View>
@@ -154,5 +153,6 @@ const styles = StyleSheet.create({
   button: {
     width: '60%',
     borderRadius: GLOBAL_BORDER_RADIUS,
+    backgroundColor: theme.colors.primary,
   },
 });

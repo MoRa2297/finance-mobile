@@ -1,5 +1,6 @@
 export interface ISocialButtonConfig {
   id: string;
+  name: string;
   iconName: string;
   onPress?: () => void;
 }
@@ -12,11 +13,13 @@ export const createSocialButtons = (
   const buttons: ISocialButtonConfig[] = [
     {
       id: 'google',
+      name: 'Google',
       iconName: 'google',
       onPress: onGooglePress,
     },
     {
       id: 'facebook',
+      name: 'Facebook',
       iconName: 'facebook',
       onPress: onFacebookPress,
     },
@@ -25,6 +28,7 @@ export const createSocialButtons = (
   if (onApplePress) {
     buttons.push({
       id: 'apple',
+      name: 'Apple',
       iconName: 'apple',
       onPress: onApplePress,
     });
@@ -33,5 +37,11 @@ export const createSocialButtons = (
   return buttons;
 };
 
-// TODO fix empty function
+interface SocialButton {
+  id: string;
+  name: string; // ← nuovo
+  iconName: string;
+  onPress?: () => void;
+}
+
 export const noop = () => {};

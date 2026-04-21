@@ -92,7 +92,6 @@ export const LanguageSheet: React.FC<SheetProps<'language-sheet'>> = ({
           <Button
             buttonText={t('common:save')}
             onPress={handleConfirm}
-            backgroundColor={theme.colors.primary}
             style={styles.button}
           />
         </View>
@@ -150,5 +149,6 @@ const styles = StyleSheet.create({
   button: {
     width: '60%',
     borderRadius: GLOBAL_BORDER_RADIUS,
+    backgroundColor: theme.colors.primary,
   },
 });
