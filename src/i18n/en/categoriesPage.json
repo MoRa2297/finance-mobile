@@ -14,5 +14,11 @@
     "alertTitle": "Warning",
     "alertNameError": "Error, name is required",
     "alertButtonText": "Got it"
+  },
+  "selectCategory": "Select category",
+  "empty": {
+    "title": "No categories",
+    "subtitle": "Create your first category to organize transactions.",
+    "cta": "Add category"
   }
 }

@@ -32,5 +32,10 @@
   "alertButtonText": "Got it",
   "alertMonthExpiryError": "Error, expiry month is required",
   "alertYearExpiryError": "Error, expiry year is required",
-  "emptyTransactions": "No transactions"
+  "emptyTransactions": "No transactions",
+  "empty": {
+    "title": "No cards",
+    "subtitle": "Add your first card to start tracking card expenses.",
+    "cta": "Add card"
+  }
 }

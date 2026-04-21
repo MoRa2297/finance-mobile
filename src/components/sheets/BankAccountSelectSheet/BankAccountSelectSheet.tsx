@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -13,6 +13,7 @@ import ActionSheet, {
   SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
+import { router } from 'expo-router';
 
 import { Icon } from '@/components/ui/Icon';
 import { useBankAccounts } from '@/stores';
@@ -20,44 +21,70 @@ import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@/config/constants';
 import { BankAccount } from '@/types';
 import { EntityImage } from '@components/ui/EntityImage';
+import { EmptyData } from '@components/common';
 
 export const BankAccountSelectSheet: React.FC<
   SheetProps<'bank-account-select-sheet'>
 > = ({ sheetId }) => {
-  const { t } = useTranslation(['bankCardsPage', 'common']);
+  const { t } = useTranslation(['bankCardsPage', 'bankAccountPage', 'common']);
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const { height } = useWindowDimensions();
   const { data: bankAccounts = [] } = useBankAccounts();
 
-  const handleSelect = (bankAccount: BankAccount) => {
-    SheetManager.hide(sheetId, { payload: { bankAccount } });
-  };
-
-  const renderItem = ({ item }: { item: BankAccount }) => (
-    <Pressable style={styles.itemContainer} onPress={() => handleSelect(item)}>
-      <EntityImage
-        imageUrl={item.bankType?.imageUrl}
-        fallbackText={item.bankType?.name}
-        size={40}
-        borderRadius={GLOBAL_BORDER_RADIUS / 2}
-      />
-      <View style={styles.nameContainer}>
-        <Text category="s1" style={styles.itemText}>
-          {item.name}
-        </Text>
-        {item.bankType?.name && (
-          <Text category="c1" style={styles.itemSubtext}>
-            {item.bankType.name}
-          </Text>
-        )}
-      </View>
-      <Icon
-        name="arrow-ios-forward-outline"
-        color={theme.colors.textHint}
-        size={24}
-      />
-    </Pressable>
+  const handleSelect = useCallback(
+    (bankAccount: BankAccount) => {
+      SheetManager.hide(sheetId, { payload: { bankAccount } });
+    },
+    [sheetId],
   );
+
+  const renderItem = useCallback(
+    ({ item }: { item: BankAccount }) => (
+      <Pressable
+        style={({ pressed }) => [
+          styles.itemContainer,
+          pressed && styles.itemContainerPressed,
+        ]}
+        onPress={() => handleSelect(item)}>
+        <EntityImage
+          imageUrl={item.bankType?.imageUrl}
+          fallbackText={item.bankType?.name}
+          size={40}
+          borderRadius={GLOBAL_BORDER_RADIUS / 2}
+        />
+        <View style={styles.nameContainer}>
+          <Text category="s1" style={styles.itemText}>
+            {item.name}
+          </Text>
+          {item.bankType?.name && (
+            <Text category="c1" style={styles.itemSubtext}>
+              {item.bankType.name}
+            </Text>
+          )}
+        </View>
+        <Icon
+          name="arrow-ios-forward-outline"
+          color={theme.colors.textHint}
+          size={24}
+        />
+      </Pressable>
+    ),
+    [handleSelect],
+  );
+
+  const renderEmpty = useCallback(
+    () => (
+      <EmptyData
+        variant="centered"
+        iconName="credit-card-outline"
+        title={t('bankAccountPage:empty.title')}
+        subtitle={t('bankAccountPage:empty.subtitle')}
+      />
+    ),
+    [t],
+  );
+
+  const isEmpty = bankAccounts.length === 0;
 
   return (
     <ActionSheet
@@ -79,12 +106,11 @@ export const BankAccountSelectSheet: React.FC<
             keyExtractor={item => item.id.toString()}
             renderItem={renderItem}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.listContent}
-            ListEmptyComponent={
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>{t('common:noResults')}</Text>
-              </View>
-            }
+            contentContainerStyle={[
+              styles.listContent,
+              isEmpty && styles.listContentEmpty,
+            ]}
+            ListEmptyComponent={renderEmpty}
           />
         </View>
       </View>
@@ -109,12 +135,20 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 20,
   },
+  listContentEmpty: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: HORIZONTAL_PADDING,
     paddingVertical: 14,
     gap: 12,
+  },
+  itemContainerPressed: {
+    backgroundColor: theme.colors.secondaryBK,
+    opacity: 0.8,
   },
   nameContainer: {
     flex: 1,
@@ -126,12 +160,5 @@ const styles = StyleSheet.create({
   itemSubtext: {
     color: theme.colors.textHint,
     fontSize: 11,
-  },
-  emptyContainer: {
-    paddingVertical: 30,
-    alignItems: 'center',
-  },
-  emptyText: {
-    color: theme.colors.textHint,
   },
 });

@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { Text } from '@ui-kitten/components';
 
 import { Icon } from '@/components/ui/Icon';
@@ -22,8 +23,18 @@ export const CategoryListCard: FC<ICategoryListCardProps> = ({
     category.categoryColor?.hexCode ?? theme.colors.textHint;
   const iconName = category.categoryIcon?.iconName ?? 'cube-outline';
 
+  const handleOptionsPress = () => {
+    Haptics.selectionAsync();
+    onOptionsPress(category);
+  };
+
   return (
-    <Pressable style={styles.container} onPress={() => onPress(category)}>
+    <Pressable
+      onPress={() => onPress(category)}
+      style={({ pressed }) => [
+        styles.container,
+        pressed && styles.containerPressed,
+      ]}>
       <View style={[styles.iconContainer, { backgroundColor }]}>
         <Icon name={iconName} color={theme.colors.basic100} size={28} />
       </View>
@@ -35,9 +46,12 @@ export const CategoryListCard: FC<ICategoryListCardProps> = ({
       </View>
 
       <Pressable
-        style={styles.optionsButton}
-        onPress={() => onOptionsPress(category)}
-        hitSlop={10}>
+        onPress={handleOptionsPress}
+        hitSlop={12}
+        style={({ pressed }) => [
+          styles.optionsButton,
+          pressed && styles.optionsButtonPressed,
+        ]}>
         <Icon
           name="more-horizontal-outline"
           color={theme.colors.basic100}
@@ -57,6 +71,9 @@ const styles = StyleSheet.create({
     gap: 15,
     backgroundColor: theme.colors.primaryBK,
   },
+  containerPressed: {
+    opacity: 0.6,
+  },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -71,6 +88,10 @@ const styles = StyleSheet.create({
     color: theme.colors.basic100,
   },
   optionsButton: {
-    padding: 4,
+    padding: 6,
+    borderRadius: 20,
+  },
+  optionsButtonPressed: {
+    opacity: 0.5,
   },
 });

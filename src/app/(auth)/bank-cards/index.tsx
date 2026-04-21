@@ -47,8 +47,19 @@ export default function BankCardsScreen() {
 
   const renderEmpty = useCallback(() => {
     if (isLoading) return null;
-    return <EmptyData title={t('bankCardsPage:emptyData')} />;
-  }, [isLoading, t]);
+    return (
+      <EmptyData
+        variant="centered"
+        iconName="credit-card-outline"
+        title={t('bankCardsPage:empty.title')}
+        subtitle={t('bankCardsPage:empty.subtitle')}
+        action={{
+          label: t('bankCardsPage:empty.cta'),
+          onPress: handleAddCard,
+        }}
+      />
+    );
+  }, [isLoading, t, handleAddCard]);
 
   return (
     <ScreenContainer
@@ -140,5 +151,8 @@ const styles = StyleSheet.create({
     marginHorizontal: HORIZONTAL_PADDING,
     gap: 15,
   },
-  listContentEmpty: { flex: 1 },
+  listContentEmpty: {
+    flex: 1,
+    justifyContent: 'center',
+  },
 });

@@ -98,8 +98,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBK,
     borderTopLeftRadius: GLOBAL_BORDER_RADIUS,
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
-    borderWidth: 1,
-    borderColor: 'red',
   },
   content: {
     paddingTop: 15,

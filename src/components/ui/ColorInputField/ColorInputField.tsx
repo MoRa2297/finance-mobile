@@ -73,10 +73,10 @@ export const ColorInputField: FC<IColorInputFieldProps> = ({
           />
         ))}
         <Button
+          status="neutral"
           size="small"
           buttonText={t('common:colorInputField.buttonText')}
           style={styles.moreButton}
-          backgroundColor={theme.colors.textHint}
           onPress={handleOpenSheet}
         />
       </View>

@@ -33,6 +33,7 @@ export default function ExpensesScreen() {
     setIsAlertVisible,
     handleDeleteTransaction,
     selectedTransaction,
+    handleAddTransaction,
   } = useExpensesScreen();
 
   return (
@@ -90,6 +91,7 @@ export default function ExpensesScreen() {
           loading={isLoading}
           onSelectTransaction={handleSelectTransaction}
           onDeleteTransaction={handleSelectRemoveTransaction}
+          onAddTransaction={handleAddTransaction}
         />
       </View>
 
