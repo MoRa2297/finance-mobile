@@ -16,7 +16,7 @@ export default function HomeScreen() {
     <ScreenContainer
       style={styles.container}
       horizontalPadding={false}
-      forceNoBottomPadding>
+      statusBarBackground={theme.colors.primaryBK}>
       <TopRoundedContainer height="35%" paddingTop={10}>
         <Header
           left={{

@@ -1,12 +1,12 @@
 {
-  "headerTitle": "Profilo",
-  "namePlaceholder": "Nome...",
-  "surnamePlaceholder": "Cognome...",
+  "headerTitle": "Profile",
+  "namePlaceholder": "First name...",
+  "surnamePlaceholder": "Last name...",
   "emailPlaceholder": "Email...",
-  "alertTitle": "Attenzione",
-  "alertButtonText": "Capito",
-  "alertBirthDateError": "Data obbligatoria",
-  "alertNameError": "Nome obbligatorio",
-  "alertSurnameError": "Cognome obbligatorio",
-  "birthDatePlaceholder": "Seleziona la data"
+  "alertTitle": "Warning",
+  "alertButtonText": "Got it",
+  "alertBirthDateError": "Date is required",
+  "alertNameError": "First name is required",
+  "alertSurnameError": "Last name is required",
+  "birthDatePlaceholder": "Select date"
 }

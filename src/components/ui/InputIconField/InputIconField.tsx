@@ -37,6 +37,7 @@ export const InputIconField: FC<IInputIconFieldProps> = ({
         </View>
       )}
       <TextInput
+        keyboardAppearance="dark"
         style={styles.input}
         value={value}
         placeholder={placeholder}

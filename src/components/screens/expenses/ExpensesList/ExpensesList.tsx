@@ -2,14 +2,14 @@ import React, { useMemo, useCallback, FC } from 'react';
 import { StyleSheet, SectionList, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { theme } from '@/config/theme';
 import { Transaction } from '@/types';
-import { groupByDate } from './ExpensesList.helpers';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BOTTOM_NAV_HEIGHT } from '@config/constants';
 import { EmptyData, LoadingSpinner } from '@components/common';
-import { ExpenseCard } from '@components/screens/expenses';
+import { ExpenseCard } from '../ExpenseCard';
+import { groupByDate } from './ExpensesList.helpers';
 
 interface IExpensesListProps {
   transactions: Transaction[];

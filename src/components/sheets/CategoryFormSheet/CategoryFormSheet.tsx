@@ -8,7 +8,7 @@ import ActionSheet, {
 import { theme } from '@/config/theme';
 import { GLOBAL_BORDER_RADIUS } from '@/config/constants';
 import { CategoryForm } from '@components/screens/settings';
-import { useCardTypes, useCategoryIcons, useColors } from '@stores/lookup';
+import { useCategoryIcons, useColors } from '@stores/lookup';
 
 export const CategoryFormSheet: FC<SheetProps<'category-form-sheet'>> = ({
   payload,

@@ -1,18 +1,18 @@
 {
-  "headerTitle": "Categorie",
-  "loadingTitle": "Caricamento categorie",
-  "emptyData": "Nessuna categoria presente al momento!",
-  "createCategory": "Crea categoria",
-  "alertTitle": "Attenzione",
-  "alertSubTitle": "Sicuro di voler cancellare la categoria?",
-  "alertButtonYes": "Si",
+  "headerTitle": "Categories",
+  "loadingTitle": "Loading categories",
+  "emptyData": "No categories available at the moment!",
+  "createCategory": "Create category",
+  "alertTitle": "Warning",
+  "alertSubTitle": "Are you sure you want to delete the category?",
+  "alertButtonYes": "Yes",
   "alertButtonNo": "No",
   "categoryForm": {
-    "newCategory": "Nuova categoria",
-    "editCategory": "Modifica categoria",
-    "namePlaceholder": "Nome...",
-    "alertTitle": "Attenzione",
-    "alertNameError": "Errore, nome obbligatorio",
-    "alertButtonText": "Capito"
+    "newCategory": "New category",
+    "editCategory": "Edit category",
+    "namePlaceholder": "Name...",
+    "alertTitle": "Warning",
+    "alertNameError": "Error, name is required",
+    "alertButtonText": "Got it"
   }
 }

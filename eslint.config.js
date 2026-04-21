@@ -3,13 +3,13 @@ import tseslint from 'typescript-eslint';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactNativePlugin from 'eslint-plugin-react-native';
+import importPlugin from 'eslint-plugin-import';
 import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import globals from 'globals';
 
 export default [
-  // Ignora file non rilevanti
   {
     ignores: [
       'node_modules/**',
@@ -26,16 +26,10 @@ export default [
     ],
   },
 
-  // Base JS recommendations
   js.configs.recommended,
-
-  // TypeScript recommendations
   ...tseslint.configs.recommended,
-
-  // TanStack Query
   ...pluginQuery.configs['flat/recommended'],
 
-  // Config principale per tutti i file TS/TSX
   {
     files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
@@ -43,9 +37,7 @@ export default [
       sourceType: 'module',
       parser: tseslint.parser,
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
+        ecmaFeatures: { jsx: true },
       },
       globals: {
         ...globals.browser,
@@ -58,37 +50,25 @@ export default [
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       'react-native': reactNativePlugin,
+      import: importPlugin,
       prettier: prettierPlugin,
     },
     settings: {
-      react: {
-        version: 'detect',
+      react: { version: 'detect' },
+      'import/resolver': {
+        typescript: { project: './tsconfig.json' },
+        node: true,
       },
     },
     rules: {
-      // ============================================================
-      // React — regole base, queste restano così
-      // ============================================================
-      'react/react-in-jsx-scope': 'off', // non serve con React 17+ / Expo
-      'react/prop-types': 'off', // usiamo TypeScript
+      // React
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
       'react-hooks/rules-of-hooks': 'error',
 
-      // ============================================================
-      // REGOLE TEMPORANEAMENTE RILASSATE
-      // TODO: rimettere a 'error' (o abilitare) una volta fatto il cleanup
-      // ============================================================
-
-      // TODO: rialzare a 'warn' (default) una volta sistemati i useEffect/useMemo/useCallback
-      // con dipendenze mancanti (~20 warning attuali, soprattutto in hooks/screens/*)
-      // Attenzione: va fatto a mano, caso per caso — auto-fix può causare loop infiniti
+      // Hooks / TS — temporaneamente rilassate
       'react-hooks/exhaustive-deps': 'off',
-
-      // TODO: rialzare a 'error' una volta rimosso 'any' dal codebase (~10 occorrenze)
-      // Sostituire con 'unknown' + narrowing, o tipi specifici
       '@typescript-eslint/no-explicit-any': 'off',
-
-      // TODO: rialzare a 'error' dopo aver pulito import/var inutilizzati
-      // (~10 occorrenze — quasi tutte banali: import non usati nei file sheets/*)
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -97,33 +77,20 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
-
-      // TODO: valutare se rimettere a 'warn' — utile per detectare StyleSheet orfani
-      // Al momento 2 warning in PickerSheet.tsx, probabilmente morti
       'react-native/no-unused-styles': 'off',
 
-      // ============================================================
-      // REGOLE DISABILITATE PERMANENTEMENTE (o quasi)
-      // ============================================================
-
-      // React Native usa require() per asset locali (immagini, font) — è idiomatico
-      // Non c'è motivo di rialzarla a meno di voler migrare tutti gli asset a ESM import
+      // Permanenti
       '@typescript-eslint/no-require-imports': 'off',
-
-      // Stili inline sono comuni in RN per valori dinamici (colori, dimensioni responsive)
-      // Non vale la pena forzare StyleSheet.create per ogni cosa
       'react-native/no-inline-styles': 'off',
-
-      // Tipo {} è comune per "any object" in React Native
       '@typescript-eslint/no-empty-object-type': 'off',
 
-      // ============================================================
-      // Prettier — stilistica
-      // ============================================================
+      // Import — circular detection
+      'import/no-cycle': ['error', { maxDepth: 5, ignoreExternal: true }],
+
+      // Prettier
       'prettier/prettier': 'warn',
     },
   },
 
-  // Prettier come ultima config per disabilitare regole che confliggono
   prettierConfig,
 ];

@@ -1,4 +1,6 @@
 export { COLORS } from './colors';
+export { LANGUAGES } from './languages';
+export type { LanguageCode } from './languages';
 // export * from './constants';
 // export * from './customMapping';
 // export * from './env';
