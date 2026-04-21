@@ -44,5 +44,10 @@
   "headerTitleNew": "Nuovo conto",
   "headerTitleEdit": "Modifica conto",
   "selectBank": "Seleziona banca",
-  "noBankFound": "Nessuna banca trovata"
+  "noBankFound": "Nessuna banca trovata",
+  "empty": {
+    "title": "Nessun conto bancario",
+    "subtitle": "Aggiungi il tuo primo conto per iniziare a tracciare entrate e uscite.",
+    "cta": "Aggiungi conto"
+  }
 }

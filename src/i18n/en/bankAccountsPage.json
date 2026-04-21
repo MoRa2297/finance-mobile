@@ -44,5 +44,10 @@
   "headerTitleNew": "New account",
   "headerTitleEdit": "Edit account",
   "selectBank": "Select bank",
-  "noBankFound": "No bank found"
+  "noBankFound": "No bank found",
+  "empty": {
+    "title": "No bank accounts",
+    "subtitle": "Add your first account to start tracking income and expenses.",
+    "cta": "Add account"
+  }
 }

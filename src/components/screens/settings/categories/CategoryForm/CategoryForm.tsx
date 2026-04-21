@@ -75,11 +75,11 @@ export const CategoryForm: FC<CategoryFormProps> = props => {
           appearance="outline"
           onPress={props.onClose}
         />
+
         <Button
           size="small"
           buttonText={t('common:save')}
           style={styles.button}
-          backgroundColor={theme.colors.primary}
           onPress={handleSubmit}
           isLoading={isSubmitting}
           isDisabled={isSubmitting}

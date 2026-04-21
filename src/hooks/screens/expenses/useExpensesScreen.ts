@@ -128,6 +128,18 @@ export const useExpensesScreen = () => {
     [handleSelectRemoveTransaction],
   );
 
+  const handleAddTransaction = useCallback(() => {
+    const formType =
+      selectedTab !== TransactionFormTypes.ALL
+        ? selectedTab
+        : TransactionFormTypes.EXPENSE;
+
+    router.push({
+      pathname: '/transaction',
+      params: { mode: 'create', formType },
+    });
+  }, [selectedTab]);
+
   return {
     tabs: TABS,
     handleSelectMonth,
@@ -146,5 +158,6 @@ export const useExpensesScreen = () => {
     setIsAlertVisible,
     handleDeleteTransaction,
     selectedTransaction,
+    handleAddTransaction,
   };
 };

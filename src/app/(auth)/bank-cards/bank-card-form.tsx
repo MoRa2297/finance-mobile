@@ -106,7 +106,6 @@ export default function BankCardFormScreen() {
             <Button
               buttonText={t('common:save')}
               onPress={handleSubmit}
-              backgroundColor={theme.colors.primary}
               style={styles.submitButton}
               isLoading={formik.isSubmitting}
               isDisabled={formik.isSubmitting}
@@ -153,5 +152,6 @@ const styles = StyleSheet.create({
     width: '60%',
     alignSelf: 'center',
     borderRadius: GLOBAL_BORDER_RADIUS,
+    backgroundColor: theme.colors.primary,
   },
 });

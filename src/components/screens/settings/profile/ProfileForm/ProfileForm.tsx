@@ -92,7 +92,6 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           <Button
             buttonText={t('common:save')}
             onPress={handleSubmit}
-            backgroundColor={theme.colors.primary}
             style={styles.button}
             isDisabled={isSubmitting}
             isLoading={isSubmitting}
@@ -135,5 +134,6 @@ const styles = StyleSheet.create({
     width: '60%',
     alignSelf: 'center',
     borderRadius: GLOBAL_BORDER_RADIUS,
+    backgroundColor: theme.colors.primary,
   },
 });

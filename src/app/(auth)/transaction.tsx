@@ -49,7 +49,6 @@ export default function TransactionFormScreen() {
             <Button
               buttonText={formTypeLabel}
               onPress={handleOpenTypeSelector}
-              backgroundColor={theme.colors.primary}
               style={styles.typeSelectorButton}
               textStyle={styles.typeSelectorText}
               accessoryRight={() => (
@@ -92,6 +91,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 60,
+    backgroundColor: theme.colors.primary,
   },
   typeSelectorText: {
     color: theme.colors.basic100,

@@ -15,6 +15,7 @@ interface IExpensesListProps {
   transactions: Transaction[];
   onSelectTransaction: (transaction: Transaction) => void;
   onDeleteTransaction: (transaction: Transaction) => void;
+  onAddTransaction?: () => void;
   loading?: boolean;
 }
 
@@ -23,6 +24,7 @@ export const ExpensesList: FC<IExpensesListProps> = ({
   loading = false,
   onSelectTransaction,
   onDeleteTransaction,
+  onAddTransaction,
 }) => {
   const { t } = useTranslation('expensesPage');
   const insets = useSafeAreaInsets();
@@ -55,8 +57,23 @@ export const ExpensesList: FC<IExpensesListProps> = ({
   );
 
   const renderEmpty = useCallback(
-    () => <EmptyData title={t('expensesPage:emptyData')} />,
-    [t],
+    () => (
+      <EmptyData
+        variant="centered"
+        iconName="swap-outline"
+        title={t('expensesPage:empty.title')}
+        subtitle={t('expensesPage:empty.subtitle')}
+        action={
+          onAddTransaction
+            ? {
+                label: t('expensesPage:empty.cta'),
+                onPress: onAddTransaction,
+              }
+            : undefined
+        }
+      />
+    ),
+    [t, onAddTransaction],
   );
 
   const keyExtractor = useCallback(
@@ -65,7 +82,9 @@ export const ExpensesList: FC<IExpensesListProps> = ({
   );
 
   const listContentStyle = useMemo(
-    () => ({ paddingBottom: BOTTOM_NAV_HEIGHT + insets.bottom }),
+    () => ({
+      paddingBottom: BOTTOM_NAV_HEIGHT + insets.bottom,
+    }),
     [insets.bottom],
   );
 
@@ -80,6 +99,8 @@ export const ExpensesList: FC<IExpensesListProps> = ({
     );
   }
 
+  const isEmpty = transactions.length === 0;
+
   return (
     <SectionList
       sections={sections}
@@ -90,7 +111,11 @@ export const ExpensesList: FC<IExpensesListProps> = ({
       ListEmptyComponent={renderEmpty}
       showsVerticalScrollIndicator={false}
       stickySectionHeadersEnabled={false}
-      contentContainerStyle={[styles.contentContainer, listContentStyle]}
+      contentContainerStyle={[
+        styles.contentContainer,
+        isEmpty && styles.contentContainerEmpty,
+        listContentStyle,
+      ]}
     />
   );
 };
@@ -98,6 +123,9 @@ export const ExpensesList: FC<IExpensesListProps> = ({
 const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
+  },
+  contentContainerEmpty: {
+    justifyContent: 'center',
   },
   sectionHeader: {
     fontSize: 17,

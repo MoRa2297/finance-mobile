@@ -32,5 +32,10 @@
   "alertButtonText": "Capito",
   "alertMonthExpiryError": "Errore, mese di scadenza obbligatorio",
   "alertYearExpiryError": "Errore, anno di scadenza obbligatorio",
-  "emptyTransactions": "Nessuna transazione"
+  "emptyTransactions": "Nessuna transazione",
+  "empty": {
+    "title": "Nessuna carta",
+    "subtitle": "Aggiungi la tua prima carta per iniziare a tracciare le spese.",
+    "cta": "Aggiungi carta"
+  }
 }

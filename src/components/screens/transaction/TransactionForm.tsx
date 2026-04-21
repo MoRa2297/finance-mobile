@@ -173,7 +173,6 @@ export const TransactionForm: FC<TransactionFormProps> = ({
             <Button
               buttonText={t('common:save')}
               onPress={handleSubmit}
-              backgroundColor={theme.colors.primary}
               style={styles.button}
               isDisabled={isSubmitting}
               isLoading={isSubmitting}
@@ -213,5 +212,6 @@ const styles = StyleSheet.create({
     width: '60%',
     borderRadius: GLOBAL_BORDER_RADIUS,
     marginBottom: 20,
+    backgroundColor: theme.colors.primary,
   },
 });

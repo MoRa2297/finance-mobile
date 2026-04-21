@@ -80,10 +80,10 @@ export const IconInputField: React.FC<IconInputFieldProps> = ({
           </Pressable>
         ))}
         <Button
+          status="neutral"
           size="small"
           buttonText={t('common:iconInputField.buttonText')}
           style={styles.moreButton}
-          backgroundColor={theme.colors.textHint}
           onPress={handleOpenSheet}
         />
       </View>

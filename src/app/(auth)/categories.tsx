@@ -44,8 +44,19 @@ export default function CategoriesScreen() {
 
   const renderEmpty = useCallback(() => {
     if (isLoading) return null;
-    return <EmptyData title={t('categoriesPage:emptyData')} />;
-  }, [isLoading, t]);
+    return (
+      <EmptyData
+        variant="fullscreen"
+        iconName="pricetags-outline"
+        title={t('categoriesPage:empty.title')}
+        subtitle={t('categoriesPage:empty.subtitle')}
+        action={{
+          label: t('categoriesPage:empty.cta'),
+          onPress: handleAddCategory,
+        }}
+      />
+    );
+  }, [isLoading, t, handleAddCategory]);
 
   return (
     <ScreenContainer
@@ -116,5 +127,7 @@ const styles = StyleSheet.create({
   },
   listContentEmpty: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

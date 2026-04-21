@@ -1,26 +1,29 @@
 import React, { FC, memo, useCallback, useMemo, useRef } from 'react';
-import { Pressable, StyleSheet, View, TextStyle } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  FlatList,
+  TextStyle,
+  useWindowDimensions,
+} from 'react-native';
 import ActionSheet, {
   ActionSheetRef,
   SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
-import { Layout, List, Text } from '@ui-kitten/components';
+import { Text } from '@ui-kitten/components';
+import { useTranslation } from 'react-i18next';
 
 import { theme } from '@config/theme';
-import {
-  GLOBAL_BORDER_RADIUS,
-  HORIZONTAL_PADDING,
-  SCREEN_HEIGHT,
-} from '@config/constants';
+import { GLOBAL_BORDER_RADIUS, HORIZONTAL_PADDING } from '@config/constants';
 import { Category } from '@/types';
 import { Icon } from '@components/ui/Icon';
+import { EmptyData } from '@components/common';
 import { useCategories } from '@stores/category';
 
 type SelectCategorySheetProps = SheetProps<'select-category-sheet'>;
 
-const LIST_MAX_HEIGHT = SCREEN_HEIGHT / 1.5;
-const LIST_MIN_HEIGHT = SCREEN_HEIGHT / 4;
 const ICON_SIZE = 24;
 const ICON_CONTAINER_SIZE = 40;
 
@@ -56,12 +59,13 @@ const ListItem: FC<{ item: Category; onSelect: (item: Category) => void }> =
     );
   });
 
-// TODO add EmptyState component
 export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
   sheetId,
   payload,
 }) => {
+  const { t } = useTranslation(['categoriesPage', 'common']);
   const actionSheetRef = useRef<ActionSheetRef>(null);
+  const { height } = useWindowDimensions();
   const { data: categories = [] } = useCategories();
 
   const filteredCategories = useMemo(() => {
@@ -83,14 +87,24 @@ export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
     [handleSelect],
   );
 
-  const renderSeparator = useCallback(
-    () => <Layout style={styles.separator} />,
-    [],
-  );
   const keyExtractor = useCallback(
     (item: Category, i: number) => item.id?.toString() ?? `cat-${i}`,
     [],
   );
+
+  const renderEmpty = useCallback(
+    () => (
+      <EmptyData
+        variant="centered"
+        iconName="pricetags-outline"
+        title={t('categoriesPage:empty.title')}
+        subtitle={t('categoriesPage:empty.subtitle')}
+      />
+    ),
+    [t],
+  );
+
+  const isEmpty = filteredCategories.length === 0;
 
   return (
     <ActionSheet
@@ -102,16 +116,25 @@ export const SelectCategorySheet: FC<SelectCategorySheetProps> = ({
       closeOnTouchBackdrop
       containerStyle={styles.sheetContainer}
       keyboardHandlerEnabled={false}>
-      <Layout>
-        <List
-          data={filteredCategories}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          ItemSeparatorComponent={renderSeparator}
-          showsVerticalScrollIndicator={false}
-          style={styles.list}
-        />
-      </Layout>
+      <View style={styles.content}>
+        <Text category="h6" style={styles.title}>
+          {t('categoriesPage:selectCategory')}
+        </Text>
+
+        <View style={{ minHeight: height * 0.3, maxHeight: height * 0.5 }}>
+          <FlatList
+            data={filteredCategories}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            ListEmptyComponent={renderEmpty}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.listContent,
+              isEmpty && styles.listContentEmpty,
+            ]}
+          />
+        </View>
+      </View>
     </ActionSheet>
   );
 };
@@ -123,14 +146,20 @@ const styles = StyleSheet.create({
     borderTopRightRadius: GLOBAL_BORDER_RADIUS,
     overflow: 'hidden',
   },
-  list: {
-    maxHeight: LIST_MAX_HEIGHT,
-    minHeight: LIST_MIN_HEIGHT,
-    backgroundColor: theme.colors.primaryBK,
+  content: {
+    paddingTop: 15,
   },
-  separator: {
-    height: 0,
-    backgroundColor: theme.colors.primaryBK,
+  title: {
+    color: theme.colors.basic100,
+    paddingHorizontal: HORIZONTAL_PADDING,
+    marginBottom: 10,
+  },
+  listContent: {
+    paddingBottom: 20,
+  },
+  listContentEmpty: {
+    flex: 1,
+    justifyContent: 'center',
   },
   listItem: {
     flexDirection: 'row',

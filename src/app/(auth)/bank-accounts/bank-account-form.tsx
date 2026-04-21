@@ -98,7 +98,6 @@ export default function BankAccountFormScreen() {
           <Button
             buttonText={t('common:save')}
             onPress={handleSubmit}
-            backgroundColor={theme.colors.primary}
             style={styles.submitButton}
             isLoading={formik.isSubmitting}
             isDisabled={formik.isSubmitting}
@@ -144,5 +143,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: GLOBAL_BORDER_RADIUS,
     marginBottom: 20,
+    backgroundColor: theme.colors.primary,
   },
 });

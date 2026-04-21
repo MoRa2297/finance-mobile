@@ -49,8 +49,19 @@ export default function BankAccountsScreen() {
 
   const renderEmpty = useCallback(() => {
     if (isLoading) return null;
-    return <EmptyData title={t('bankAccountPage:emptyData')} />;
-  }, [isLoading, t]);
+    return (
+      <EmptyData
+        variant="centered"
+        iconName="credit-card-outline"
+        title={t('bankAccountPage:empty.title')}
+        subtitle={t('bankAccountPage:empty.subtitle')}
+        action={{
+          label: t('bankAccountPage:empty.cta'),
+          onPress: handleAddAccount,
+        }}
+      />
+    );
+  }, [isLoading, t, handleAddAccount]);
 
   return (
     <ScreenContainer
@@ -147,5 +158,8 @@ const styles = StyleSheet.create({
     gap: 15,
     paddingBottom: 30,
   },
-  listContentEmpty: { flex: 1 },
+  listContentEmpty: {
+    flex: 1,
+    justifyContent: 'center',
+  },
 });

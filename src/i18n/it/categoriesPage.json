@@ -14,5 +14,11 @@
     "alertTitle": "Attenzione",
     "alertNameError": "Errore, nome obbligatorio",
     "alertButtonText": "Capito"
+  },
+  "selectCategory": "Seleziona categoria",
+  "empty": {
+    "title": "Nessuna categoria",
+    "subtitle": "Crea la tua prima categoria per organizzare le transazioni.",
+    "cta": "Aggiungi categoria"
   }
 }

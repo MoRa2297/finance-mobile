@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { theme } from '@/config/theme';
 
@@ -19,6 +20,8 @@ export const SocialLoginButtons: FC<ISocialLoginButtonsProps> = ({
   onApplePress,
   disabled = true,
 }) => {
+  const { t } = useTranslation('login');
+
   const socialButtons = createSocialButtons(
     onGooglePress,
     onFacebookPress,
@@ -36,6 +39,9 @@ export const SocialLoginButtons: FC<ISocialLoginButtonsProps> = ({
             iconColor={theme.colors.textHint}
             style={styles.socialButton}
             isDisabled={disabled}
+            accessibilityLabel={t('socialLogin.signInWith', {
+              provider: button.name,
+            })}
           />
         ))}
       </View>
