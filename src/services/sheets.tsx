@@ -27,6 +27,8 @@ import {
   SelectCardSheetPayload,
 } from '@components/sheets/SelectCardSheet/SelectCardSheet';
 import { SelectFrequencySheet } from '@components/sheets/SelectFrequencySheet/SelectFrequencySheet';
+import { LanguageCode } from '@/config';
+import { LanguageSheet } from '@components/sheets/LanguageSheet/LanguageSheet';
 
 registerSheet('color-sheet', ColorSheet);
 registerSheet('icon-sheet', IconSheet);
@@ -41,6 +43,7 @@ registerSheet('transaction-detail-sheet', TransactionDetailSheet);
 registerSheet('select-category-sheet', SelectCategorySheet);
 registerSheet('select-card-sheet', SelectCardSheet);
 registerSheet('select-frequency-sheet', SelectFrequencySheet);
+registerSheet('language-sheet', LanguageSheet);
 
 // TODO improve the typos
 declare module 'react-native-actions-sheet' {
@@ -98,6 +101,14 @@ declare module 'react-native-actions-sheet' {
     'select-frequency-sheet': {
       returnValue: { frequency: Frequency };
     };
+    'language-sheet': SheetDefinition<{
+      payload: {
+        currentLanguage: LanguageCode;
+      };
+      returnValue: {
+        code: LanguageCode;
+      };
+    }>;
   }
 }
 

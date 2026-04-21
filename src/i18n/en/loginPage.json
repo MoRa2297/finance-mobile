@@ -1,13 +1,13 @@
 {
   "welcome": "Hello!",
-  "welcomeSub": "Bentornat*, accedi al tuo account!",
+  "welcomeSub": "Welcome back, sign in to your account!",
   "form": {
-    "emailPlaceholder": "E-mail",
+    "emailPlaceholder": "Email",
     "passwordPlaceholder": "Password",
-    "forgotPassword": "Password dimenticata?",
-    "signIn": "Accedi"
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign in"
   },
-  "or": "OPPURE",
-  "noAccount": "Non hai un'account?",
-  "signUp": "Registrati"
+  "or": "OR",
+  "noAccount": "Don't have an account?",
+  "signUp": "Sign up"
 }

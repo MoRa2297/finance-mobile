@@ -39,7 +39,7 @@ export default function ExpensesScreen() {
     <ScreenContainer
       style={styles.container}
       horizontalPadding={false}
-      forceNoBottomPadding>
+      statusBarBackground={theme.colors.primaryBK}>
       <TopRoundedContainer height="28%" paddingTop={10}>
         <Header
           left={{

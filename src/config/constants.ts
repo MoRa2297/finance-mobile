@@ -25,6 +25,7 @@ export const YEARS_NUMBER: Array<GenericType> = Array.from(
   (_, i) => ({ id: i + 1, name: String(currentYear + i) }),
 );
 
+// TODO use these
 export const ROUTES = {
   // Unauth
   LOGIN: '/(unauth)/login',

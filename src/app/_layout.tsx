@@ -15,6 +15,7 @@ import { queryClient } from '@config/queryClient';
 import { setupReactQueryFocus } from '@config/reactQueryFocus';
 import { setupReactQueryOnline } from '@config/reactQueryOnline';
 import { setupReactQueryLogger } from '@config/reactQueryLogger';
+import { theme } from '@config/theme';
 
 if (__DEV__) {
   // @typescript-eslint/no-require-imports
@@ -36,7 +37,11 @@ export default function RootLayout() {
             theme={{ ...eva.dark, ...customMapping }}>
             <ActionSheetProvider useCustomActionSheet useNativeDriver={false}>
               <SheetProvider>
-                <StatusBar style="light" />
+                <StatusBar
+                  style="light"
+                  translucent
+                  backgroundColor="transparent"
+                />
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="index" />
                   <Stack.Screen name="(unauth)" />

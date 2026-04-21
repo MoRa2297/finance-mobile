@@ -1,5 +1,5 @@
 {
-  "accountBalance": "Saldo del conto",
-  "incomesMiniTitle": "Entrate",
-  "expensesMiniTitle": "Uscite"
+  "accountBalance": "Account balance",
+  "incomesMiniTitle": "Income",
+  "expensesMiniTitle": "Expenses"
 }

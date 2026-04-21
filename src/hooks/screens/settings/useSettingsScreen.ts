@@ -6,6 +6,7 @@ import { useAuthStore, useUIStore } from '@/stores';
 import { theme } from '@/config/theme';
 import { ROUTES } from '@/config/constants';
 import { SettingsList } from '@/types';
+import { useLanguage } from '@hooks/screens/settings/useLanguage';
 
 const TABS = [
   { title: 'settingsPage:general', value: 'general' },
@@ -16,6 +17,7 @@ const TABS = [
 export const useSettingsScreen = () => {
   const { t } = useTranslation('settingsPage');
   const router = useRouter();
+  const { currentLanguage, openLanguageSheet } = useLanguage();
 
   const user = useAuthStore(state => state.user);
   const logout = useAuthStore(state => state.logout);
@@ -80,6 +82,12 @@ export const useSettingsScreen = () => {
             title: t('profile'),
             iconName: 'person-outline',
             navigationScreen: '/(auth)/profile',
+          },
+          {
+            title: t('language'),
+            iconName: 'globe-outline',
+            rightLabel: `${currentLanguage.flag}  ${currentLanguage.label}`,
+            callback: openLanguageSheet,
           },
           {
             title: t('deleteAccount'),
